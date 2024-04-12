@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import ormConfig from './config/orm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 import ormConfigProd from './config/orm.config.prod';
 
 @Module({
@@ -21,6 +22,7 @@ import ormConfigProd from './config/orm.config.prod';
         process.env.NODE_ENV !== 'production' ? ormConfig : ormConfigProd,
     }),
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
