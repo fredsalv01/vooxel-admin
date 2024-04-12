@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import {
   ValidationArguments,
   ValidationOptions,
@@ -5,10 +6,9 @@ import {
   ValidatorConstraintInterface,
   registerDecorator,
 } from 'class-validator';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
 import { User } from '../../auth/entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
@@ -24,6 +24,8 @@ export class UserDoesNotExistsConstrint
     value: any,
     validationArguments?: ValidationArguments,
   ): Promise<boolean> {
+    console.log('value', value);
+    console.log('validationArgument', validationArguments);
     const entity = await this.userRepository.findOneBy({
       [validationArguments.property]: value,
     });
