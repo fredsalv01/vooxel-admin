@@ -16,6 +16,7 @@ import ormConfigProd from './config/orm.config.prod';
       envFilePath: `${process.env.NODE_ENV}.env`,
     }),
     TypeOrmModule.forRootAsync({
+      imports: [],
       useFactory:
         process.env.NODE_ENV !== 'production' ? ormConfig : ormConfigProd,
     }),
