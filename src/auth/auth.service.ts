@@ -27,14 +27,14 @@ export class AuthService {
     });
 
     if (!user) {
-      this.logger.debug(`User ${email} not found!`);
-      throw new UnauthorizedException(new Error(`User ${email} not found!`));
+      this.logger.debug(`Usuario ${email} no encontrado`);
+      throw new UnauthorizedException(new Error(`Usuario ${email} no encontrado`));
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-      this.logger.debug(`Invalid credentials for user ${email}`);
+      this.logger.debug(`Credenciales invalidas para el usuario: ${email}`);
       throw new UnauthorizedException(
-        new Error(`Invalid credentials for user ${email}`),
+        new Error(`Credenciales invalidas para el usuario: ${email}`),
       );
     }
 
