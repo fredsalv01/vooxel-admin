@@ -24,8 +24,6 @@ export class UserDoesNotExistsConstrint
     value: any,
     validationArguments?: ValidationArguments,
   ): Promise<boolean> {
-    console.log('value', value);
-    console.log('validationArgument', validationArguments);
     const entity = await this.userRepository.findOneBy({
       [validationArguments.property]: value,
     });
