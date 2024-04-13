@@ -4,9 +4,24 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User } from '../auth/entities/user.entity';
 import { UserDoesNotExistsConstrint } from './validation/user-does-not-exists.constraint';
+import { AuthModule } from '../auth/auth.module';
+import { AuthService } from '../auth/auth.service';
+import { JwtModule } from '@nestjs/jwt';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  providers: [UsersService, UserDoesNotExistsConstrint],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.AUTH_SECRET,
+        signOptions: {
+          expiresIn: '60m',
+        },
+      }),
+    }),
+    AuthModule,
+  ],
+  providers: [UsersService, AuthService, UserDoesNotExistsConstrint],
   controllers: [UsersController],
 })
 export class UsersModule {}
