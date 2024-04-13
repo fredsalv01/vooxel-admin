@@ -11,14 +11,14 @@ export class User {
   @Expose()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   @Expose()
   username: string;
 
   @Column()
   password: string;
 
-  @Column()
+  @Column({ unique: true })
   @Expose()
   email: string;
 
