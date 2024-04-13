@@ -6,13 +6,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  login(@Request request) {
+  login(@Request() request) {
     const token = this.authService.getJwtToken(request);
     return token;
   }
 
   @Get()
-  getProfile(@Request request) {
+  getProfile(@Request() request) {
     return request.user;
   }
 }
