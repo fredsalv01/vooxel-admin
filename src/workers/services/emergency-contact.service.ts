@@ -13,9 +13,12 @@ export class EmergencyContactService {
   async create(
     emergencyContactData: EmergencyContact,
   ): Promise<EmergencyContact> {
-    return await this.EmergencyContactRepository.addEmergencyContact(
+    return await this.EmergencyContactRepository.add(
       emergencyContactData as unknown as EmergencyContact,
     );
-    
+  }
+
+  async getAllFromWorkerId(id: number): Promise<EmergencyContact[]>{
+    return await this.EmergencyContactRepository.findAll(id);
   }
 }

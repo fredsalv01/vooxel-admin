@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EmergencyContactService } from '../services/emergency-contact.service';
 import { EmergencyContactDto } from '../dto/create-emergencyContact.dto';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
@@ -14,5 +14,10 @@ export class EmergencyContactsController {
     return this.emergencyContactService.create(
       emergencyContactDto as unknown as EmergencyContact,
     );
+  }
+
+  @Get(':workerId')
+  getAll(@Param('workerId') workerId: string) {
+    return this.emergencyContactService.getAllFromWorkerId(+workerId);
   }
 }

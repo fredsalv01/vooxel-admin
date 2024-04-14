@@ -8,11 +8,26 @@ export class EmergencyContactRepository {
     private readonly db: Repository<EmergencyContact>,
   ) {}
 
-  async addEmergencyContact(data: EmergencyContact) {
+  async add(data: EmergencyContact) {
     try {
       return await this.db.save(data);
     } catch (error) {
       console.log('ERROR GUARDANDO CONTACTO DE EMERGENCIA:', error);
+      throw new Error(error);
+    }
+  }
+
+  async findAll(id: number) {
+    try {
+      return await this.db.find({
+        where: {
+          worker: {
+            id: id,
+          },
+        },
+      });
+    } catch (error) {
+      console.log('ERROR OBTENIENDO LISTA DE CONTACTOS DE EMERGENCIA:', error);
       throw new Error(error);
     }
   }
