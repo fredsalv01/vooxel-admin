@@ -1,5 +1,11 @@
 import { Expose } from 'class-transformer';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Worker } from './worker.entity';
 
 @Entity()
@@ -23,7 +29,11 @@ export class EmergencyContact {
   @Expose()
   @Column()
   relation: string;
-  
+
   @ManyToOne(() => Worker, (worker) => worker.emergencyContacts)
+  @JoinColumn({ name: 'workerId' })
   worker: Worker;
+
+  @Column({ type: 'int', nullable: true })
+  workerId: number;
 }
