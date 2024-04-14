@@ -8,12 +8,13 @@ import { Certification } from './entities/certification.entity';
 import { WorkerRepository } from './repository/workerRepository';
 import { EmergencyContactRepository } from './repository/emergencyContactRepository';
 import { EmergencyContactService } from './services/emergency-contact.service';
+import { EmergencyContactsController } from './controllers/emergency-contacts.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Worker, EmergencyContact, Certification]),
   ],
-  controllers: [WorkersController],
+  controllers: [WorkersController, EmergencyContactsController],
   providers: [
     WorkersService,
     EmergencyContactService,

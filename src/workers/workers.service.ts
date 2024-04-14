@@ -28,8 +28,8 @@ export class WorkersService {
         );
         emergencyContactArray.push(emergencyContact);
       }
+      worker.emergencyContacts = emergencyContactArray;
     }
-    worker.emergencyContacts = emergencyContactArray;
     return worker;
   }
 
