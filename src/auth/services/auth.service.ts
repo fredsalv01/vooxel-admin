@@ -1,6 +1,6 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -28,7 +28,9 @@ export class AuthService {
 
     if (!user) {
       this.logger.debug(`Usuario ${email} no encontrado`);
-      throw new UnauthorizedException(new Error(`Usuario ${email} no encontrado`));
+      throw new UnauthorizedException(
+        new Error(`Usuario ${email} no encontrado`),
+      );
     }
 
     if (!(await bcrypt.compare(password, user.password))) {

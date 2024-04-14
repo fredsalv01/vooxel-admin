@@ -1,12 +1,15 @@
 import {
   IsArray,
-  IsDate,
+  IsDateString,
+  IsEmpty,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
 } from 'class-validator';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
+import { EmergencyContact } from '../entities/emergency-contact.entity';
+import { EmergencyContactDto } from './create-emergencyContact.dto';
 
 export class CreateWorkerDto {
   @IsNotEmpty()
@@ -19,15 +22,15 @@ export class CreateWorkerDto {
 
   @IsNotEmpty()
   @IsString()
-  ApPat: string; // apellido paterno
+  apPat: string; // apellido paterno
 
   @IsNotEmpty()
   @IsString()
-  ApMat: string; // apellido materno
+  apMat: string; // apellido materno
 
   @IsNotEmpty()
   @IsString()
-  Name: string; // nombre
+  name: string; // nombre
 
   @IsNotEmpty()
   @IsEnum(EnglishLevel)
@@ -37,7 +40,7 @@ export class CreateWorkerDto {
   @IsString()
   charge: string; // cargo
 
-  @IsDate()
+  @IsDateString({ strict: true } as any)
   @IsNotEmpty()
   birthdate: string; // fecha de nacimiento
 
@@ -45,9 +48,9 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
 
-  @IsDate()
+  @IsDateString({ strict: true } as any)
   @IsNotEmpty()
-  hiringDate: Date; // fecha de inicio de contrato
+  hiringDate: string; // fecha de inicio de contrato
 
   @IsNotEmpty()
   @IsString()
@@ -71,13 +74,19 @@ export class CreateWorkerDto {
 
   @IsString()
   @IsNotEmpty()
-  familiarAssingment: string;
+  familiarAssignment: string;
 
   @IsArray()
   @IsNotEmpty()
   techSkills: string[]; // string[]
 
-  @IsNumber()
-  @IsNotEmpty()
-  chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
+  @IsArray({
+    each: false,
+    context: EmergencyContactDto,
+  })
+  emergencyContacts?: EmergencyContactDto[];
+
+  // @IsEmpty()
+  // @IsNumber()
+  // chiefOfficerId?: number | null; // aca vamos a hacer una asignacion circular en bd
 }

@@ -5,7 +5,7 @@ import { UsersController } from './users.controller';
 import { User } from '../auth/entities/user.entity';
 import { UserDoesNotExistsConstrint } from './validation/user-does-not-exists.constraint';
 import { AuthModule } from '../auth/auth.module';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({

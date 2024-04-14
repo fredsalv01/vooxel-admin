@@ -35,15 +35,15 @@ export class Worker {
 
   @Expose()
   @Column()
-  ApPat: string; // apellido paterno
+  apPat: string; // apellido paterno
 
   @Expose()
   @Column()
-  ApMat: string; // apellido materno
+  apMat: string; // apellido materno
 
   @Expose()
   @Column()
-  Name: string; // nombre
+  name: string; // nombre
 
   @Expose()
   @Column({
@@ -114,7 +114,7 @@ export class Worker {
 
   @Expose()
   @Column()
-  familiarAssingment: string;
+  familiarAssignment: string;
 
   @Expose()
   @Column('text', {
@@ -124,17 +124,34 @@ export class Worker {
   techSkills: string; // string[]
 
   @Expose()
-  @OneToOne(() => Worker)
+  @OneToOne(() => Worker, {
+    nullable: true,
+    eager: true,
+  })
   @JoinColumn()
   chiefOfficerId: Worker; // aca vamos a hacer una asignacion circular en bd
 
   @Expose()
-  @OneToMany(
-    () => Certification,
-    (Certification) => Certification.worker,
-    {
-      cascade: true,
-    },
-  )
+  @OneToMany(() => Certification, (Certification) => Certification.worker, {
+    cascade: true,
+  })
   certifications: Certification[]; // listado de certificaciones string[]
+
+  @Expose()
+  @Column({
+    nullable: true,
+  })
+  resumeUrl: string;
+
+  @Expose()
+  @Column({
+    nullable: true,
+  })
+  contractUrl: string;
+
+  @Expose()
+  @Column({
+    nullable: true,
+  })
+  psychologicalTestUrl: string;
 }

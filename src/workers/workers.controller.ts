@@ -9,6 +9,7 @@ export class WorkersController {
 
   @Post()
   create(@Body() createWorkerDto: CreateWorkerDto) {
+    // PARA CREAR UN COLABORADOR SOLO CIERTOS DATOS SON NECESARIOS
     return this.workersService.create(createWorkerDto);
   }
 

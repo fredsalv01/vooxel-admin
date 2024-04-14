@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UsersService } from './users.service';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 
 @Controller('users')
 export class UsersController {
@@ -17,7 +17,7 @@ export class UsersController {
     const token = this.authService.getJwtToken(user);
     return {
       user,
-      token
+      token,
     };
   }
 }
