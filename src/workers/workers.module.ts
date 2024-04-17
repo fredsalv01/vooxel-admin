@@ -9,7 +9,7 @@ import { WorkerRepository } from './repository/workerRepository';
 import { EmergencyContactRepository } from './repository/emergencyContactRepository';
 import { EmergencyContactService } from './services/emergency-contact.service';
 import { EmergencyContactsController } from './controllers/emergency-contacts.controller';
-import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exists.constraint';
+// import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exists.constraint';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exist
     EmergencyContactService,
     WorkerRepository,
     EmergencyContactRepository,
-    WorkerDoesNotExistsConstrint
+    // WorkerDoesNotExistsConstrint
   ],
 })
 export class WorkersModule {}

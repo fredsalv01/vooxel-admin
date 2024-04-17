@@ -17,7 +17,7 @@ export class CreateWorkerDto {
   documentType: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
   @IsNumber()
-  @WorkerDoesNotExists()
+  // @WorkerDoesNotExists()
   @IsNotEmpty()
   documentNumber: number; // numero de documento MAX: 9 MIN: 8
 
