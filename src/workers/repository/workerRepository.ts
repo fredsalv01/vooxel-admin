@@ -34,20 +34,11 @@ export class WorkerRepository {
           modifiedWorker[modifiedKey] = worker[key];
         }
       }
-      // if (worker.hiringTime > 0) {
-      console.log(worker.hiringTime);
-      console.log(Math.round(Number(worker.hiringTime) * 12));
-      worker.hiringTime = Math.round(
-        Number(worker.hiringTime) * 12,
-      ).toString();
-      // }
 
       return modifiedWorker;
     });
 
     return modifiedWorkers;
-
-    // 1000*3600*24
   }
 
   async addWorker(data: any) {
@@ -55,6 +46,29 @@ export class WorkerRepository {
       return await this.db.save(new Worker(data));
     } catch (error) {
       console.log('ERROR GUARDANDO COLABORADOR:', error);
+      throw new Error(error);
+    }
+  }
+
+  async getOneWorker(id: number) {
+    try {
+      const data = await this.db
+        .createQueryBuilder('worker')
+        .leftJoinAndSelect('worker.emergencyContacts', 'emergencyContacts')
+        .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
+        // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
+        .where('worker.id = :id', { id: id })
+        .getOne();
+
+      data.chiefOfficer = data.chiefOfficer
+        ? new Worker({
+            name: `${data.chiefOfficer?.name} ${data.chiefOfficer?.apPat}`,
+          })
+        : null;
+
+      return data;
+    } catch (error) {
+      console.log('ERROR AL OBTENER COLABORADOR: ', error);
       throw new Error(error);
     }
   }

@@ -38,7 +38,7 @@ export class WorkersService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} worker`;
+    return this.workerRepository.getOneWorker(id);
   }
 
   update(id: number, updateWorkerDto: UpdateWorkerDto) {
