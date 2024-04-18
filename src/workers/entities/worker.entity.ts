@@ -70,12 +70,10 @@ export class Worker {
   contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
 
   @Expose()
-  hiringTime?: string; // tiempo de contratacion
+  hiringTime?: number; // tiempo de contratacion
 
   @Expose()
-  @Column({
-    type: 'date',
-  })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   hiringDate: Date; // fecha de inicio de contrato
 
   @Expose()
@@ -154,4 +152,11 @@ export class Worker {
     nullable: true,
   })
   psychologicalTestUrl: string;
+
+  getHiringTime(): number {
+    const currentTime = new Date();
+    const hiringTimeMs = currentTime.getTime() - this.hiringDate.getTime();
+    // Convertir de milisegundos a días
+    return hiringTimeMs / (1000 * 3600 * 24);
+  }
 }
