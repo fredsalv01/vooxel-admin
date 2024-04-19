@@ -20,6 +20,7 @@ import { WorkersModule } from './workers/workers.module';
     TypeOrmModule.forRootAsync({
       useFactory:
         process.env.NODE_ENV !== 'production' ? ormConfig : ormConfigProd,
+      imports: [],
     }),
     AuthModule,
     UsersModule,
@@ -27,6 +28,6 @@ import { WorkersModule } from './workers/workers.module';
   ],
   controllers: [AppController],
   providers: [AppService],
-  exports: [AuthModule]
+  exports: [AuthModule],
 })
 export class AppModule {}

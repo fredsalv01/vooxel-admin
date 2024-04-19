@@ -16,7 +16,7 @@ export class UsersService {
       new User({
         ...createUserDto,
         password: await hashPassword(createUserDto.password),
-      })
-    )
+      }),
+    );
   }
 }

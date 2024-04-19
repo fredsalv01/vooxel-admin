@@ -17,6 +17,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
           expiresIn: '60m',
         },
       }),
+      imports: [],
     }),
   ],
   providers: [LocalStrategy, JwtStrategy, AuthService],

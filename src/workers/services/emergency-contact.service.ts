@@ -18,17 +18,21 @@ export class EmergencyContactService {
     );
   }
 
-  async getAllFromWorkerId(id: number): Promise<EmergencyContact[]>{
+  async getAllFromWorkerId(id: number): Promise<EmergencyContact[]> {
     return await this.EmergencyContactRepository.findAll(id);
   }
 
-  async update(id: number, emergencyContactData: EmergencyContact): Promise<EmergencyContact>{
+  async update(
+    id: number,
+    emergencyContactData: EmergencyContact,
+  ): Promise<EmergencyContact> {
     return await this.EmergencyContactRepository.update(
-      id, emergencyContactData as unknown as EmergencyContact
-    )
+      id,
+      emergencyContactData as unknown as EmergencyContact,
+    );
   }
 
   async delete(id: number): Promise<any> {
-    return await this.EmergencyContactRepository.delete(id)
+    return await this.EmergencyContactRepository.delete(id);
   }
 }
