@@ -70,12 +70,10 @@ export class Worker {
   contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
 
   @Expose()
-  hiringTime?: string; // tiempo de contratacion
+  hiringTime?: number; // tiempo de contratacion
 
   @Expose()
-  @Column({
-    type: 'date',
-  })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   hiringDate: Date; // fecha de inicio de contrato
 
   @Expose()
@@ -102,34 +100,39 @@ export class Worker {
   @Column()
   department: string;
 
-  @Expose()
   @OneToMany(
     () => EmergencyContact,
     (emergencyContact) => emergencyContact.worker,
     {
       cascade: true,
+      eager: true,
     },
   )
+  @Expose()
   emergencyContacts: EmergencyContact[]; // contacto de emergencia esta es otra entidad
 
-  @Expose()
   @Column()
+  @Expose()
   familiarAssignment: string;
 
-  @Expose()
   @Column('text', {
     array: true,
     default: [],
   })
+  @Expose()
   techSkills: string; // string[]
 
-  @Expose()
-  @OneToOne(() => Worker, {
-    nullable: true,
-    eager: true,
+  @OneToOne(() => Worker, (worker) => worker.chiefOfficer)
+  @JoinColumn({
+    name: 'chiefOfficerId',
   })
-  @JoinColumn()
-  chiefOfficerId: Worker; // aca vamos a hacer una asignacion circular en bd
+  @Expose()
+  chiefOfficer: Worker;
+
+  @Column({
+    nullable: true,
+  })
+  chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
 
   @Expose()
   @OneToMany(() => Certification, (Certification) => Certification.worker, {
@@ -154,4 +157,11 @@ export class Worker {
     nullable: true,
   })
   psychologicalTestUrl: string;
+
+  getHiringTime(): number {
+    const currentTime = new Date();
+    const hiringTimeMs = currentTime.getTime() - this.hiringDate.getTime();
+    // Convertir de milisegundos a días
+    return hiringTimeMs / (1000 * 3600 * 24);
+  }
 }

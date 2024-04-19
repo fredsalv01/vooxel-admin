@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWorkerDto } from './dto/create-worker.dto';
-import { UpdateWorkerDto } from './dto/update-worker.dto';
-import { WorkerRepository } from './repository/workerRepository';
-import { EmergencyContactService } from './services/emergency-contact.service';
-import { EmergencyContact } from './entities/emergency-contact.entity';
+import { CreateWorkerDto } from '../dto/create-worker.dto';
+import { UpdateWorkerDto } from '../dto/update-worker.dto';
+import { WorkerRepository } from '../repository/workerRepository';
+import { EmergencyContactService } from './emergency-contact.service';
+import { EmergencyContact } from '../entities/emergency-contact.entity';
 
 @Injectable()
 export class WorkersService {
@@ -33,12 +33,12 @@ export class WorkersService {
     return worker;
   }
 
-  findAll() {
-    return `This action returns all workers`;
+  async findAll() {
+    return this.workerRepository.getWorkersWithHiringTime();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} worker`;
+    return this.workerRepository.getOneWorker(id);
   }
 
   update(id: number, updateWorkerDto: UpdateWorkerDto) {
