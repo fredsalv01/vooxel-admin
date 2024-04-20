@@ -1,7 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import * as moment from 'moment-timezone';
 
 export class WorkerRepository {
   constructor(
@@ -14,15 +13,30 @@ export class WorkerRepository {
   }
 
   async getWorkersWithHiringTime() {
+    // get all emergency contacts and chief officer with hiring time too
     const data = await this.db
-      .createQueryBuilder()
-      .select('e')
+      .createQueryBuilder('worker')
+      .leftJoin('worker.emergencyContacts', 'emergencyContacts')
+      .leftJoin('worker.chiefOfficer', 'chiefOfficer')
+      .select([
+        'worker.id',
+        'worker.documentType',
+        'worker.documentNumber',
+        'worker.name',
+        'worker.apPat',
+        'worker.apMat',
+        'worker.contractType',
+        'worker.charge',
+      ])
       .addSelect(
-        'EXTRACT(EPOCH FROM NOW() - e.hiringDate) / 86400',
-        'hiringTime',
+        'chiefOfficer.name', // Concatenar nombre y apellido paterno del jefe si tiene
+        'chiefOfficerName',
       )
-      .from(Worker, 'e')
-      .groupBy('e.id')
+      .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
+      .addSelect('COUNT(emergencyContacts.id)', 'emergencyContactsCount')
+      .groupBy('worker.id')
+      .addGroupBy('chiefOfficer.name')
+      .addGroupBy('chiefOfficer.apPat')
       .getRawMany();
 
     const modifiedWorkers = data.map((worker) => {
@@ -30,11 +44,10 @@ export class WorkerRepository {
       for (const key in worker) {
         if (Object.prototype.hasOwnProperty.call(worker, key)) {
           // Eliminar el prefijo "e_" de las claves
-          const modifiedKey = key.replace('e_', '');
+          const modifiedKey = key.replace('worker_', '');
           modifiedWorker[modifiedKey] = worker[key];
         }
       }
-
       return modifiedWorker;
     });
 
