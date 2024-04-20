@@ -27,6 +27,7 @@ export class WorkerRepository {
         'worker.apMat',
         'worker.contractType',
         'worker.charge',
+        'worker.techSkills',
       ])
       .addSelect(
         'chiefOfficer.name', // Concatenar nombre y apellido paterno del jefe si tiene
