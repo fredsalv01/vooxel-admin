@@ -111,9 +111,23 @@ export class WorkerRepository {
         'chiefOfficer.name',
       ]);
     const { techSkills, ...restFilters } = filters;
-    qb.where(restFilters);
+    // Loop through each filter field and apply %LIKE% operator if the field is defined
+    Object.keys(restFilters).forEach((key) => {
+      if (restFilters[key]) {
+        const paramName = `:${key}`;
+        const condition = `e.${key} ILIKE ${paramName}`;
+        const paramValue = `%${restFilters[key]}%`;
+        console.log('condition', condition);
+        console.log('paramName', paramName);
+        console.log('paramValue', paramValue);
+        qb.andWhere(condition, { [key]: paramValue });
+      }
+    });
+
     if (techSkills.length > 0) {
-      qb.andWhere('e.techSkills && :techSkills', { techSkills });
+      qb.andWhere("ARRAY_TO_STRING(e.techSkills, ',') LIKE :techSkills", {
+        techSkills: `%${techSkills.join(',')}%`,
+      });
     }
 
     return await paginate(qb, {
