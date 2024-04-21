@@ -18,7 +18,7 @@ export class PaginationResult<T> {
   @Expose()
   limit: number;
   @Expose()
-  total?: number;
+  totalItems?: number;
   @Expose()
   totalPages: number;
   @Expose()
@@ -41,7 +41,7 @@ export async function paginate<T>(
       first: offset + 1,
       last: offset + data.length,
       limit: options.limit,
-      total: options.total ? await qb.getCount() : null,
+      totalItems: options.total ? await qb.getCount() : null,
       totalPages: options.total
         ? Math.ceil((await qb.getCount()) / options.limit)
         : null,
@@ -53,7 +53,7 @@ export async function paginate<T>(
     first: 0,
     last: 0,
     limit: 0,
-    total: null,
+    totalItems: null,
     totalPages: null,
     currentPage: options.currentPage,
     data,

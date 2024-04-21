@@ -109,6 +109,7 @@ export class WorkerRepository {
       {
         limit,
         currentPage,
+        total: true,
       },
     );
   }
