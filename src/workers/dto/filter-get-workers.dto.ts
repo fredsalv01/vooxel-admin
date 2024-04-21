@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 import { ContractType, DocumentType } from '../utils/enum-types';
 import { PaginationDto } from "../../pagination/dto/pagination.dto";
 
@@ -8,6 +8,7 @@ export class filterWorkersPaginatedDto extends PaginationDto {
   documentType?: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
   @IsNumber()
+  @IsPositive()
   @IsOptional()
   documentNumber?: number; // numero de documento MAX: 9 MIN: 8
 
