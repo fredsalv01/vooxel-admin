@@ -120,7 +120,7 @@ export class Worker {
     default: [],
   })
   @Expose()
-  techSkills: string; // string[]
+  techSkills: string[]; // string[]
 
   @OneToOne(() => Worker, (worker) => worker.chiefOfficer)
   @JoinColumn({

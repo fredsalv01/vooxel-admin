@@ -55,6 +55,10 @@ export class WorkerRepository {
     return modifiedWorkers;
   }
 
+  async paginatedWorkers(){
+    
+  }
+
   async addWorker(data: any) {
     try {
       return await this.db.save(new Worker(data));
