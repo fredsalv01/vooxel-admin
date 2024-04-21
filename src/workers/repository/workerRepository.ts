@@ -103,7 +103,11 @@ export class WorkerRepository {
           'e.contractType',
           'e.charge',
           'e.techSkills',
-          'emergencyContacts',
+          'emergencyContacts.id',
+          'emergencyContacts.phone',
+          'emergencyContacts.name',
+          'emergencyContacts.relation',
+          'chiefOfficer.id',
           'chiefOfficer.name',
         ]),
       {
