@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "0017d5a0-1ec2-4fc2-bf3a-592f1f158cba",
+		"name": "workers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19361105",
+		"_collection_link": "https://warped-capsule-152882.postman.co/workspace/My-Workspace~54d1da99-ac02-49a0-8ddf-209d4792c177/collection/19361105-0017d5a0-1ec2-4fc2-bf3a-592f1f158cba?action=share&source=collection_link&creator=19361105"
+	},
+	"item": [
+		{
+			"name": "emergency contacts",
+			"item": [
+				{
+					"name": "create emergency contacts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Freddy Morales\",\r\n    \"phone\": \"980048040\",\r\n    \"relation\": \"HERMANO\",\r\n    \"workerId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/emergency_contacts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"emergency_contacts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all emergency contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/emergency_contacts/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"emergency_contacts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update emergency contacts",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Jose David\",\r\n    \"workerId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/emergency_contacts/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"emergency_contacts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "create workers",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"documentType\": \"Dni\",\r\n    \"documentNumber\": 4904457,\r\n    \"apPat\": \"Mey\",\r\n    \"apMat\": \"Ramos\",\r\n    \"name\": \"Carlos\",\r\n    \"englishLevel\": \"Intermedio\",\r\n    \"charge\": \"Desarrollador Full Stack Junior\",\r\n    \"birthdate\": \"1998-07-13\",\r\n    \"contractType\": \"RECIBOS POR HONORARIOS\",\r\n    \"hiringDate\": \"2024-04-14\",\r\n    \"phoneNumber\": \"980048040\",\r\n    \"address\": \"Calle Saint Tropez 185\",\r\n    \"district\": \"La Molina\",\r\n    \"province\": \"Lima\",\r\n    \"department\": \"Lima\",\r\n    \"familiarAssignment\": \"NINGUNA\",\r\n    \"techSkills\": [\"PYTHON\", \"GRAPHQL\", \"NODEJS\", \"TYPESCRIPT\", \"MYSQL\", \"POSTGRESQL\", \"MONGODB\", \"NESTJS\", \"AWS\", \"RESTAPI\"],\r\n    \"emergencyContacts\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/workers",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"workers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get workers by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3005/workers/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3005",
+					"path": [
+						"workers",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all workers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3005/workers?limit=1&page=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3005",
+					"path": [
+						"workers"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "1"
+						},
+						{
+							"key": "page",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
