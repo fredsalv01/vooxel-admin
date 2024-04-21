@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { paginate } from '../../pagination/interfaces/paginator.interface';
 
 export class WorkerRepository {
   constructor(
@@ -55,10 +56,6 @@ export class WorkerRepository {
     return modifiedWorkers;
   }
 
-  async paginatedWorkers(){
-    
-  }
-
   async addWorker(data: any) {
     try {
       return await this.db.save(new Worker(data));
@@ -89,5 +86,30 @@ export class WorkerRepository {
       console.log('ERROR AL OBTENER COLABORADOR: ', error);
       throw new Error(error);
     }
+  }
+
+  async findWorkers({ limit, currentPage }) {
+    return await paginate(
+      this.getWorkersBaseQuery()
+        .leftJoin('e.emergencyContacts', 'emergencyContacts')
+        .leftJoin('e.chiefOfficer', 'chiefOfficer')
+        .select([
+          'e.id',
+          'e.documentType',
+          'e.documentNumber',
+          'e.name',
+          'e.apPat',
+          'e.apMat',
+          'e.contractType',
+          'e.charge',
+          'e.techSkills',
+          'emergencyContacts',
+          'chiefOfficer.name',
+        ]),
+      {
+        limit,
+        currentPage,
+      },
+    );
   }
 }
