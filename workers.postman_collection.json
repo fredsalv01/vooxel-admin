@@ -142,7 +142,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3005/workers?limit=1&page=3",
+					"raw": "http://localhost:3005/workers?limit=5&page=1&documentNumber=4904457&techSkills=aZuRe,gO",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -154,11 +154,19 @@
 					"query": [
 						{
 							"key": "limit",
-							"value": "1"
+							"value": "5"
 						},
 						{
 							"key": "page",
-							"value": "3"
+							"value": "1"
+						},
+						{
+							"key": "documentNumber",
+							"value": "4904457"
+						},
+						{
+							"key": "techSkills",
+							"value": "aZuRe,gO"
 						}
 					]
 				}

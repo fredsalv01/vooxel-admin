@@ -88,33 +88,38 @@ export class WorkerRepository {
     }
   }
 
-  async findWorkers({ limit, currentPage }) {
-    return await paginate(
-      this.getWorkersBaseQuery()
-        .leftJoin('e.emergencyContacts', 'emergencyContacts')
-        .leftJoin('e.chiefOfficer', 'chiefOfficer')
-        .select([
-          'e.id',
-          'e.documentType',
-          'e.documentNumber',
-          'e.name',
-          'e.apPat',
-          'e.apMat',
-          'e.contractType',
-          'e.charge',
-          'e.techSkills',
-          'emergencyContacts.id',
-          'emergencyContacts.phone',
-          'emergencyContacts.name',
-          'emergencyContacts.relation',
-          'chiefOfficer.id',
-          'chiefOfficer.name',
-        ]),
-      {
-        limit,
-        currentPage,
-        total: true,
-      },
-    );
+  async findWorkers({ limit, currentPage, filters }) {
+    console.log('VALIDATE Filters', filters);
+    const qb = this.getWorkersBaseQuery()
+      .leftJoin('e.emergencyContacts', 'emergencyContacts')
+      .leftJoin('e.chiefOfficer', 'chiefOfficer')
+      .select([
+        'e.id',
+        'e.documentType',
+        'e.documentNumber',
+        'e.name',
+        'e.apPat',
+        'e.apMat',
+        'e.contractType',
+        'e.charge',
+        'e.techSkills',
+        'emergencyContacts.id',
+        'emergencyContacts.phone',
+        'emergencyContacts.name',
+        'emergencyContacts.relation',
+        'chiefOfficer.id',
+        'chiefOfficer.name',
+      ]);
+    const { techSkills, ...restFilters } = filters;
+    qb.where(restFilters);
+    if (techSkills.length > 0) {
+      qb.andWhere('e.techSkills && :techSkills', { techSkills });
+    }
+
+    return await paginate(qb, {
+      limit,
+      currentPage,
+      total: true,
+    });
   }
 }

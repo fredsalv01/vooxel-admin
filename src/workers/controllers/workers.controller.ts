@@ -18,6 +18,7 @@ import { WorkersService } from '../services/workers.service';
 import { CreateWorkerDto } from '../dto/create-worker.dto';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { PaginationDto } from '../../pagination/dto/pagination.dto';
+import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 
 @Controller('workers')
 @SerializeOptions({ strategy: 'exposeAll' })
@@ -34,7 +35,7 @@ export class WorkersController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(ClassSerializerInterceptor)
   findAll(
-    @Query() queryParams: PaginationDto
+    @Query() queryParams: filterWorkersPaginatedDto
   ) {
     return this.workersService.findAll(queryParams);
   }
