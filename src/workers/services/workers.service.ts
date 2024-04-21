@@ -4,10 +4,7 @@ import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { WorkerRepository } from '../repository/workerRepository';
 import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
-import { PaginationDto } from '../../pagination/dto/pagination.dto';
-import { filter } from 'rxjs';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
-import { SearchCriteria } from '../interfaces/searchCriteria';
 
 @Injectable()
 export class WorkersService {
