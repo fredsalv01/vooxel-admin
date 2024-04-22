@@ -36,16 +36,15 @@ export class WorkersService {
 
   async findAll({ limit, page, ...filters }: filterWorkersPaginatedDto) {
     const filterProperties = { ...filters } as unknown as any;
-    // Verificar si la propiedad techSkills existe en el objeto filters
-    if (filters.hasOwnProperty('techSkills')) {
-      // Si existe, convertir el string en un array
-      filterProperties.techSkills = filters.techSkills
+
+    if (filters.input.includes(',')) {
+      filterProperties.techSkills = filters.input
         .split(',')
         .map((data) => data.toUpperCase());
     } else {
-      // Si no existe, asignar un array vacío como valor por defecto
       filterProperties.techSkills = [];
     }
+    console.log(filterProperties);
     // return this.workerRepository.getWorkersWithHiringTime();
     return this.workerRepository.findWorkers({
       limit,
