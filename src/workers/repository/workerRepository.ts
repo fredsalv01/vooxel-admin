@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { paginate } from '../../pagination/interfaces/paginator.interface';
 
 export class WorkerRepository {
   constructor(
@@ -85,5 +86,77 @@ export class WorkerRepository {
       console.log('ERROR AL OBTENER COLABORADOR: ', error);
       throw new Error(error);
     }
+  }
+
+  async findWorkers({ limit, currentPage, filters }) {
+    console.log('VALIDATE Filters', filters);
+    const qb = this.getWorkersBaseQuery()
+      .leftJoin('e.emergencyContacts', 'emergencyContacts')
+      .leftJoin('e.chiefOfficer', 'chiefOfficer')
+      .select([
+        'e.id',
+        'e.documentType',
+        'e.documentNumber',
+        'e.name',
+        'e.apPat',
+        'e.apMat',
+        'e.contractType',
+        'e.charge',
+        'e.techSkills',
+        'emergencyContacts.id',
+        'emergencyContacts.phone',
+        'emergencyContacts.name',
+        'emergencyContacts.relation',
+        'chiefOfficer.id',
+        'chiefOfficer.name',
+      ]);
+
+    // Destructurar el objeto filters y obtener la entrada de usuario
+    const { input, techSkills } = filters;
+
+    // Inicializar el objeto de condiciones para el bucle de comparación
+    const conditions = [];
+
+    // Comprobar si la entrada de usuario está definida
+    if (input) {
+      // Iterar sobre los campos deseados y crear condiciones LIKE para cada uno
+      const fieldsToSearch = [
+        'documentType',
+        'documentNumber',
+        'name',
+        'apPat',
+        'apMat',
+        'contractType',
+        'charge',
+      ];
+
+      fieldsToSearch.forEach((field) => {
+        if (field === 'documentType') {
+          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
+        } else if (field === 'contractType') {
+          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
+        } else {
+          conditions.push(`e.${field} ILIKE :input`);
+        }
+      });
+    }
+
+    // Comprobar si se han generado condiciones para la entrada de usuario
+    if (conditions.length > 0) {
+      // Unir todas las condiciones con un OR y agregarlas al query builder
+      qb.andWhere(`(${conditions.join(' OR ')})`, { input: `%${input}%` });
+    }
+
+    if (techSkills.length > 0) {
+      qb.andWhere("ARRAY_TO_STRING(e.techSkills, ',') LIKE :techSkills", {
+        techSkills: `%${techSkills.join(',')}%`,
+      });
+    }
+
+    return await paginate(qb, {
+      limit,
+      currentPage,
+      total: true,
+    });
   }
 }

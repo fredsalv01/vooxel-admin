@@ -4,6 +4,7 @@ import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { WorkerRepository } from '../repository/workerRepository';
 import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
+import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 
 @Injectable()
 export class WorkersService {
@@ -33,8 +34,23 @@ export class WorkersService {
     return worker;
   }
 
-  async findAll() {
-    return this.workerRepository.getWorkersWithHiringTime();
+  async findAll({ limit, page, ...filters }: filterWorkersPaginatedDto) {
+    const filterProperties = { ...filters } as unknown as any;
+
+    if (filters.input.includes(',')) {
+      filterProperties.techSkills = filters.input
+        .split(',')
+        .map((data) => data.toUpperCase());
+    } else {
+      filterProperties.techSkills = [];
+    }
+    console.log(filterProperties);
+    // return this.workerRepository.getWorkersWithHiringTime();
+    return this.workerRepository.findWorkers({
+      limit,
+      currentPage: page,
+      filters: filterProperties,
+    });
   }
 
   findOne(id: number) {
