@@ -31,7 +31,7 @@ export class Worker {
 
   @Expose()
   @Column({ unique: true, default: null })
-  documentNumber: number; // numero de documento MAX: 9 MIN: 8
+  documentNumber: string; // numero de documento MAX: 9 MIN: 8
 
   @Expose()
   @Column({

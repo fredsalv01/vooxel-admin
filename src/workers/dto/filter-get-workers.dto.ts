@@ -1,38 +1,47 @@
-import { IsEnum, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import { ContractType, DocumentType } from '../utils/enum-types';
-import { PaginationDto } from "../../pagination/dto/pagination.dto";
+import { PaginationDto } from '../../pagination/dto/pagination.dto';
 
 export class filterWorkersPaginatedDto extends PaginationDto {
-  @IsEnum(DocumentType)
-  @IsOptional()
-  documentType?: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
-
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  documentNumber?: number; // numero de documento MAX: 9 MIN: 8
-
   @IsString()
   @IsOptional()
-  apPat?: string; // apellido paterno
+  input?: string;
+  // @IsString()
+  // @IsOptional()
+  // documentType?: string; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
-  @IsString()
-  @IsOptional()
-  apMat?: string; // apellido materno
+  // @IsNumber()
+  // @IsPositive()
+  // @IsOptional()
+  // documentNumber?: number; // numero de documento MAX: 9 MIN: 8
 
-  @IsString()
-  @IsOptional()
-  name?: string; // nombre
+  // @IsString()
+  // @IsOptional()
+  // apPat?: string; // apellido paterno
 
-  @IsString()
-  @IsOptional()
-  charge?: string; // cargo
+  // @IsString()
+  // @IsOptional()
+  // apMat?: string; // apellido materno
 
-  @IsEnum(ContractType)
-  @IsOptional()
-  contractType?: ContractType;
+  // @IsString()
+  // @IsOptional()
+  // name?: string; // nombre
 
-  @IsString()
-  @IsOptional()
-  techSkills?: string;
+  // @IsString()
+  // @IsOptional()
+  // charge?: string; // cargo
+
+  // @IsEnum(ContractType)
+  // @IsOptional()
+  // contractType?: ContractType;
+
+  // @IsString()
+  // @IsOptional()
+  // techSkills?: string;
 }

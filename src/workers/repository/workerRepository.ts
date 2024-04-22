@@ -110,19 +110,42 @@ export class WorkerRepository {
         'chiefOfficer.id',
         'chiefOfficer.name',
       ]);
-    const { techSkills, ...restFilters } = filters;
-    // Loop through each filter field and apply %LIKE% operator if the field is defined
-    Object.keys(restFilters).forEach((key) => {
-      if (restFilters[key]) {
-        const paramName = `:${key}`;
-        const condition = `e.${key} ILIKE ${paramName}`;
-        const paramValue = `%${restFilters[key]}%`;
-        console.log('condition', condition);
-        console.log('paramName', paramName);
-        console.log('paramValue', paramValue);
-        qb.andWhere(condition, { [key]: paramValue });
-      }
-    });
+
+    // Destructurar el objeto filters y obtener la entrada de usuario
+    const { input, techSkills } = filters;
+
+    // Inicializar el objeto de condiciones para el bucle de comparación
+    const conditions = [];
+
+    // Comprobar si la entrada de usuario está definida
+    if (input) {
+      // Iterar sobre los campos deseados y crear condiciones LIKE para cada uno
+      const fieldsToSearch = [
+        'documentType',
+        'documentNumber',
+        'name',
+        'apPat',
+        'apMat',
+        'contractType',
+        'charge',
+      ];
+
+      fieldsToSearch.forEach((field) => {
+        if (field === 'documentType') {
+          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
+        } else if (field === 'contractType') {
+          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
+        } else {
+          conditions.push(`e.${field} ILIKE :input`);
+        }
+      });
+    }
+
+    // Comprobar si se han generado condiciones para la entrada de usuario
+    if (conditions.length > 0) {
+      // Unir todas las condiciones con un OR y agregarlas al query builder
+      qb.andWhere(`(${conditions.join(' OR ')})`, { input: `%${input}%` });
+    }
 
     if (techSkills.length > 0) {
       qb.andWhere("ARRAY_TO_STRING(e.techSkills, ',') LIKE :techSkills", {
