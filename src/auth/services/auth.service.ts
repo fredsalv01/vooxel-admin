@@ -16,7 +16,7 @@ export class AuthService {
 
   getJwtToken(user: User): string {
     return this.jwtService.sign({
-      username: user.username,
+      email: user.email,
       sub: user.id,
     });
   }
@@ -41,5 +41,17 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  refresh(token: string) {
+    try {
+      const user = this.jwtService.decode(token);
+      return {
+        token: this.getJwtToken(user),
+      };
+    } catch (error) {
+      this.logger.error(error);
+      throw new UnauthorizedException('El token no es válido');
+    }
   }
 }

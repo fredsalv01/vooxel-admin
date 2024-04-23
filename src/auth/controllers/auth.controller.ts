@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthGuardLocal } from '../guards/auth-guard-local.guard';
 import { AuthService } from '../services/auth.service';
@@ -22,5 +22,10 @@ export class AuthController {
   @UseGuards(AuthGuardJwt)
   getProfile(@CurrentUser() user) {
     return user;
+  }
+
+  @Post('refresh')
+  refresh(@Body('token') token: string) {
+    return this.authService.refresh(token);
   }
 }
