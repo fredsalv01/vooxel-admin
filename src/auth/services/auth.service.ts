@@ -28,17 +28,24 @@ export class AuthService {
     });
 
     if (!user) {
-      this.logger.debug(`Usuario ${email} no encontrado`);
-      throw new UnauthorizedException(
-        new Error(`Usuario ${email} no encontrado`),
-      );
+      this.logger.error(`Usuario ${email} no encontrado`);
+      throw new UnauthorizedException({
+        error: `Usuario ${email} no encontrado`,
+      });
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-      this.logger.debug(`Credenciales invalidas para el usuario: ${email}`);
-      throw new UnauthorizedException(
-        new Error(`Credenciales invalidas para el usuario: ${email}`),
-      );
+      this.logger.error(`Contraseña incorrecta para el usuario: ${email}`);
+      throw new UnauthorizedException({
+        error: `Contraseña incorrecta para el usuario: ${email}`,
+      });
+    }
+
+    if (!user.isActive) {
+      this.logger.error(`El usuario no esta activo: ${email}`);
+      throw new UnauthorizedException({
+        error: `El usuario no esta activo`,
+      });
     }
 
     return user;

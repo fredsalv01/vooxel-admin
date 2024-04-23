@@ -1,7 +1,10 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/services/auth.service';
+import { AuthGuardJwt } from '../auth/guards/auth-guard-jwt.guard';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { CurrentUser } from "../decorators/current-user.decorator";
 
 @Controller('users')
 export class UsersController {
@@ -19,5 +22,14 @@ export class UsersController {
       user,
       token,
     };
+  }
+
+  @Post('reset-password')
+  @UseGuards(AuthGuardJwt)
+  resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+    @CurrentUser() user,
+  ) {
+    return this.usersService.resetPassword(resetPasswordDto, user);
   }
 }
