@@ -16,7 +16,6 @@ export class AuthService {
   ) {}
 
   getJwtToken(user: User): string {
-    console.log(user);
     return this.jwtService.sign({
       email: user.email,
       sub: user.id,

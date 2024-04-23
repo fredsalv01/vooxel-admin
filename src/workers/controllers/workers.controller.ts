@@ -37,7 +37,7 @@ export class WorkersController {
   }
 
   @Get()
-  @UseGuards(AuthGuardJwt)
+  // @UseGuards(AuthGuardJwt)
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(ClassSerializerInterceptor)
   findAll(@Query() queryParams: filterWorkersPaginatedDto) {

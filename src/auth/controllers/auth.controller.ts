@@ -1,5 +1,12 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuardLocal } from '../guards/auth-guard-local.guard';
 import { AuthService } from '../services/auth.service';
 import { AuthGuardJwt } from '../guards/auth-guard-jwt.guard';
@@ -7,11 +14,14 @@ import { CurrentUser } from '../../decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   @UseGuards(AuthGuardLocal)
   async login(@CurrentUser() user) {
+    this.logger.log('Using route: ', this.login.name);
+
     return {
       userId: user.id,
       token: this.authService.getJwtToken(user),
