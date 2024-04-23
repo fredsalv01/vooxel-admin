@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
   ) {}
 
   getJwtToken(user: User): string {
+    console.log(user);
     return this.jwtService.sign({
       email: user.email,
       sub: user.id,
@@ -45,9 +47,9 @@ export class AuthService {
 
   refresh(token: string) {
     try {
-      const user = this.jwtService.decode(token);
+      const user = this.jwtService.decode(token) as JwtPayload;
       return {
-        token: this.getJwtToken(user),
+        token: this.getJwtToken(new User({ id: user.sub, email: user.email })),
       };
     } catch (error) {
       this.logger.error(error);
