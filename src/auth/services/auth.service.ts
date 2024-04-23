@@ -59,7 +59,9 @@ export class AuthService {
       };
     } catch (error) {
       this.logger.error(error);
-      throw new UnauthorizedException('El token no es válido');
+      throw new UnauthorizedException({
+        error: 'El token no es válido',
+      });
     }
   }
 }

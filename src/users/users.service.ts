@@ -25,12 +25,14 @@ export class UsersService {
     const { password } = resetPasswordDto;
 
     if (!user) {
-      throw new NotFoundException("El token no es válido");
+      throw new NotFoundException({
+        error: 'El token no es válido',
+      });
     }
 
     user.password = await hashPassword(password);
     await this.userRepository.save(user);
 
-    return { message: "Contraseña actualizada correctamente" };
+    return { message: 'Contraseña actualizada correctamente' };
   }
 }
