@@ -25,7 +25,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       },
     });
 
-    if (!user) throw new UnauthorizedException('Invalid token');
+    if (!user)
+      throw new UnauthorizedException({
+        error: 'TOKEN INVALIDO',
+      });
 
     if (!user.isActive)
       throw new UnauthorizedException('El usuario esta inactivo');
