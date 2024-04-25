@@ -1,11 +1,10 @@
 import {
   BadRequestException,
   ExecutionContext,
+  ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
-import { Observable } from 'rxjs';
-import { User } from '../entities/user.entity';
 import { JsonWebTokenError } from '@nestjs/jwt';
 
 export class AuthGuardJwt extends AuthGuard('jwt') {
@@ -21,8 +20,7 @@ export class AuthGuardJwt extends AuthGuard('jwt') {
     status?: any,
   ): TUser {
     if (info instanceof JsonWebTokenError) {
-      console.log(info);
-      throw new UnauthorizedException('Invalid Token!');
+      throw new ForbiddenException('Invalid Token');
     }
 
     return super.handleRequest(err, user, info, context, status);
