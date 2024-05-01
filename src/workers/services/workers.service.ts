@@ -16,7 +16,10 @@ export class WorkersService {
   async create(createWorkerDto: CreateWorkerDto) {
     const worker = await this.workerRepository.addWorker(createWorkerDto);
     let emergencyContactArray: any[] = [];
-    if (createWorkerDto.emergencyContacts.length > 0) {
+    if (
+      createWorkerDto?.emergencyContacts &&
+      createWorkerDto?.emergencyContacts.length > 0
+    ) {
       for (
         let index = 0;
         index < createWorkerDto.emergencyContacts.length;

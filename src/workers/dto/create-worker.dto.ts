@@ -9,17 +9,16 @@ import {
 } from 'class-validator';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
-import { WorkerDoesNotExists } from '../validation/worker-does-not-exists.constraint';
 
 export class CreateWorkerDto {
   @IsNotEmpty()
   @IsEnum(DocumentType)
   documentType: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
-  @IsNumber()
+  @IsString()
   // @WorkerDoesNotExists()
   @IsNotEmpty()
-  documentNumber: number; // numero de documento MAX: 9 MIN: 8
+  documentNumber: string; // numero de documento MAX: 9 MIN: 8
 
   @IsNotEmpty()
   @IsString()
