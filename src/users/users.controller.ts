@@ -6,6 +6,9 @@ import {
   UseGuards,
   Get,
   Query,
+  Param,
+  Put,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UsersService } from './users.service';
@@ -13,6 +16,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { AuthGuardJwt } from '../auth/guards/auth-guard-jwt.guard';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { CurrentUser } from '../decorators/current-user.decorator';
+import { UpdateUserDto } from './dto/updateUserDto.dto';
 
 @Controller('users')
 export class UsersController {
@@ -47,5 +51,21 @@ export class UsersController {
   async getUsers(@Query('isActive') isActive: boolean) {
     const users = await this.usersService.getUsers(isActive);
     return users;
+  }
+
+  @Get(':id')
+  @HttpCode(200)
+  async findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
+
+  @Put(':id')
+  @HttpCode(200)
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ){
+    return await this.usersService.updateOne(+id, updateUserDto);
+
   }
 }

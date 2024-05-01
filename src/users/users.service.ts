@@ -1,16 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../auth/entities/user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { hashPassword } from './utils/functions';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateUserDto } from './dto/updateUserDto.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly dataSource: DataSource,
   ) {}
   async register(createUserDto: CreateUserDto) {
     return await this.userRepository.save(
@@ -44,5 +50,51 @@ export class UsersService {
       .where('e.isActive = :isActive', { isActive })
       .getMany();
     return users;
+  }
+
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+      select: ['id', 'email', 'firstName', 'lastName', 'username', 'isActive'],
+    });
+    if (!user) {
+      throw new NotFoundException({
+        error: 'No se encontro el usuario',
+      });
+    }
+    return user;
+  }
+
+  async updateOne(id: number, updateUserDto: UpdateUserDto) {
+    // const user = new User({
+    //   ...updateUserDto,
+    //   password: await hashPassword(updateUserDto.password),
+    // });
+    const user = await this.userRepository.preload({
+      id: id,
+      ...updateUserDto,
+    });
+    if (!user) {
+      throw new NotFoundException({
+        error: 'User not found',
+      });
+    }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.save(user);
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
+      throw new BadRequestException({
+        error: error?.detail,
+      });
+    }
   }
 }

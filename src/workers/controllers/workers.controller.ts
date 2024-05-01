@@ -58,7 +58,7 @@ export class WorkersController {
   @UseGuards(AuthGuardJwt)
   update(@Param('id') id: string, @Body() updateWorkerDto: UpdateWorkerDto) {
     this.logger.log(this.update.name);
-    this.logger.debug('urlParams', id);
+  this.logger.debug('urlParams', id);
     this.logger.debug('body', updateWorkerDto);
     return this.workersService.update(+id, updateWorkerDto);
   }
