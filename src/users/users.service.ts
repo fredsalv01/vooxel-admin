@@ -35,4 +35,14 @@ export class UsersService {
 
     return { message: 'Contraseña actualizada correctamente' };
   }
+
+  async getUsers(isActive: boolean) {
+    const users = this.userRepository
+      .createQueryBuilder('e')
+      .orderBy('e.id', 'DESC')
+      .select(['e.id', 'e.username', 'e.email', 'e.lastName', 'e.isActive'])
+      .where('e.isActive = :isActive', { isActive })
+      .getMany();
+    return users;
+  }
 }
