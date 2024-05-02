@@ -21,7 +21,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Vooxel Group API')
-    .setDescription('Esta es un API funcional del Grupo Vooxel')
+    .setDescription(
+      'Esta es un API funcional Grupo Vooxel para la gestion de su personal de RR.HH, Facturacion, Servicios y Clientes',
+    )
     .setVersion('1.0')
     .addTag('Vooxel Group')
     .addBearerAuth()
