@@ -19,12 +19,17 @@ export class UsersService {
     private readonly dataSource: DataSource,
   ) {}
   async register(createUserDto: CreateUserDto) {
-    return await this.userRepository.save(
-      new User({
-        ...createUserDto,
-        password: await hashPassword(createUserDto.password),
-      }),
-    );
+    const { retypedPassword, ...restData } = createUserDto;
+
+    const newUser = new User({
+      ...restData,
+      password: await hashPassword(createUserDto.password),
+    });
+    const UserDoc = await this.userRepository.save<User>(newUser);
+
+    const { password, ...restUser } = UserDoc;
+
+    return restUser;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto, user: User) {

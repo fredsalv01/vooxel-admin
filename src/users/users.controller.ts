@@ -18,6 +18,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { User } from '../auth/entities/user.entity';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -31,13 +32,9 @@ export class UsersController {
   @Post()
   @UseGuards(AuthGuardJwt)
   @HttpCode(201)
-  async AddUser(@Body() createUserDto: CreateUserDto): Promise<any> {
+  async AddUser(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
     const user = await this.usersService.register(createUserDto);
-    const token = this.authService.getJwtToken(user);
-    return {
-      user,
-      token,
-    };
+    return user;
   }
 
   @Post('reset-password')
