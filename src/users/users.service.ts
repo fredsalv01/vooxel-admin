@@ -100,7 +100,7 @@ export class UsersService {
     });
     if (!user) {
       throw new BadRequestException({
-        error: 'User not found, maybe is inactive',
+        error: 'Usuario no encontrado, puede estar desactivado',
       });
     }
     this.userRepository.update(id, { isActive: false });

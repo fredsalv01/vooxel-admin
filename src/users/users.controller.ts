@@ -62,17 +62,13 @@ export class UsersController {
 
   @Put(':id')
   @HttpCode(200)
-  async update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto
-  ){
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.updateOne(+id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(200)
-  async delete(@Param('id') id: string){
+  async activeOrInactiveUser(@Param('id') id: string) {
     return await this.usersService.remove(+id);
   }
-
 }
