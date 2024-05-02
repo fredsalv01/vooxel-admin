@@ -11,6 +11,12 @@ export class CertificationsService {
   ) {}
 
   async create(data: CreateCertificationDto) {
+    this.logger.debug(`${this.create.name} - data`, data);
     return this.certificationRepository.addCertification(data);
+  }
+
+  async findAll(workerId: number) {
+    this.logger.debug(`${this.findAll.name} - params`, workerId);
+    return this.certificationRepository.findAllCertifications(workerId);
   }
 }

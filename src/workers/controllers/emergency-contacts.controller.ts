@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  Logger,
   Param,
   Patch,
   Post,
@@ -21,6 +22,8 @@ import { AuthGuardJwt } from '../../auth/guards/auth-guard-jwt.guard';
 @ApiBearerAuth()
 @Controller('emergency_contacts')
 export class EmergencyContactsController {
+  private readonly logger = new Logger(EmergencyContactsController.name);
+
   constructor(
     private readonly emergencyContactService: EmergencyContactService,
   ) {}
@@ -29,6 +32,10 @@ export class EmergencyContactsController {
   @UseGuards(AuthGuardJwt)
   @HttpCode(201)
   create(@Body() emergencyContactDto: EmergencyContactDto) {
+    this.logger.log(
+      `${this.create.name} - RequestBody`,
+      JSON.stringify(emergencyContactDto, null, 2),
+    );
     return this.emergencyContactService.create(
       emergencyContactDto as unknown as EmergencyContact,
     );
@@ -38,6 +45,7 @@ export class EmergencyContactsController {
   @UseGuards(AuthGuardJwt)
   @HttpCode(200)
   getAll(@Param('workerId') workerId: string) {
+    this.logger.log(`${this.getAll.name} - QueryParams`, workerId);
     return this.emergencyContactService.getAllFromWorkerId(+workerId);
   }
 
@@ -48,6 +56,11 @@ export class EmergencyContactsController {
     @Param('id') id: string,
     @Body() emergencyContactDto: UpdateEmergencyContactDto,
   ) {
+    this.logger.log(`${this.update.name} - QueryParams`, id);
+    this.logger.log(
+      `${this.update.name} - RequestBody`,
+      JSON.stringify(emergencyContactDto, null, 2),
+    );
     return this.emergencyContactService.update(
       +id,
       emergencyContactDto as unknown as EmergencyContact,
@@ -58,6 +71,7 @@ export class EmergencyContactsController {
   @UseGuards(AuthGuardJwt)
   @HttpCode(204)
   delete(@Param('id') id: string) {
+    this.logger.log(`${this.delete.name} - QueryParams`, id);
     return this.emergencyContactService.delete(+id);
   }
 }

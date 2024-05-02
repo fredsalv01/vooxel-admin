@@ -3,11 +3,12 @@ import { Worker } from '../entities/worker.entity';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { paginate } from '../../pagination/interfaces/paginator.interface';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { Certification } from '../entities/certification.entity';
 
 export class WorkerRepository {
+  private readonly logger = new Logger(WorkerRepository.name);
   constructor(
     @InjectRepository(Worker)
     private readonly db: Repository<Worker>,
@@ -63,9 +64,14 @@ export class WorkerRepository {
 
   async addWorker(data: any) {
     try {
-      return await this.db.save(new Worker(data));
+      const result = await this.db.save(new Worker(data));
+      this.logger.debug(
+        `${this.addWorker.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
     } catch (error) {
-      console.log('ERROR GUARDANDO COLABORADOR:', error);
+      this.logger.error('ERROR GUARDANDO COLABORADOR:', error);
       throw new Error(error);
     }
   }
@@ -89,7 +95,7 @@ export class WorkerRepository {
 
       return data;
     } catch (error) {
-      console.log('ERROR AL OBTENER COLABORADOR: ', error);
+      this.logger.error('ERROR AL OBTENER COLABORADOR: ', error);
       throw new Error(error);
     }
   }
@@ -167,7 +173,6 @@ export class WorkerRepository {
   }
 
   async updateWorker(id: number, updateWorkerData: any) {
-    console.log('updateWorkerData', updateWorkerData);
     const worker: Worker = await this.db.preload({
       id: id,
       ...updateWorkerData,
@@ -214,7 +219,7 @@ export class WorkerRepository {
       return worker;
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      console.log(error);
+      this.logger.error(error);
       throw new BadRequestException(error?.detail);
     } finally {
       await queryRunner.release();

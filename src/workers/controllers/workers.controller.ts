@@ -34,7 +34,7 @@ export class WorkersController {
   @UseGuards(AuthGuardJwt)
   create(@Body() createWorkerDto: CreateWorkerDto) {
     this.logger.log(this.create.name);
-    this.logger.debug('body', JSON.stringify(createWorkerDto, null, 2));
+    this.logger.debug('RequestBody', JSON.stringify(createWorkerDto, null, 2));
     return this.workersService.create(createWorkerDto);
   }
 

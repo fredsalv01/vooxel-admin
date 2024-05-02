@@ -16,6 +16,10 @@ export class WorkersService {
   ) {}
 
   async create(createWorkerDto: CreateWorkerDto) {
+    this.logger.debug(
+      `create worker method - DataToDB ${this.create.name}:`,
+      JSON.stringify(createWorkerDto, null, 2),
+    );
     const worker = await this.workerRepository.addWorker(createWorkerDto);
     let emergencyContactArray: any[] = [];
     if (
@@ -36,9 +40,10 @@ export class WorkersService {
       }
       worker.emergencyContacts = emergencyContactArray;
     }
+    
     this.logger.debug(
-      `create worker method - response ${this.create.name}:`,
-      worker,
+      `DB Response ${this.create.name}:`,
+      JSON.stringify(createWorkerDto, null, 2),
     );
     return worker;
   }
