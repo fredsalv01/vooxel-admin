@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWorkerDto {
   @IsNotEmpty()
@@ -41,6 +42,10 @@ export class CreateWorkerDto {
   @IsString()
   charge: string; // cargo
 
+  @ApiProperty({
+    description: 'birthDate',
+    example: '1998-07-13',
+  })
   @IsDateString({ strict: true } as any)
   @IsNotEmpty()
   birthdate: string; // fecha de nacimiento
@@ -49,6 +54,10 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
 
+  @ApiProperty({
+    description: 'hiringDate',
+    example: '2024-05-05',
+  })
   @IsDateString({ strict: true } as any)
   @IsNotEmpty()
   hiringDate: string; // fecha de inicio de contrato

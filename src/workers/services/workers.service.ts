@@ -5,6 +5,7 @@ import { WorkerRepository } from '../repository/workerRepository';
 import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
+import { Certification } from '../entities/certification.entity';
 
 @Injectable()
 export class WorkersService {
@@ -61,6 +62,33 @@ export class WorkersService {
   }
 
   update(id: number, updateWorkerDto: UpdateWorkerDto) {
+    const formatData = {
+      ...updateWorkerDto,
+    };
+    if (
+      updateWorkerDto.certifications &&
+      updateWorkerDto.certifications.length > 0
+    ) {
+      const certifications: Certification[] =
+        updateWorkerDto.certifications.map<Certification>(
+          (item) => new Certification({ ...item }),
+        );
+      formatData.certifications = certifications;
+    }
+
+    if (
+      updateWorkerDto.emergencyContacts &&
+      updateWorkerDto.emergencyContacts.length > 0
+    ) {
+      const emergencyContacts: EmergencyContact[] =
+        updateWorkerDto.emergencyContacts.map<EmergencyContact>(
+          (item) => new EmergencyContact({ ...item }),
+        );
+      formatData.emergencyContacts = emergencyContacts;
+    }
+
+    console.log('formatData', formatData)
+
     return this.workerRepository.updateWorker(id, updateWorkerDto);
   }
 

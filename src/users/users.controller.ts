@@ -8,7 +8,6 @@ import {
   Query,
   Param,
   Put,
-  NotFoundException,
   Delete,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
@@ -51,6 +50,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuardJwt)
   @HttpCode(200)
   async getUsers(@Query('isActive') isActive: boolean) {
     const users = await this.usersService.getUsers(isActive);
@@ -58,18 +58,21 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuardJwt)
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
   @Put(':id')
+  @UseGuards(AuthGuardJwt)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.updateOne(+id, updateUserDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuardJwt)
   @HttpCode(200)
   async activeOrInactiveUser(@Param('id') id: string) {
     return await this.usersService.remove(+id);

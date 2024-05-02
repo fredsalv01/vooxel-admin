@@ -11,9 +11,11 @@ import { AuthGuardLocal } from '../guards/auth-guard-local.guard';
 import { AuthService } from '../services/auth.service';
 import { AuthGuardJwt } from '../guards/auth-guard-jwt.guard';
 import { CurrentUser } from '../../decorators/current-user.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { LoginUserDto } from '../dto/login-user.dto';
 
 @ApiTags('auth')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -21,7 +23,7 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(AuthGuardLocal)
-  async login(@CurrentUser() user) {
+  async login(@Body() loginUserDto: LoginUserDto, @CurrentUser() user) {
     this.logger.log('Using route: ', this.login.name);
 
     return {

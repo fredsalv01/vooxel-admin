@@ -158,12 +158,10 @@ export class Worker {
   })
   chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
 
-  @OneToMany(
-    () => Certification, 
-    (certification) => certification.worker, {
-      cascade: true,
-      eager: true,
-    })
+  @OneToMany(() => Certification, (certification) => certification.worker, {
+    cascade: true,
+    eager: true,
+  })
   @Expose()
   certifications: Certification[]; // listado de certificaciones string[]
 
@@ -187,6 +185,17 @@ export class Worker {
     default: null,
   })
   psychologicalTestUrl: string;
+
+  @Expose()
+  vacationDays?: number; // virtual property se genera en el backend
+
+  @Expose()
+  usedVacationDays?: number; // virtual property
+
+  @Expose()
+  truncatedVacations?: number;
+
+
 
   getHiringTime(): number {
     const currentTime = new Date();

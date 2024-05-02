@@ -2,6 +2,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateWorkerDto } from './create-worker.dto';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
+import { CreateCertificationDto } from './create-certification.dto';
 import {
   IsArray,
   IsDateString,
@@ -10,7 +11,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Certification } from '../entities/certification.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   constructor() {
@@ -42,14 +43,18 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
 
   @IsArray({
     each: false,
-    context: Certification,
+    context: CreateCertificationDto,
   })
   @IsOptional()
-  certifications:Certification[];
+  certifications: CreateCertificationDto[];
 
+  @ApiProperty({
+    description: 'leaveDate',
+    example: null,
+  })
   @IsDateString({ strict: true } as any)
   @IsOptional()
-  leaveDate?: string;
+  leaveDate?: string = null;
 
   @IsString()
   @IsOptional()
