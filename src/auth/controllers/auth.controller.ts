@@ -11,7 +11,9 @@ import { AuthGuardLocal } from '../guards/auth-guard-local.guard';
 import { AuthService } from '../services/auth.service';
 import { AuthGuardJwt } from '../guards/auth-guard-jwt.guard';
 import { CurrentUser } from '../../decorators/current-user.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);

@@ -18,7 +18,10 @@ import { AuthGuardJwt } from '../auth/guards/auth-guard-jwt.guard';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(
