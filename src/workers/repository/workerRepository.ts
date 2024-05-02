@@ -5,7 +5,7 @@ import { paginate } from '../../pagination/interfaces/paginator.interface';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
-import { Certification } from "../entities/certification.entity";
+import { Certification } from '../entities/certification.entity';
 
 export class WorkerRepository {
   constructor(
@@ -76,6 +76,7 @@ export class WorkerRepository {
         .createQueryBuilder('worker')
         .leftJoinAndSelect('worker.emergencyContacts', 'emergencyContacts')
         .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
+        .leftJoinAndSelect('worker.certifications', 'certifications')
         // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
         .where('worker.id = :id', { id: id })
         .getOne();
@@ -183,17 +184,29 @@ export class WorkerRepository {
     try {
       await queryRunner.manager.save(worker);
       // Insert EmergencyContacts
-      if (updateWorkerData.emergencyContacts && updateWorkerData.emergencyContacts.length > 0) {
+      if (
+        updateWorkerData.emergencyContacts &&
+        updateWorkerData.emergencyContacts.length > 0
+      ) {
         for (const emergencyContactData of updateWorkerData.emergencyContacts) {
-          const emergencyContact = queryRunner.manager.create(EmergencyContact, emergencyContactData);
+          const emergencyContact = queryRunner.manager.create(
+            EmergencyContact,
+            emergencyContactData,
+          );
           await queryRunner.manager.save(emergencyContact);
         }
       }
 
       // Insert Certifications
-      if (updateWorkerData.certifications && updateWorkerData.certifications.length > 0) {
+      if (
+        updateWorkerData.certifications &&
+        updateWorkerData.certifications.length > 0
+      ) {
         for (const certificationData of updateWorkerData.certifications) {
-          const certification = queryRunner.manager.create(Certification, certificationData);
+          const certification = queryRunner.manager.create(
+            Certification,
+            certificationData,
+          );
           await queryRunner.manager.save(certification);
         }
       }
