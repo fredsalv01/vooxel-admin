@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { CreateWorkerDto } from '../dto/create-worker.dto';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { WorkerRepository } from '../repository/workerRepository';
@@ -6,9 +6,11 @@ import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 import { Certification } from '../entities/certification.entity';
+import { filter } from 'rxjs';
 
 @Injectable()
 export class WorkersService {
+  private readonly logger = new Logger(WorkersService.name);
   constructor(
     private readonly workerRepository: WorkerRepository,
     private readonly emergencyContactService: EmergencyContactService,
@@ -35,13 +37,16 @@ export class WorkersService {
       }
       worker.emergencyContacts = emergencyContactArray;
     }
+    this.logger.debug(
+      `create worker method - response ${this.create.name}:`,
+      worker,
+    );
     return worker;
   }
 
   async findAll({ limit, page, ...filters }: filterWorkersPaginatedDto) {
     const filterProperties = { ...filters } as unknown as any;
-
-    if (filters.input.includes(',')) {
+    if (filters?.input && filters.input.includes(',')) {
       filterProperties.techSkills = filters.input
         .split(',')
         .map((data) => data.toUpperCase());
@@ -65,30 +70,36 @@ export class WorkersService {
     const formatData = {
       ...updateWorkerDto,
     };
+    console.log('formatData', formatData);
+    // validar que tenga certificaciones y contactos de emergencia
     if (
-      updateWorkerDto.certifications &&
-      updateWorkerDto.certifications.length > 0
+      !updateWorkerDto.certifications &&
+      !(updateWorkerDto.certifications.length > 0)
     ) {
-      const certifications: Certification[] =
-        updateWorkerDto.certifications.map<Certification>(
-          (item) => new Certification({ ...item }),
-        );
-      formatData.certifications = certifications;
+      throw new BadRequestException({
+        error: 'No ha agregado ninguna certificacion',
+      });
     }
 
     if (
-      updateWorkerDto.emergencyContacts &&
-      updateWorkerDto.emergencyContacts.length > 0
+      !updateWorkerDto.emergencyContacts &&
+      !(updateWorkerDto.emergencyContacts.length > 0)
     ) {
-      const emergencyContacts: EmergencyContact[] =
-        updateWorkerDto.emergencyContacts.map<EmergencyContact>(
-          (item) => new EmergencyContact({ ...item }),
-        );
-      formatData.emergencyContacts = emergencyContacts;
+      throw new BadRequestException({
+        error: 'No ha agregado ningun contacto de emergencia',
+      });
     }
-
-    console.log('formatData', formatData)
-
+    // mapeando certificaciones y contactos de emergencia para ese worker
+    const certifications = updateWorkerDto.certifications.map(
+      (item) => new Certification({ ...item }),
+    );
+    const emergencyContacts = updateWorkerDto.emergencyContacts.map(
+      (item) => new EmergencyContact({ ...item }),
+    );
+    console.log('certifications', certifications);
+    console.log('emergencyContacts', emergencyContacts);
+    formatData.certifications = certifications;
+    formatData.emergencyContacts = emergencyContacts;
     return this.workerRepository.updateWorker(id, updateWorkerDto);
   }
 

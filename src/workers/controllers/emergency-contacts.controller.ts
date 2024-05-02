@@ -14,10 +14,11 @@ import { EmergencyContactService } from '../services/emergency-contact.service';
 import { EmergencyContactDto } from '../dto/create-emergencyContact.dto';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { UpdateEmergencyContactDto } from '../dto/update-emergencyContact.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuardJwt } from '../../auth/guards/auth-guard-jwt.guard';
 
 @ApiTags('emergency_contacts')
+@ApiBearerAuth()
 @Controller('emergency_contacts')
 export class EmergencyContactsController {
   constructor(

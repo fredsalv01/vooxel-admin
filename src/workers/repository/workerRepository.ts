@@ -4,6 +4,8 @@ import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { paginate } from '../../pagination/interfaces/paginator.interface';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { EmergencyContact } from '../entities/emergency-contact.entity';
+import { Certification } from "../entities/certification.entity";
 
 export class WorkerRepository {
   constructor(
@@ -163,32 +165,46 @@ export class WorkerRepository {
     });
   }
 
-  async updateWorker(id: number, updateWorkerData: UpdateWorkerDto) {
-    // const worker = await this.db.preload({
-    //   id: id,
-    //   ...updateWorkerData,
-    // });
-
-    // if (!worker) {
-    //   throw new NotFoundException({
-    //     error: 'Colaborador no encontrado',
-    //   });
-    // }
+  async updateWorker(id: number, updateWorkerData: any) {
     console.log('updateWorkerData', updateWorkerData);
-    // const queryRunner = this.dataSource.createQueryRunner();
-    // await queryRunner.connect();
-    // await queryRunner.startTransaction();
-    // try {
-    //   await queryRunner.manager.save(worker);
-    //   await queryRunner.commitTransaction();
-    //   await queryRunner.release();
-    //   return worker;
-    // } catch (error) {
-    //   await queryRunner.rollbackTransaction();
-    //   await queryRunner.release();
-    //   throw new BadRequestException({
-    //     error: error?.detail,
-    //   });
-    // }
+    const worker: Worker = await this.db.preload({
+      id: id,
+      ...updateWorkerData,
+    });
+
+    if (!worker) {
+      throw new NotFoundException({
+        error: 'Colaborador no encontrado',
+      });
+    }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.save(worker);
+      // Insert EmergencyContacts
+      if (updateWorkerData.emergencyContacts && updateWorkerData.emergencyContacts.length > 0) {
+        for (const emergencyContactData of updateWorkerData.emergencyContacts) {
+          const emergencyContact = queryRunner.manager.create(EmergencyContact, emergencyContactData);
+          await queryRunner.manager.save(emergencyContact);
+        }
+      }
+
+      // Insert Certifications
+      if (updateWorkerData.certifications && updateWorkerData.certifications.length > 0) {
+        for (const certificationData of updateWorkerData.certifications) {
+          const certification = queryRunner.manager.create(Certification, certificationData);
+          await queryRunner.manager.save(certification);
+        }
+      }
+      await queryRunner.commitTransaction();
+      return worker;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.log(error);
+      throw new BadRequestException(error?.detail);
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

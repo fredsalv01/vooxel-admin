@@ -13,7 +13,7 @@ export class EmergencyContactRepository {
       return await this.db.save(data);
     } catch (error) {
       console.log('ERROR GUARDANDO CONTACTO DE EMERGENCIA:', error);
-      throw new Error(error);
+      throw new Error(`ERROR GUARDANDO CONTACTO DE EMERGENCIA: ${error}`);
     }
   }
 
