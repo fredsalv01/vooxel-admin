@@ -1,6 +1,12 @@
 import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Worker } from './worker.entity';
 
 @Entity()
@@ -22,5 +28,9 @@ export class Certification {
   urlFile: string;
 
   @ManyToOne(() => Worker, (worker) => worker.certifications)
+  @JoinColumn({ name: 'workerId' })
   worker: Worker;
+
+  @Column({ type: 'int', nullable: true })
+  workerId: number;
 }

@@ -1,12 +1,15 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { paginate } from '../../pagination/interfaces/paginator.interface';
+import { UpdateWorkerDto } from '../dto/update-worker.dto';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 export class WorkerRepository {
   constructor(
     @InjectRepository(Worker)
     private readonly db: Repository<Worker>,
+    private readonly dataSource: DataSource,
   ) {}
 
   private getWorkersBaseQuery(): SelectQueryBuilder<Worker> {
@@ -158,5 +161,34 @@ export class WorkerRepository {
       currentPage,
       total: true,
     });
+  }
+
+  async updateWorker(id: number, updateWorkerData: UpdateWorkerDto) {
+    // const worker = await this.db.preload({
+    //   id: id,
+    //   ...updateWorkerData,
+    // });
+
+    // if (!worker) {
+    //   throw new NotFoundException({
+    //     error: 'Colaborador no encontrado',
+    //   });
+    // }
+    console.log('updateWorkerData', updateWorkerData);
+    // const queryRunner = this.dataSource.createQueryRunner();
+    // await queryRunner.connect();
+    // await queryRunner.startTransaction();
+    // try {
+    //   await queryRunner.manager.save(worker);
+    //   await queryRunner.commitTransaction();
+    //   await queryRunner.release();
+    //   return worker;
+    // } catch (error) {
+    //   await queryRunner.rollbackTransaction();
+    //   await queryRunner.release();
+    //   throw new BadRequestException({
+    //     error: error?.detail,
+    //   });
+    // }
   }
 }

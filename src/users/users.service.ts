@@ -74,7 +74,7 @@ export class UsersService {
     });
     if (!user) {
       throw new NotFoundException({
-        error: 'User not found',
+        error: 'Usuario no encontrado',
       });
     }
     const queryRunner = this.dataSource.createQueryRunner();

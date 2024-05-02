@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
@@ -84,6 +85,7 @@ export class CreateWorkerDto {
     each: false,
     context: EmergencyContactDto,
   })
+  @IsOptional()
   emergencyContacts?: EmergencyContactDto[];
 
   // @IsEmpty()

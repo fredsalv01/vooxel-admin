@@ -158,10 +158,13 @@ export class Worker {
   })
   chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
 
+  @OneToMany(
+    () => Certification, 
+    (certification) => certification.worker, {
+      cascade: true,
+      eager: true,
+    })
   @Expose()
-  @OneToMany(() => Certification, (Certification) => Certification.worker, {
-    cascade: true,
-  })
   certifications: Certification[]; // listado de certificaciones string[]
 
   @Expose()
