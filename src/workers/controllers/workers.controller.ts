@@ -18,7 +18,6 @@ import {
 import { WorkersService } from '../services/workers.service';
 import { CreateWorkerDto } from '../dto/create-worker.dto';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
-import { PaginationDto } from '../../pagination/dto/pagination.dto';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 import { AuthGuardJwt } from '../../auth/guards/auth-guard-jwt.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

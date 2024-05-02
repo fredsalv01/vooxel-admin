@@ -6,7 +6,6 @@ import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 import { Certification } from '../entities/certification.entity';
-import { filter } from 'rxjs';
 
 @Injectable()
 export class WorkersService {
@@ -53,7 +52,6 @@ export class WorkersService {
     } else {
       filterProperties.techSkills = [];
     }
-    console.log(filterProperties);
     // return this.workerRepository.getWorkersWithHiringTime();
     return this.workerRepository.findWorkers({
       limit,
