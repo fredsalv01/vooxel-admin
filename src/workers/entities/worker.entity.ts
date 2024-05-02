@@ -195,7 +195,12 @@ export class Worker {
   @Expose()
   truncatedVacations?: number;
 
-
+  @Column({
+    type: 'bool',
+    default: true,
+  })
+  @Expose()
+  isActive: boolean;
 
   getHiringTime(): number {
     const currentTime = new Date();
