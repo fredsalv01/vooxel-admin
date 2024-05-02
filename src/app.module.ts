@@ -8,6 +8,7 @@ import ormConfigProd from './config/orm.config.prod';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WorkersModule } from './workers/workers.module';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { WorkersModule } from './workers/workers.module';
     AuthModule,
     UsersModule,
     WorkersModule,
+    ClientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

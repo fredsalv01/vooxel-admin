@@ -25,6 +25,7 @@ export class WorkerRepository {
       .createQueryBuilder('worker')
       .leftJoin('worker.emergencyContacts', 'emergencyContacts')
       .leftJoin('worker.chiefOfficer', 'chiefOfficer')
+      .leftJoin('worker.client', 'client')
       .select([
         'worker.id',
         'worker.documentType',
@@ -40,13 +41,17 @@ export class WorkerRepository {
         'chiefOfficer.name', // Concatenar nombre y apellido paterno del jefe si tiene
         'chiefOfficerName',
       )
+      .addSelect('client.businessName', 'clientName')
       .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
       .addSelect('COUNT(emergencyContacts.id)', 'emergencyContactsCount')
       .groupBy('worker.id')
       .addGroupBy('chiefOfficer.name')
       .addGroupBy('chiefOfficer.apPat')
       .getRawMany();
-
+    this.logger.debug(
+      `${this.getWorkersWithHiringTime} - dbResponse`,
+      JSON.stringify(data, null, 2),
+    );
     const modifiedWorkers = data.map((worker) => {
       const modifiedWorker = {};
       for (const key in worker) {
@@ -83,6 +88,7 @@ export class WorkerRepository {
         .leftJoinAndSelect('worker.emergencyContacts', 'emergencyContacts')
         .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
         .leftJoinAndSelect('worker.certifications', 'certifications')
+        .leftJoinAndSelect('worker.client', 'client')
         // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
         .where('worker.id = :id', { id: id })
         .getOne();
@@ -105,6 +111,7 @@ export class WorkerRepository {
     const qb = this.getWorkersBaseQuery()
       .leftJoin('e.emergencyContacts', 'emergencyContacts')
       .leftJoin('e.chiefOfficer', 'chiefOfficer')
+      .leftJoin('e.client', 'client')
       .select([
         'e.id',
         'e.documentType',
@@ -121,6 +128,8 @@ export class WorkerRepository {
         'emergencyContacts.relation',
         'chiefOfficer.id',
         'chiefOfficer.name',
+        'client.id',
+        'client.businessName',
       ]);
 
     // Destructurar el objeto filters y obtener la entrada de usuario

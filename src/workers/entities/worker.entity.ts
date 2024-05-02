@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import {
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
+import { Client } from '../../clients/entities/client.entity';
 
 @Entity()
 export class Worker {
@@ -201,6 +203,13 @@ export class Worker {
   })
   @Expose()
   isActive: boolean;
+
+  @ManyToOne(() => Client, (client) => client.workers)
+  @JoinColumn({ name: 'clientId' })
+  client: Client;
+
+  @Column({ type: 'int', nullable: true })
+  clientId: number;
 
   getHiringTime(): number {
     const currentTime = new Date();

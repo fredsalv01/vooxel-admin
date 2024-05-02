@@ -67,4 +67,8 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   @IsString()
   @IsOptional()
   psychologicalTestUrl?: string;
+
+  @IsNumber()
+  @IsOptional()
+  clientId?: number;
 }
