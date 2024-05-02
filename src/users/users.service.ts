@@ -68,10 +68,6 @@ export class UsersService {
   }
 
   async updateOne(id: number, updateUserDto: UpdateUserDto) {
-    // const user = new User({
-    //   ...updateUserDto,
-    //   password: await hashPassword(updateUserDto.password),
-    // });
     const user = await this.userRepository.preload({
       id: id,
       ...updateUserDto,
@@ -96,5 +92,19 @@ export class UsersService {
         error: error?.detail,
       });
     }
+  }
+
+  async remove(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id, isActive: true },
+    });
+    if (!user) {
+      throw new BadRequestException({
+        error: 'User not found, maybe is inactive',
+      });
+    }
+    this.userRepository.update(id, { isActive: false });
+    await this.userRepository.save(user);
+    return { message: `User ${user.email} ha sido desactivado` };
   }
 }

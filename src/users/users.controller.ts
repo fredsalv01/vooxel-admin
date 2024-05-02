@@ -9,6 +9,7 @@ import {
   Param,
   Put,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UsersService } from './users.service';
@@ -66,6 +67,12 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto
   ){
     return await this.usersService.updateOne(+id, updateUserDto);
-
   }
+
+  @Delete(':id')
+  @HttpCode(200)
+  async delete(@Param('id') id: string){
+    return await this.usersService.remove(+id);
+  }
+
 }
