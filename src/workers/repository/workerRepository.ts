@@ -2,7 +2,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { paginate } from '../../pagination/interfaces/paginator.interface';
-import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { Certification } from '../entities/certification.entity';
@@ -132,45 +131,36 @@ export class WorkerRepository {
         'client.businessName',
       ]);
 
-    // Destructurar el objeto filters y obtener la entrada de usuario
-    const { input, techSkills } = filters;
+    const { input } = filters;
 
-    // Inicializar el objeto de condiciones para el bucle de comparación
-    const conditions = [];
-
-    // Comprobar si la entrada de usuario está definida
     if (input) {
-      // Iterar sobre los campos deseados y crear condiciones LIKE para cada uno
       const fieldsToSearch = [
-        'documentType',
-        'documentNumber',
-        'name',
-        'apPat',
-        'apMat',
-        'contractType',
-        'charge',
+        'e."documentType"',
+        'e."documentNumber"',
+        'e.name',
+        'e."apPat"',
+        'e."apMat"',
+        'e."contractType"',
+        'e.charge',
+        'e."techSkills"',
+        '"chiefOfficer".name',
+        'client."businessName"',
       ];
 
-      fieldsToSearch.forEach((field) => {
-        if (field === 'documentType') {
-          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
-        } else if (field === 'contractType') {
-          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
-        } else {
-          conditions.push(`e.${field} ILIKE :input`);
-        }
-      });
-    }
+      // fieldsToSearch.forEach((field) => {
+      //   if (field === 'documentType' || field === 'contractType') {
+      //     conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
+      //   } else if (field === 'businessName') {
+      //     conditions.push(`CAST(client.${field} AS TEXT) ILIKE :input`);
+      //   } else if (field === 'techSkills')
+      //     conditions.push(`ARRAY_TO_STRING(e.techSkills, ',') ILIKE :input`);
+      //   else {
+      //     conditions.push(`e.${field} ILIKE :input`);
+      //   }
+      // });
 
-    // Comprobar si se han generado condiciones para la entrada de usuario
-    if (conditions.length > 0) {
-      // Unir todas las condiciones con un OR y agregarlas al query builder
-      qb.andWhere(`(${conditions.join(' OR ')})`, { input: `%${input}%` });
-    }
-
-    if (techSkills.length > 0) {
-      qb.andWhere("ARRAY_TO_STRING(e.techSkills, ',') LIKE :techSkills", {
-        techSkills: `%${techSkills.join(',')}%`,
+      qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
+        input: `%${input}%`,
       });
     }
 

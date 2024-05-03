@@ -50,14 +50,6 @@ export class WorkersService {
 
   async findAll({ limit, page, ...filters }: filterWorkersPaginatedDto) {
     const filterProperties = { ...filters } as unknown as any;
-    if (filters?.input && filters.input.includes(',')) {
-      filterProperties.techSkills = filters.input
-        .split(',')
-        .map((data) => data.toUpperCase());
-    } else {
-      filterProperties.techSkills = [];
-    }
-    // return this.workerRepository.getWorkersWithHiringTime();
     return this.workerRepository.findWorkers({
       limit,
       currentPage: page,
