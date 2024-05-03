@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthController } from './auth.controller';
+import { AuthController } from './controllers/auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { User } from './entities/user.entity';
-import { AuthService } from './auth.service';
-import { JwtService, JwtModule } from '@nestjs/jwt';
+import { AuthService } from './services/auth.service';
+import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
@@ -14,9 +14,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       useFactory: () => ({
         secret: process.env.AUTH_SECRET,
         signOptions: {
-          expiresIn: '60m',
+          expiresIn: '120m',
         },
       }),
+      imports: [],
     }),
   ],
   providers: [LocalStrategy, JwtStrategy, AuthService],

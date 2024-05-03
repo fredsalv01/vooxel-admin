@@ -23,7 +23,7 @@ export function IsRepeated(
           return value === object[property];
         },
         defaultMessage(): string {
-          return `${propertyName} needs to be identical to ${property}`;
+          return `${propertyName} debe ser identico a: ${property}`;
         },
       },
     });
