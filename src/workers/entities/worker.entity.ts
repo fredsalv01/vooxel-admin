@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import {
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
+import { Client } from '../../clients/entities/client.entity';
 
 @Entity()
 export class Worker {
@@ -158,10 +160,11 @@ export class Worker {
   })
   chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
 
-  @Expose()
-  @OneToMany(() => Certification, (Certification) => Certification.worker, {
+  @OneToMany(() => Certification, (certification) => certification.worker, {
     cascade: true,
+    eager: true,
   })
+  @Expose()
   certifications: Certification[]; // listado de certificaciones string[]
 
   @Expose()
@@ -184,6 +187,29 @@ export class Worker {
     default: null,
   })
   psychologicalTestUrl: string;
+
+  @Expose()
+  vacationDays?: number; // virtual property se genera en el backend
+
+  @Expose()
+  usedVacationDays?: number; // virtual property
+
+  @Expose()
+  truncatedVacations?: number;
+
+  @Column({
+    type: 'bool',
+    default: true,
+  })
+  @Expose()
+  isActive: boolean;
+
+  @ManyToOne(() => Client, (client) => client.workers)
+  @JoinColumn({ name: 'clientId' })
+  client: Client;
+
+  @Column({ type: 'int', nullable: true })
+  clientId: number;
 
   getHiringTime(): number {
     const currentTime = new Date();

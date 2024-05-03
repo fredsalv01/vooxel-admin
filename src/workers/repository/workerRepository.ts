@@ -1,12 +1,17 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { paginate } from '../../pagination/interfaces/paginator.interface';
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import { EmergencyContact } from '../entities/emergency-contact.entity';
+import { Certification } from '../entities/certification.entity';
 
 export class WorkerRepository {
+  private readonly logger = new Logger(WorkerRepository.name);
   constructor(
     @InjectRepository(Worker)
     private readonly db: Repository<Worker>,
+    private readonly dataSource: DataSource,
   ) {}
 
   private getWorkersBaseQuery(): SelectQueryBuilder<Worker> {
@@ -19,6 +24,7 @@ export class WorkerRepository {
       .createQueryBuilder('worker')
       .leftJoin('worker.emergencyContacts', 'emergencyContacts')
       .leftJoin('worker.chiefOfficer', 'chiefOfficer')
+      .leftJoin('worker.client', 'client')
       .select([
         'worker.id',
         'worker.documentType',
@@ -34,13 +40,17 @@ export class WorkerRepository {
         'chiefOfficer.name', // Concatenar nombre y apellido paterno del jefe si tiene
         'chiefOfficerName',
       )
+      .addSelect('client.businessName', 'clientName')
       .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
       .addSelect('COUNT(emergencyContacts.id)', 'emergencyContactsCount')
       .groupBy('worker.id')
       .addGroupBy('chiefOfficer.name')
       .addGroupBy('chiefOfficer.apPat')
       .getRawMany();
-
+    this.logger.debug(
+      `${this.getWorkersWithHiringTime} - dbResponse`,
+      JSON.stringify(data, null, 2),
+    );
     const modifiedWorkers = data.map((worker) => {
       const modifiedWorker = {};
       for (const key in worker) {
@@ -58,9 +68,14 @@ export class WorkerRepository {
 
   async addWorker(data: any) {
     try {
-      return await this.db.save(new Worker(data));
+      const result = await this.db.save(new Worker(data));
+      this.logger.debug(
+        `${this.addWorker.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
     } catch (error) {
-      console.log('ERROR GUARDANDO COLABORADOR:', error);
+      this.logger.error('ERROR GUARDANDO COLABORADOR:', error);
       throw new Error(error);
     }
   }
@@ -71,6 +86,8 @@ export class WorkerRepository {
         .createQueryBuilder('worker')
         .leftJoinAndSelect('worker.emergencyContacts', 'emergencyContacts')
         .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
+        .leftJoinAndSelect('worker.certifications', 'certifications')
+        .leftJoinAndSelect('worker.client', 'client')
         // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
         .where('worker.id = :id', { id: id })
         .getOne();
@@ -83,7 +100,7 @@ export class WorkerRepository {
 
       return data;
     } catch (error) {
-      console.log('ERROR AL OBTENER COLABORADOR: ', error);
+      this.logger.error('ERROR AL OBTENER COLABORADOR: ', error);
       throw new Error(error);
     }
   }
@@ -93,6 +110,7 @@ export class WorkerRepository {
     const qb = this.getWorkersBaseQuery()
       .leftJoin('e.emergencyContacts', 'emergencyContacts')
       .leftJoin('e.chiefOfficer', 'chiefOfficer')
+      .leftJoin('e.client', 'client')
       .select([
         'e.id',
         'e.documentType',
@@ -109,47 +127,28 @@ export class WorkerRepository {
         'emergencyContacts.relation',
         'chiefOfficer.id',
         'chiefOfficer.name',
+        'client.id',
+        'client.businessName',
       ]);
 
-    // Destructurar el objeto filters y obtener la entrada de usuario
-    const { input, techSkills } = filters;
+    const { input } = filters;
 
-    // Inicializar el objeto de condiciones para el bucle de comparación
-    const conditions = [];
-
-    // Comprobar si la entrada de usuario está definida
     if (input) {
-      // Iterar sobre los campos deseados y crear condiciones LIKE para cada uno
       const fieldsToSearch = [
-        'documentType',
-        'documentNumber',
-        'name',
-        'apPat',
-        'apMat',
-        'contractType',
-        'charge',
+        'CAST(e.documentType AS TEXT)',
+        'CAST(e.documentNumber AS TEXT)',
+        'CAST(e.name AS TEXT)',
+        'CAST(e.apPat AS TEXT)',
+        'CAST(e.apMat AS TEXT)',
+        'CAST(e.contractType AS TEXT)',
+        'CAST(e.charge AS TEXT)',
+        'CAST(e.techSkills AS TEXT)',
+        'CAST(chiefOfficer.name AS TEXT)',
+        'CAST(client.businessName AS TEXT)',
       ];
 
-      fieldsToSearch.forEach((field) => {
-        if (field === 'documentType') {
-          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
-        } else if (field === 'contractType') {
-          conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
-        } else {
-          conditions.push(`e.${field} ILIKE :input`);
-        }
-      });
-    }
-
-    // Comprobar si se han generado condiciones para la entrada de usuario
-    if (conditions.length > 0) {
-      // Unir todas las condiciones con un OR y agregarlas al query builder
-      qb.andWhere(`(${conditions.join(' OR ')})`, { input: `%${input}%` });
-    }
-
-    if (techSkills.length > 0) {
-      qb.andWhere("ARRAY_TO_STRING(e.techSkills, ',') LIKE :techSkills", {
-        techSkills: `%${techSkills.join(',')}%`,
+      qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
+        input: `%${input}%`,
       });
     }
 
@@ -158,5 +157,59 @@ export class WorkerRepository {
       currentPage,
       total: true,
     });
+  }
+
+  async updateWorker(id: number, updateWorkerData: any) {
+    const worker: Worker = await this.db.preload({
+      id: id,
+      ...updateWorkerData,
+    });
+
+    if (!worker) {
+      throw new NotFoundException({
+        error: 'Colaborador no encontrado',
+      });
+    }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.save(worker);
+      // Insert EmergencyContacts
+      if (
+        updateWorkerData.emergencyContacts &&
+        updateWorkerData.emergencyContacts.length > 0
+      ) {
+        for (const emergencyContactData of updateWorkerData.emergencyContacts) {
+          const emergencyContact = queryRunner.manager.create(
+            EmergencyContact,
+            emergencyContactData,
+          );
+          await queryRunner.manager.save(emergencyContact);
+        }
+      }
+
+      // Insert Certifications
+      if (
+        updateWorkerData.certifications &&
+        updateWorkerData.certifications.length > 0
+      ) {
+        for (const certificationData of updateWorkerData.certifications) {
+          const certification = queryRunner.manager.create(
+            Certification,
+            certificationData,
+          );
+          await queryRunner.manager.save(certification);
+        }
+      }
+      await queryRunner.commitTransaction();
+      return worker;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error(error);
+      throw new BadRequestException(error?.detail);
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

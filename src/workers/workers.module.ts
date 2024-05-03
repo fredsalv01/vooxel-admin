@@ -9,18 +9,27 @@ import { WorkerRepository } from './repository/workerRepository';
 import { EmergencyContactRepository } from './repository/emergencyContactRepository';
 import { EmergencyContactService } from './services/emergency-contact.service';
 import { EmergencyContactsController } from './controllers/emergency-contacts.controller';
+import { CertificationController } from './controllers/certifications.controller';
+import { CertificationsService } from './services/certifications.service';
+import { CertificationRepository } from './repository/certificationRepository';
 // import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exists.constraint';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Worker, EmergencyContact, Certification]),
   ],
-  controllers: [WorkersController, EmergencyContactsController],
+  controllers: [
+    WorkersController,
+    EmergencyContactsController,
+    CertificationController,
+  ],
   providers: [
     WorkersService,
     EmergencyContactService,
+    CertificationsService,
     WorkerRepository,
     EmergencyContactRepository,
+    CertificationRepository,
     // WorkerDoesNotExistsConstrint
   ],
 })

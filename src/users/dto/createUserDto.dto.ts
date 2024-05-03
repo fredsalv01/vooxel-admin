@@ -1,4 +1,4 @@
-import { IsEmail, Length } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, Length } from 'class-validator';
 import { IsRepeated } from '../../validation/is-repeated.constraint';
 import { UserDoesNotExist } from '../validation/user-does-not-exists.constraint';
 
@@ -23,4 +23,8 @@ export class CreateUserDto {
   @IsEmail()
   @UserDoesNotExist()
   email: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive: boolean;
 }

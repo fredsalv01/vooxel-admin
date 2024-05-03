@@ -5,21 +5,22 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
-import { WorkerDoesNotExists } from '../validation/worker-does-not-exists.constraint';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWorkerDto {
   @IsNotEmpty()
   @IsEnum(DocumentType)
   documentType: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
-  @IsNumber()
+  @IsString()
   // @WorkerDoesNotExists()
   @IsNotEmpty()
-  documentNumber: number; // numero de documento MAX: 9 MIN: 8
+  documentNumber: string; // numero de documento MAX: 9 MIN: 8
 
   @IsNotEmpty()
   @IsString()
@@ -41,6 +42,10 @@ export class CreateWorkerDto {
   @IsString()
   charge: string; // cargo
 
+  @ApiProperty({
+    description: 'birthDate',
+    example: '1998-07-13',
+  })
   @IsDateString({ strict: true } as any)
   @IsNotEmpty()
   birthdate: string; // fecha de nacimiento
@@ -49,6 +54,10 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
 
+  @ApiProperty({
+    description: 'hiringDate',
+    example: '2024-05-05',
+  })
   @IsDateString({ strict: true } as any)
   @IsNotEmpty()
   hiringDate: string; // fecha de inicio de contrato
@@ -85,6 +94,7 @@ export class CreateWorkerDto {
     each: false,
     context: EmergencyContactDto,
   })
+  @IsOptional()
   emergencyContacts?: EmergencyContactDto[];
 
   // @IsEmpty()

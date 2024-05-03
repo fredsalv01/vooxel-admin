@@ -18,10 +18,12 @@ import {
 import { WorkersService } from '../services/workers.service';
 import { CreateWorkerDto } from '../dto/create-worker.dto';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
-import { PaginationDto } from '../../pagination/dto/pagination.dto';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 import { AuthGuardJwt } from '../../auth/guards/auth-guard-jwt.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('workers')
+@ApiBearerAuth()
 @Controller('workers')
 @SerializeOptions({ strategy: 'exposeAll' })
 export class WorkersController {
@@ -32,7 +34,7 @@ export class WorkersController {
   @UseGuards(AuthGuardJwt)
   create(@Body() createWorkerDto: CreateWorkerDto) {
     this.logger.log(this.create.name);
-    this.logger.debug('body', createWorkerDto);
+    this.logger.debug('RequestBody', JSON.stringify(createWorkerDto, null, 2));
     return this.workersService.create(createWorkerDto);
   }
 
@@ -58,8 +60,8 @@ export class WorkersController {
   @UseGuards(AuthGuardJwt)
   update(@Param('id') id: string, @Body() updateWorkerDto: UpdateWorkerDto) {
     this.logger.log(this.update.name);
-    this.logger.debug('urlParams', id);
-    this.logger.debug('body', updateWorkerDto);
+    this.logger.debug('urlParams - id:', id);
+    this.logger.debug('body', JSON.stringify(updateWorkerDto, null, 2));
     return this.workersService.update(+id, updateWorkerDto);
   }
 
