@@ -51,7 +51,14 @@ export class UsersService {
     const users = this.userRepository
       .createQueryBuilder('e')
       .orderBy('e.id', 'DESC')
-      .select(['e.id', 'e.username', 'e.email', 'e.lastName', 'e.isActive'])
+      .select([
+        'e.id',
+        'e.username',
+        'e.email',
+        'e.firstName',
+        'e.lastName',
+        'e.isActive',
+      ])
       .where('e.isActive = :isActive', { isActive })
       .getMany();
     return users;
