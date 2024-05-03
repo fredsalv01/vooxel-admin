@@ -18,7 +18,8 @@ import { ClientsModule } from './clients/clients.module';
       envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: ormConfig,
+      useFactory:
+        process.env.NODE_ENV !== 'production' ? ormConfig : ormConfigProd,
       imports: [],
     }),
     AuthModule,
