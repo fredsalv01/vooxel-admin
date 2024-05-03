@@ -18,6 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
           expiresIn: '60m',
         },
       }),
+      imports: [],
     }),
     AuthModule,
   ],

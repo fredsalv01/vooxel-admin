@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import {
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
+import { Client } from '../../clients/entities/client.entity';
 
 @Entity()
 export class Worker {
@@ -25,40 +27,50 @@ export class Worker {
   @Column({
     type: 'enum',
     enum: DocumentType,
-    default: DocumentType.DNI,
+    default: null,
   })
   documentType: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
   @Expose()
-  @Column({ unique: true })
-  documentNumber: number; // numero de documento MAX: 9 MIN: 8
+  @Column({ unique: true, default: null })
+  documentNumber: string; // numero de documento MAX: 9 MIN: 8
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   apPat: string; // apellido paterno
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   apMat: string; // apellido materno
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   name: string; // nombre
 
   @Expose()
   @Column({
     type: 'enum',
     enum: EnglishLevel,
-    default: EnglishLevel.BASIC,
+    default: null,
   })
   englishLevel: EnglishLevel; // nivel de ingles enum: [INTERMEDIO, AVANZADO, NATIVO, BASICO]
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   charge: string; // cargo
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   birthdate: string; // fecha de nacimiento
 
   @Expose()
@@ -66,6 +78,7 @@ export class Worker {
     type: 'enum',
     enum: ContractType,
     nullable: true,
+    default: null,
   })
   contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
 
@@ -77,27 +90,37 @@ export class Worker {
   hiringDate: Date; // fecha de inicio de contrato
 
   @Expose()
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'date', nullable: true, default: null })
   leaveDate: Date; // fecha de salida de la empresa
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   phoneNumber: string; // numero de telefono cel o telefono
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   address: string;
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   district: string;
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   province: string;
 
   @Expose()
-  @Column()
+  @Column({
+    default: null,
+  })
   department: string;
 
   @OneToMany(
@@ -111,16 +134,18 @@ export class Worker {
   @Expose()
   emergencyContacts: EmergencyContact[]; // contacto de emergencia esta es otra entidad
 
-  @Column()
   @Expose()
+  @Column({
+    default: null,
+  })
   familiarAssignment: string;
 
   @Column('text', {
     array: true,
-    default: [],
+    default: null,
   })
   @Expose()
-  techSkills: string; // string[]
+  techSkills: string[]; // string[]
 
   @OneToOne(() => Worker, (worker) => worker.chiefOfficer)
   @JoinColumn({
@@ -131,32 +156,60 @@ export class Worker {
 
   @Column({
     nullable: true,
+    default: null,
   })
   chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
 
-  @Expose()
-  @OneToMany(() => Certification, (Certification) => Certification.worker, {
+  @OneToMany(() => Certification, (certification) => certification.worker, {
     cascade: true,
+    eager: true,
   })
+  @Expose()
   certifications: Certification[]; // listado de certificaciones string[]
 
   @Expose()
   @Column({
     nullable: true,
+    default: null,
   })
   resumeUrl: string;
 
   @Expose()
   @Column({
     nullable: true,
+    default: null,
   })
   contractUrl: string;
 
   @Expose()
   @Column({
     nullable: true,
+    default: null,
   })
   psychologicalTestUrl: string;
+
+  @Expose()
+  vacationDays?: number; // virtual property se genera en el backend
+
+  @Expose()
+  usedVacationDays?: number; // virtual property
+
+  @Expose()
+  truncatedVacations?: number;
+
+  @Column({
+    type: 'bool',
+    default: true,
+  })
+  @Expose()
+  isActive: boolean;
+
+  @ManyToOne(() => Client, (client) => client.workers)
+  @JoinColumn({ name: 'clientId' })
+  client: Client;
+
+  @Column({ type: 'int', nullable: true })
+  clientId: number;
 
   getHiringTime(): number {
     const currentTime = new Date();
