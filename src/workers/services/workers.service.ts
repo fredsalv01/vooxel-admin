@@ -40,7 +40,7 @@ export class WorkersService {
       }
       worker.emergencyContacts = emergencyContactArray;
     }
-    
+
     this.logger.debug(
       `DB Response ${this.create.name}:`,
       JSON.stringify(createWorkerDto, null, 2),
