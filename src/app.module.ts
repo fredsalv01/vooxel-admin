@@ -14,7 +14,8 @@ import { ClientsModule } from './clients/clients.module';
       isGlobal: true,
       load: [ormConfig],
       expandVariables: true,
-      envFilePath: `${process.env.NODE_ENV}.env`,
+      // envFilePath: `${process.env.NODE_ENV}.env`,
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       useFactory:
