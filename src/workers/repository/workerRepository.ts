@@ -135,29 +135,17 @@ export class WorkerRepository {
 
     if (input) {
       const fieldsToSearch = [
-        'e."documentType"',
-        'e."documentNumber"',
-        'e.name',
-        'e."apPat"',
-        'e."apMat"',
-        'e."contractType"',
-        'e.charge',
-        'e."techSkills"',
-        '"chiefOfficer".name',
-        'client."businessName"',
+        'CAST(e.documentType AS TEXT)',
+        'CAST(e.documentNumber AS TEXT)',
+        'CAST(e.name AS TEXT)',
+        'CAST(e.apPat AS TEXT)',
+        'CAST(e.apMat AS TEXT)',
+        'CAST(e.contractType AS TEXT)',
+        'CAST(e.charge AS TEXT)',
+        'CAST(e.techSkills AS TEXT)',
+        'CAST(chiefOfficer.name AS TEXT)',
+        'CAST(client.businessName AS TEXT)',
       ];
-
-      // fieldsToSearch.forEach((field) => {
-      //   if (field === 'documentType' || field === 'contractType') {
-      //     conditions.push(`CAST(e.${field} AS TEXT) ILIKE :input`);
-      //   } else if (field === 'businessName') {
-      //     conditions.push(`CAST(client.${field} AS TEXT) ILIKE :input`);
-      //   } else if (field === 'techSkills')
-      //     conditions.push(`ARRAY_TO_STRING(e.techSkills, ',') ILIKE :input`);
-      //   else {
-      //     conditions.push(`e.${field} ILIKE :input`);
-      //   }
-      // });
 
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
         input: `%${input}%`,
