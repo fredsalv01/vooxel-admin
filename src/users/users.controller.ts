@@ -19,6 +19,7 @@ import { CurrentUser } from '../decorators/current-user.decorator';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from '../auth/entities/user.entity';
+import { getUserDto } from './dto/get-userDto.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -30,7 +31,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  // @UseGuards(AuthGuardJwt)
+  @UseGuards(AuthGuardJwt)
   @HttpCode(201)
   async AddUser(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
     const user = await this.usersService.register(createUserDto);
@@ -49,14 +50,10 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuardJwt)
   @HttpCode(200)
-  async getUsers(
-    @Query('isActive') isActive: boolean,
-    @Query('page') page: string,
-    @Query('limit') limit: string,
-  ) {
-    const users = await this.usersService.getUsers(isActive, {
-      page: +page,
-      limit: +limit,
+  async getUsers(@Query() data: getUserDto) {
+    const users = await this.usersService.getUsers(data.isActive, {
+      page: +data.page,
+      limit: +data.limit,
     });
     return users;
   }
