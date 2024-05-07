@@ -153,8 +153,8 @@ export class WorkerRepository {
     }
 
     return await paginate(qb, {
-      limit,
-      page: currentPage,
+      limit: limit ?? 10,
+      page: currentPage ?? 1,
     });
   }
 
