@@ -10,6 +10,7 @@ import { DataSource, Repository } from 'typeorm';
 import { hashPassword } from './utils/functions';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
+import { paginate } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class UsersService {
@@ -47,7 +48,7 @@ export class UsersService {
     return { message: 'Contraseña actualizada correctamente' };
   }
 
-  async getUsers(isActive: boolean) {
+  async getUsers(isActive: boolean, data: { page: number; limit: number }) {
     const users = this.userRepository
       .createQueryBuilder('e')
       .orderBy('e.id', 'DESC')
@@ -59,9 +60,12 @@ export class UsersService {
         'e.lastName',
         'e.isActive',
       ])
-      .where('e.isActive = :isActive', { isActive })
-      .getMany();
-    return users;
+      .where('e.isActive = :isActive', { isActive });
+
+    return await paginate(users, {
+      limit: 1,
+      page: 1,
+    });
   }
 
   async findOne(id: number) {

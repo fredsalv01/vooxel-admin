@@ -30,7 +30,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  @UseGuards(AuthGuardJwt)
+  // @UseGuards(AuthGuardJwt)
   @HttpCode(201)
   async AddUser(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
     const user = await this.usersService.register(createUserDto);
@@ -49,8 +49,15 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuardJwt)
   @HttpCode(200)
-  async getUsers(@Query('isActive') isActive: boolean) {
-    const users = await this.usersService.getUsers(isActive);
+  async getUsers(
+    @Query('isActive') isActive: boolean,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+  ) {
+    const users = await this.usersService.getUsers(isActive, {
+      page: +page,
+      limit: +limit,
+    });
     return users;
   }
 
