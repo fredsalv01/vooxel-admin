@@ -63,8 +63,8 @@ export class UsersService {
       .where('e.isActive = :isActive', { isActive });
 
     return await paginate(users, {
-      limit: 1,
-      page: 1,
+      limit: data.page || 1,
+      page: data.limit || 0,
     });
   }
 
