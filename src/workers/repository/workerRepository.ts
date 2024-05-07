@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Worker } from '../entities/worker.entity';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
-import { paginate } from '../../pagination/interfaces/paginator.interface';
+import { paginate } from 'nestjs-typeorm-paginate';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { Certification } from '../entities/certification.entity';
@@ -154,8 +154,7 @@ export class WorkerRepository {
 
     return await paginate(qb, {
       limit,
-      currentPage,
-      total: true,
+      page: currentPage,
     });
   }
 
