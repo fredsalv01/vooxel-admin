@@ -17,14 +17,14 @@ export class User {
   @Expose()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   @Expose()
   username: string;
 
   @Column()
   password: string;
 
-  @Column({ unique: true })
+  @Column()
   @Expose()
   email: string;
 

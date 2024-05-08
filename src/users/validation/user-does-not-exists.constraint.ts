@@ -27,6 +27,11 @@ export class UserDoesNotExistsConstrint
     const entity = await this.userRepository.findOneBy({
       [validationArguments.property]: value,
     });
+
+    if (entity.isActive) {
+      return null;
+    }
+
     return entity === null;
   }
 
