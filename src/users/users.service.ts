@@ -33,7 +33,11 @@ export class UsersService {
     return restUser;
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto, user: User) {
+  async resetPassword(resetPasswordDto: ResetPasswordDto, id: number) {
+    const user = await this.userRepository.findOneBy({
+      id,
+    });
+
     const { password } = resetPasswordDto;
 
     if (!user) {

@@ -42,9 +42,9 @@ export class UsersController {
   @UseGuards(AuthGuardJwt)
   resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
-    @CurrentUser() user,
+    @Param('id') id: string,
   ) {
-    return this.usersService.resetPassword(resetPasswordDto, user);
+    return this.usersService.resetPassword(resetPasswordDto, +id);
   }
 
   @Get()
