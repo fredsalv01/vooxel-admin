@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User } from '../auth/entities/user.entity';
-import { UserDoesNotExistsConstrint } from './validation/user-does-not-exists.constraint';
 import { AuthModule } from '../auth/auth.module';
 import { AuthService } from '../auth/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
+import { IsUniqueConstraint } from './validation/isUnique.constraint';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     AuthModule,
   ],
-  providers: [UsersService, AuthService, UserDoesNotExistsConstrint],
+  providers: [UsersService, AuthService, IsUniqueConstraint],
   controllers: [UsersController],
 })
 export class UsersModule {}
