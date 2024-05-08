@@ -92,16 +92,16 @@ export class WorkersService {
     }
 
     // mapeando certificaciones y contactos de emergencia para ese worker
-    const certifications = updateWorkerDto.certifications.map(
-      (item) => new Certification({ ...item }),
-    );
-    const emergencyContacts = updateWorkerDto.emergencyContacts.map(
-      (item) => new EmergencyContact({ ...item }),
-    );
-    console.log('certifications', certifications);
-    console.log('emergencyContacts', emergencyContacts);
-    formatData.certifications = certifications;
-    formatData.emergencyContacts = emergencyContacts;
+    // const certifications = updateWorkerDto.certifications.map(
+    //   (item) => new Certification({ ...item }),
+    // );
+    // const emergencyContacts = updateWorkerDto.emergencyContacts.map(
+    //   (item) => new EmergencyContact({ ...item }),
+    // );
+    // console.log('certifications', certifications);
+    // console.log('emergencyContacts', emergencyContacts);
+    // formatData.certifications = certifications;
+    // formatData.emergencyContacts = emergencyContacts;
     return this.workerRepository.updateWorker(id, updateWorkerDto);
   }
 
