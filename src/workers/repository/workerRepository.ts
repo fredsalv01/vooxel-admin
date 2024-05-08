@@ -123,6 +123,7 @@ export class WorkerRepository {
         'e.contractType',
         'e.charge',
         'e.techSkills',
+        'e.isActive',
         'emergencyContacts.id',
         'emergencyContacts.phone',
         'emergencyContacts.name',
@@ -133,7 +134,7 @@ export class WorkerRepository {
         'client.businessName',
       ]);
 
-    const { input } = filters;
+    const { input, isActive } = filters;
 
     if (input) {
       const fieldsToSearch = [
@@ -153,6 +154,10 @@ export class WorkerRepository {
         input: `%${input}%`,
       });
     }
+
+    qb.andWhere('e.isActive = :isActive', {
+      isActive,
+    });
 
     return await paginate(qb, {
       limit: limit ?? 10,
