@@ -6,6 +6,7 @@ import { EmergencyContact } from '../workers/entities/emergency-contact.entity';
 import { Certification } from '../workers/entities/certification.entity';
 // import { User } from '../auth/user.entity';
 import { Client } from '../clients/entities/client.entity';
+import { BankAccount } from '../workers/entities/bank-account.entity';
 
 export default registerAs(
   'orm.config',
@@ -16,7 +17,14 @@ export default registerAs(
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    entities: [User, Client, Worker, EmergencyContact, Certification],
+    entities: [
+      User,
+      Client,
+      Worker,
+      EmergencyContact,
+      Certification,
+      BankAccount,
+    ],
     synchronize: true,
     dropSchema: Boolean(parseInt(process.env.DB_DROP_SCHEMA)),
   }),

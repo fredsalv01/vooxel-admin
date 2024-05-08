@@ -84,6 +84,13 @@ export class WorkersService {
         error: 'No ha agregado ningun contacto de emergencia',
       });
     }
+
+    if (!updateWorkerDto.bankAccount) {
+      throw new BadRequestException({
+        error: 'No se ha agregado ninguna cuenta bancaria',
+      });
+    }
+
     // mapeando certificaciones y contactos de emergencia para ese worker
     const certifications = updateWorkerDto.certifications.map(
       (item) => new Certification({ ...item }),

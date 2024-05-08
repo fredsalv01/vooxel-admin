@@ -12,6 +12,7 @@ import {
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { CreateBankAccountDto } from './create-bank-account.dto';
 
 export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   constructor() {
@@ -71,4 +72,7 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   @IsNumber()
   @IsOptional()
   clientId?: number;
+
+  @IsOptional()
+  bankAccount?: CreateBankAccountDto;
 }

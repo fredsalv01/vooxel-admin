@@ -12,11 +12,17 @@ import { EmergencyContactsController } from './controllers/emergency-contacts.co
 import { CertificationController } from './controllers/certifications.controller';
 import { CertificationsService } from './services/certifications.service';
 import { CertificationRepository } from './repository/certificationRepository';
+import { BankAccount } from './entities/bank-account.entity';
 // import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exists.constraint';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Worker, EmergencyContact, Certification]),
+    TypeOrmModule.forFeature([
+      Worker,
+      EmergencyContact,
+      Certification,
+      BankAccount,
+    ]),
   ],
   controllers: [
     WorkersController,

@@ -12,6 +12,7 @@ import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
 import { Client } from '../../clients/entities/client.entity';
+import { BankAccount } from './bank-account.entity';
 
 @Entity()
 export class Worker {
@@ -159,6 +160,10 @@ export class Worker {
     default: null,
   })
   chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
+
+  @OneToOne(() => BankAccount, (bankAccount) => bankAccount.worker)
+  @Expose()
+  bankAccount: BankAccount;
 
   @OneToMany(() => Certification, (certification) => certification.worker, {
     cascade: true,

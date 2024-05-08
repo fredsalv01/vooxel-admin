@@ -5,6 +5,7 @@ import { paginate } from 'nestjs-typeorm-paginate';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { Certification } from '../entities/certification.entity';
+import { BankAccount } from '../entities/bank-account.entity';
 
 export class WorkerRepository {
   private readonly logger = new Logger(WorkerRepository.name);
@@ -88,6 +89,7 @@ export class WorkerRepository {
         .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
         .leftJoinAndSelect('worker.certifications', 'certifications')
         .leftJoinAndSelect('worker.client', 'client')
+        .leftJoinAndSelect('worker.bankAccount', 'bankAccount')
         // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
         .where('worker.id = :id', { id: id })
         .getOne();
@@ -201,6 +203,15 @@ export class WorkerRepository {
           await queryRunner.manager.save(certification);
         }
       }
+
+      if (updateWorkerData.bankAccount) {
+        const bankAccount = queryRunner.manager.create(
+          BankAccount,
+          updateWorkerData.bankAccount,
+        );
+        await queryRunner.manager.save(bankAccount);
+      }
+
       await queryRunner.commitTransaction();
       return worker;
     } catch (error) {
