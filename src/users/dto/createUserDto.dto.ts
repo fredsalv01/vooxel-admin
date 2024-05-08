@@ -4,7 +4,9 @@ import { UserDoesNotExist } from '../validation/user-does-not-exists.constraint'
 
 export class CreateUserDto {
   @Length(5)
-  @UserDoesNotExist()
+  @UserDoesNotExist({
+    context: 'create',
+  })
   username: string;
 
   @Length(8)
@@ -21,7 +23,9 @@ export class CreateUserDto {
   lastName: string;
 
   @IsEmail()
-  @UserDoesNotExist()
+  @UserDoesNotExist({
+    context: 'create',
+  })
   email: string;
 
   @IsBoolean()
