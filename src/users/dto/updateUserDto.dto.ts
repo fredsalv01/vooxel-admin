@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './createUserDto.dto';
 import { IsEmail, Length } from 'class-validator';
-import { isUnique } from '../validation/isUnique.constraint';
+import { isUnique } from '../../validation/isUnique.constraint';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @Length(5)

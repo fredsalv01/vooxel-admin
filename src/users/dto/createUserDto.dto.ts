@@ -1,6 +1,6 @@
 import { IsBoolean, IsEmail, IsOptional, Length } from 'class-validator';
 import { IsRepeated } from '../../validation/is-repeated.constraint';
-import { isUnique } from '../validation/isUnique.constraint';
+import { isUnique } from '../../validation/isUnique.constraint';
 
 export class CreateUserDto {
   @Length(5)
