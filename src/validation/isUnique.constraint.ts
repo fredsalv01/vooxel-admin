@@ -15,18 +15,15 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args?: ValidationArguments): Promise<boolean> {
     // catch options from decorator
     const { tableName, column, method }: IsUniqeInterface = args.constraints[0];
-    console.log('method');
     const dataExist = await this.entityManager
       .getRepository(tableName)
       .createQueryBuilder(tableName)
       .where({ [column]: value })
-      .where({ isActive: true })
+      .andWhere({ isActive: true })
       .getExists();
     if (method === 'create') {
-      console.log('dataExistscreate', dataExist);
       return !dataExist;
     } else {
-      console.log('dataExistsupdate', dataExist);
       return true;
     }
   }
@@ -38,10 +35,15 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
   }
 }
 
+export enum methodEnum {
+  create = 'create',
+  update = 'update',
+}
+
 export type IsUniqeInterface = {
   tableName: string;
   column: string;
-  method: 'create' | 'update';
+  method: methodEnum;
 };
 
 export function isUnique(

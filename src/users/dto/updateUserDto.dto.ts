@@ -5,12 +5,16 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { isUnique } from '../../validation/isUnique.constraint';
+import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
 import { Transform } from 'class-transformer';
 
 export class UpdateUserDto {
   @Length(5)
-  @isUnique({ tableName: 'user', column: 'username', method: 'update' })
+  @isUnique({
+    tableName: 'user',
+    column: 'username',
+    method: methodEnum.update,
+  })
   username?: string;
 
   @IsString()
@@ -20,7 +24,7 @@ export class UpdateUserDto {
   lastName?: string;
 
   @IsEmail()
-  @isUnique({ tableName: 'user', column: 'email', method: 'update' })
+  @isUnique({ tableName: 'user', column: 'email', method: methodEnum.update })
   email?: string;
 
   @IsString()
