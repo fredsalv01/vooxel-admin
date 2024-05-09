@@ -1,5 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './createUserDto.dto';
 import {
   IsBoolean,
   IsEmail,
@@ -10,7 +8,7 @@ import {
 import { isUnique } from '../../validation/isUnique.constraint';
 import { Transform } from 'class-transformer';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
   @Length(5)
   @isUnique({ tableName: 'user', column: 'username', method: 'update' })
   username?: string;
