@@ -33,7 +33,7 @@ export class Worker {
   documentType: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
 
   @Expose()
-  @Column({ unique: true, default: null })
+  @Column({ default: null })
   documentNumber: string; // numero de documento MAX: 9 MIN: 8
 
   @Expose()
