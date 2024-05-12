@@ -11,6 +11,7 @@ import {
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
 
 export class CreateWorkerDto {
   @IsNotEmpty()
@@ -19,6 +20,11 @@ export class CreateWorkerDto {
 
   @IsString()
   // @WorkerDoesNotExists()
+  @isUnique({
+    tableName: 'worker',
+    column: 'documentNumber',
+    method: methodEnum.create,
+  })
   @IsNotEmpty()
   documentNumber: string; // numero de documento MAX: 9 MIN: 8
 

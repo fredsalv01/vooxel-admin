@@ -13,6 +13,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateBankAccountDto } from './create-bank-account.dto';
+import { isUnique, methodEnum } from 'src/validation/isUnique.constraint';
 
 export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   constructor() {
@@ -23,6 +24,11 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   apPat?: string;
   apMat?: string;
   documentType?: DocumentType;
+  @isUnique({
+    tableName: 'worker',
+    column: 'documentNumber',
+    method: methodEnum.update,
+  })
   documentNumber?: string;
   birthdate?: string;
   phoneNumber?: string;
