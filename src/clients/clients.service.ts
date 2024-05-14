@@ -1,15 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { ClientRepository } from './repository/clientRepository';
+import { filterClientsPaginatedDto } from './dto/filter-client-paginated.dto';
 
 @Injectable()
 export class ClientsService {
+  private readonly logger = new Logger(ClientsService.name);
+
+  constructor(private readonly clientRepository: ClientRepository) {}
+
   create(createClientDto: CreateClientDto) {
-    return 'This action adds a new client';
+    this.logger.debug(
+      `create worker method - DataToDB ${this.create.name}:`,
+      JSON.stringify(createClientDto, null, 2),
+    );
+    return this.clientRepository.addClient(createClientDto);
   }
 
-  findAll() {
-    return `This action returns all clients`;
+  findAll({ limit, page, ...filters }: filterClientsPaginatedDto) {
+    const filterProperties = { ...filters } as unknown as any;
+    console.log(filterProperties);
+    return this.clientRepository.findAll({
+      limit,
+      currentPage: page,
+      filters: filterProperties,
+    });
   }
 
   findOne(id: number) {

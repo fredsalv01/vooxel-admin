@@ -14,6 +14,7 @@ import { CertificationsService } from './services/certifications.service';
 import { CertificationRepository } from './repository/certificationRepository';
 import { BankAccount } from './entities/bank-account.entity';
 import { WorkerToClient } from './entities/worker-to-client.entity';
+import { WorkerToClientRepository } from './repository/workerToClientsRepository';
 // import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exists.constraint';
 
 @Module({
@@ -23,7 +24,7 @@ import { WorkerToClient } from './entities/worker-to-client.entity';
       EmergencyContact,
       Certification,
       BankAccount,
-      WorkerToClient
+      WorkerToClient,
     ]),
   ],
   controllers: [
@@ -38,6 +39,7 @@ import { WorkerToClient } from './entities/worker-to-client.entity';
     WorkerRepository,
     EmergencyContactRepository,
     CertificationRepository,
+    WorkerToClientRepository,
     // WorkerDoesNotExistsConstrint
   ],
 })

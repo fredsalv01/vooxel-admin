@@ -11,6 +11,10 @@ import { Worker } from './worker.entity';
 
 @Entity()
 export class WorkerToClient {
+  constructor(partial?: Partial<WorkerToClient>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn('increment')
   workerToClientId: number;
 

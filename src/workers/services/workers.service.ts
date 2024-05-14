@@ -5,7 +5,7 @@ import { WorkerRepository } from '../repository/workerRepository';
 import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
-import { Certification } from '../entities/certification.entity';
+import { WorkerToClientRepository } from '../repository/workerToClientsRepository';
 
 @Injectable()
 export class WorkersService {
@@ -13,6 +13,7 @@ export class WorkersService {
   constructor(
     private readonly workerRepository: WorkerRepository,
     private readonly emergencyContactService: EmergencyContactService,
+    private readonly workerToClientsRepository: WorkerToClientRepository,
   ) {}
 
   async create(createWorkerDto: CreateWorkerDto) {
@@ -62,7 +63,7 @@ export class WorkersService {
     return this.workerRepository.getOneWorker(id);
   }
 
-  update(id: number, updateWorkerDto: UpdateWorkerDto) {
+  async update(id: number, updateWorkerDto: UpdateWorkerDto) {
     const formatData = {
       ...updateWorkerDto,
     };
@@ -92,17 +93,20 @@ export class WorkersService {
       });
     }
 
-    // mapeando certificaciones y contactos de emergencia para ese worker
-    // const certifications = updateWorkerDto.certifications.map(
-    //   (item) => new Certification({ ...item }),
-    // );
-    // const emergencyContacts = updateWorkerDto.emergencyContacts.map(
-    //   (item) => new EmergencyContact({ ...item }),
-    // );
-    // console.log('certifications', certifications);
-    // console.log('emergencyContacts', emergencyContacts);
-    // formatData.certifications = certifications;
-    // formatData.emergencyContacts = emergencyContacts;
+    //validar si el row existe para ver si hay actualizacion de cliente o no
+    const existsWorkerToClient =
+      this.workerToClientsRepository.validateNewClientForWorker({
+        workerId: id,
+        clientId: updateWorkerDto.clientId,
+      });
+
+    if (!existsWorkerToClient) {
+      await this.workerToClientsRepository.create({
+        workerId: id,
+        clientId: updateWorkerDto.clientId,
+      });
+    }
+
     return this.workerRepository.updateWorker(id, updateWorkerDto);
   }
 
