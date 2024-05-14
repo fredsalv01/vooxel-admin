@@ -4,9 +4,9 @@ import { User } from '../auth/entities/user.entity';
 import { Worker } from '../workers/entities/worker.entity';
 import { EmergencyContact } from '../workers/entities/emergency-contact.entity';
 import { Certification } from '../workers/entities/certification.entity';
-// import { User } from '../auth/user.entity';
 import { Client } from '../clients/entities/client.entity';
 import { BankAccount } from '../workers/entities/bank-account.entity';
+import { WorkerToClient } from '../workers/entities/worker-to-client.entity';
 
 export default registerAs(
   'orm.config',
@@ -21,6 +21,7 @@ export default registerAs(
       User,
       Client,
       Worker,
+      WorkerToClient,
       EmergencyContact,
       Certification,
       BankAccount,

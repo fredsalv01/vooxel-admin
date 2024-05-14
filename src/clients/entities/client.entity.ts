@@ -1,6 +1,14 @@
 import { Expose } from 'class-transformer';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Worker } from '../../workers/entities/worker.entity';
+import { WorkerToClient } from 'src/workers/entities/worker-to-client.entity';
 
 @Entity()
 export class Client {
@@ -40,10 +48,6 @@ export class Client {
   @Expose()
   contractEndDate: string;
 
-  @OneToMany(() => Worker, (worker) => worker.client, {
-    cascade: true,
-    eager: true,
-  })
-  @Expose()
-  workers: Worker[];
+  @OneToMany(() => WorkerToClient, workerToClient => workerToClient.client)
+  workerToClients: WorkerToClient[];
 }

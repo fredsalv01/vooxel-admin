@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -13,6 +13,7 @@ import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
 import { Client } from '../../clients/entities/client.entity';
 import { BankAccount } from './bank-account.entity';
+import { WorkerToClient } from './worker-to-client.entity';
 
 @Entity()
 export class Worker {
@@ -209,12 +210,8 @@ export class Worker {
   @Expose()
   isActive: boolean;
 
-  @ManyToOne(() => Client, (client) => client.workers)
-  @JoinColumn({ name: 'clientId' })
-  client: Client;
-
-  @Column({ type: 'int', nullable: true })
-  clientId: number;
+  @OneToMany(() => WorkerToClient, workerToClient => workerToClient.worker)
+  workerToClients: WorkerToClient[];
 
   getHiringTime(): number {
     const currentTime = new Date();

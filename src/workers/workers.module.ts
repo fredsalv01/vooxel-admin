@@ -13,6 +13,7 @@ import { CertificationController } from './controllers/certifications.controller
 import { CertificationsService } from './services/certifications.service';
 import { CertificationRepository } from './repository/certificationRepository';
 import { BankAccount } from './entities/bank-account.entity';
+import { WorkerToClient } from './entities/worker-to-client.entity';
 // import { WorkerDoesNotExistsConstrint } from './validation/worker-does-not-exists.constraint';
 
 @Module({
@@ -22,6 +23,7 @@ import { BankAccount } from './entities/bank-account.entity';
       EmergencyContact,
       Certification,
       BankAccount,
+      WorkerToClient
     ]),
   ],
   controllers: [

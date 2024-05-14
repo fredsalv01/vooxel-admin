@@ -112,7 +112,7 @@ export class WorkerRepository {
     const qb = this.getWorkersBaseQuery()
       .leftJoin('e.emergencyContacts', 'emergencyContacts')
       .leftJoin('e.chiefOfficer', 'chiefOfficer')
-      .leftJoin('e.client', 'client')
+      .leftJoin('e.workerToClient', 'workerToClient')
       .select([
         'e.id',
         'e.documentType',
@@ -130,8 +130,8 @@ export class WorkerRepository {
         'emergencyContacts.relation',
         'chiefOfficer.id',
         'chiefOfficer.name',
-        'client.id',
-        'client.businessName',
+        'workerToClient.id',
+        'workerToClient.client',
       ]);
 
     const { input, isActive } = filters;
@@ -155,6 +155,8 @@ export class WorkerRepository {
       });
     }
 
+    qb.andWhere('workerToClient.isActive = :isActive', { isActive: true });
+    
     qb.andWhere('e.isActive = :isActive', {
       isActive,
     });
