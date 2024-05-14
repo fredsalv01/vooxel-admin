@@ -30,6 +30,13 @@ export class Client {
   @Expose()
   businessName: string; // razon social
 
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  @Expose()
+  ruc: string;
+
   @Column('text')
   @Expose()
   phone: string;
@@ -38,17 +45,13 @@ export class Client {
   @Expose()
   email: string;
 
-  @Column({
-    default: null,
-  })
+  @Column({ type: 'date', nullable: true, default: null })
   @Expose()
-  contractStartDate: string;
+  contractStartDate: Date;
 
-  @Column({
-    default: null,
-  })
+  @Column({ type: 'date', nullable: true, default: null })
   @Expose()
-  contractEndDate: string;
+  contractEndDate: Date;
 
   @OneToMany(() => WorkerToClient, (workerToClient) => workerToClient.client)
   workerToClients: WorkerToClient[];
@@ -65,4 +68,10 @@ export class Client {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
+
+  @Column('bool', {
+    default: true,
+  })
+  @Expose()
+  isActive: boolean;
 }

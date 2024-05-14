@@ -18,17 +18,26 @@ export class ClientRepository {
     return this.db
       .createQueryBuilder('client')
       .orderBy('client.created_at', 'DESC')
-      .leftJoin('client.workerToClients', 'workerToClient')
-      .leftJoin('client.chiefOfficer', 'chiefOfficer')
+      .leftJoin(
+        'client.workerToClients',
+        'workerToClient',
+        'workerToClient.isActive = :isActive',
+        { isActive: true },
+      )
       .select([
         'client.id',
         'client.fullName', // Assuming 'fullName' is the combined name fields
         'client.businessName',
+        'client.ruc',
+        'client.isActive',
+        'client.phone',
+        'client.email',
+        'client.contractStartDate',
+        'client.contractEndDate',
         'COUNT(workerToClient.workerToClientId) AS workerToClientCount',
         // Add more fields as needed
       ])
-      .groupBy('client.id')
-      .where('client.isActive = :isActive', { isActive: true });
+      .groupBy('client.id');
   }
 
   async addClient(data: any) {
@@ -50,12 +59,14 @@ export class ClientRepository {
 
     const qb = this.getClientsBaseQuery();
 
-    if (filters.input) {
+    if (filters.input && filters.input !== '') {
       const fieldsToSearch = [
-        'CAST(client.documentType AS TEXT)',
-        'CAST(client.documentNumber AS TEXT)',
-        'CAST(client.fullName AS TEXT)', // Assuming 'fullName' is the combined name fields
+        'CAST(client.ruc AS TEXT)',
         'CAST(client.businessName AS TEXT)',
+        'CAST(client.fullName AS TEXT)', // Assuming 'fullName' is the combined name fields
+        'CAST(client.email AS TEXT)',
+        'CAST(client.ruc AS TEXT)',
+        'CAST(client.phone AS TEXT)',
         // Add more fields as needed
       ];
 
@@ -64,12 +75,19 @@ export class ClientRepository {
       });
     }
 
-    qb.andWhere('workerToClient.isActive = :isActive', { isActive: true });
+    // qb.andWhere('workerToClient.isActive = :isActive', { isActive: true });
     qb.andWhere('client.isActive = :isActive', { isActive: filters.isActive });
 
-    return await paginate(qb, {
+    const result = await paginate(qb, {
       limit: limit ?? 10,
       page: currentPage ?? 1,
     });
+
+    this.logger.debug(
+      `${this.addClient.name} - result`,
+      JSON.stringify(result, null, 2),
+    );
+
+    return result;
   }
 }
