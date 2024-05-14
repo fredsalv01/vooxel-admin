@@ -32,7 +32,6 @@ export class Client {
 
   @Column({
     type: 'text',
-    nullable: true,
   })
   @Expose()
   ruc: string;
@@ -45,11 +44,11 @@ export class Client {
   @Expose()
   email: string;
 
-  @Column({ type: 'date', nullable: true, default: null })
+  @Column({ type: 'date' })
   @Expose()
   contractStartDate: Date;
 
-  @Column({ type: 'date', nullable: true, default: null })
+  @Column({ type: 'date' })
   @Expose()
   contractEndDate: Date;
 
