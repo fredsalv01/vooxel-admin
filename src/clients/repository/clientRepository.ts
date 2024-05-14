@@ -1,9 +1,7 @@
-import { Logger } from '@nestjs/common';
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from '../entities/client.entity';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
-import { CreateClientDto } from '../dto/create-client.dto';
-import { Console } from 'console';
 import { paginate } from 'nestjs-typeorm-paginate';
 
 export class ClientRepository {
@@ -89,5 +87,78 @@ export class ClientRepository {
     );
 
     return result;
+  }
+
+  async findOne(id: number) {
+    try {
+      const result = this.getClientsBaseQuery()
+        .where('client.id = :id', { id })
+        .getOne();
+      if (!result) {
+        throw new NotFoundException(
+          `No se encontro el cliente con el id ${id}`,
+        );
+      }
+      this.logger.debug(
+        `${this.addClient.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    } catch (error) {
+      this.logger.error('ERROR BUSCANDO AL CLIENTE:', error);
+      throw new Error(error);
+    }
+  }
+
+  async updateOne(id: number, data: any) {
+    const client = await this.db.preload({
+      id: id,
+      ...data,
+    });
+
+    if (!client) {
+      throw new NotFoundException({
+        error: 'Cliente no encontrado',
+      });
+    }
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.save(client);
+      await queryRunner.commitTransaction();
+      return client;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error(error);
+      throw new BadRequestException(error?.detail);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async deleteOne(id: number) {
+    try {
+      await this.findOne(id);
+
+      const result = this.db.update(
+        {
+          id,
+        },
+        {
+          isActive: false,
+        },
+      );
+      this.logger.debug(
+        `${this.addClient.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+
+      return result;
+    } catch (error) {
+      this.logger.error('ERROR DESACTIVAR AL CLIENTE:', error);
+      throw new Error(error);
+    }
   }
 }

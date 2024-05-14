@@ -12,7 +12,7 @@ export class ClientsService {
 
   create(createClientDto: CreateClientDto) {
     this.logger.debug(
-      `create worker method - DataToDB ${this.create.name}:`,
+      `create client method - DataToDB ${this.create.name}:`,
       JSON.stringify(createClientDto, null, 2),
     );
     return this.clientRepository.addClient(createClientDto);
@@ -29,14 +29,18 @@ export class ClientsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} client`;
+    return this.clientRepository.findOne(id);
   }
 
   update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+    this.logger.debug(
+      `update client method - DataToDB ${this.create.name}:`,
+      JSON.stringify(updateClientDto, null, 2),
+    );
+    return this.clientRepository.updateOne(id, updateClientDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} client`;
+    return this.clientRepository.deleteOne(id);
   }
 }
