@@ -110,6 +110,6 @@ export class WorkersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} worker`;
+    return this.workerRepository.updateWorker(id, { isActive: false });
   }
 }

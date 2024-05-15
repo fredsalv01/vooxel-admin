@@ -104,7 +104,6 @@ export class WorkerRepository {
           'workerToClient.clientId = client.id',
         )
         .leftJoinAndSelect('worker.bankAccount', 'bankAccount')
-        // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
         .where('worker.id = :id', { id: id })
         .getOne();
 
