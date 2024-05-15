@@ -6,6 +6,8 @@ import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { Certification } from '../entities/certification.entity';
 import { BankAccount } from '../entities/bank-account.entity';
+import { WorkerToClient } from '../entities/worker-to-client.entity';
+import { Client } from '../../clients/entities/client.entity';
 
 export class WorkerRepository {
   private readonly logger = new Logger(WorkerRepository.name);
@@ -112,11 +114,18 @@ export class WorkerRepository {
     const qb = this.getWorkersBaseQuery()
       .leftJoin('e.emergencyContacts', 'emergencyContacts')
       .leftJoin('e.chiefOfficer', 'chiefOfficer')
-      .leftJoin(
-        'e.workerToClients',
+      .leftJoinAndMapOne(
+        'e.clientInfo',
+        WorkerToClient,
         'workerToClient',
-        'workerToClient.isActive = :isActive',
+        'e.id = workerToClient.workerId AND workerToClient.isActive = :isActive',
         { isActive: true },
+      )
+      .leftJoinAndMapOne(
+        'e.clientInfo.client',
+        Client,
+        'client',
+        'workerToClient.clientId = client.id',
       )
       .select([
         'e.id',
@@ -135,10 +144,10 @@ export class WorkerRepository {
         'emergencyContacts.relation',
         'chiefOfficer.id',
         'chiefOfficer.name',
-        'workerToClient.workerToClientId',
-        'workerToClient.client AS client',
+        'client.id', // Include client id
+        'client.businessName',
+        'client.ruc',
       ]);
-
     const { input, isActive } = filters;
 
     if (input) {

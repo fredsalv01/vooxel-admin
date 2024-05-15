@@ -210,8 +210,12 @@ export class Worker {
   @Expose()
   isActive: boolean;
 
-  @OneToMany(() => WorkerToClient, workerToClient => workerToClient.worker)
-  workerToClients: WorkerToClient[];
+  @OneToMany(() => WorkerToClient, (workerToClient) => workerToClient.worker, {
+    cascade: true,
+    eager: true,
+  })
+  @Expose()
+  public workerToClients: WorkerToClient[];
 
   getHiringTime(): number {
     const currentTime = new Date();

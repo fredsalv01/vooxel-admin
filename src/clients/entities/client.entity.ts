@@ -53,7 +53,7 @@ export class Client {
   contractEndDate: Date;
 
   @OneToMany(() => WorkerToClient, (workerToClient) => workerToClient.client)
-  workerToClients: WorkerToClient[];
+  public workerToClients: WorkerToClient[];
 
   @CreateDateColumn({
     type: 'timestamp',
