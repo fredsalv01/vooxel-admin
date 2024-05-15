@@ -90,7 +90,19 @@ export class WorkerRepository {
         .leftJoinAndSelect('worker.emergencyContacts', 'emergencyContacts')
         .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
         .leftJoinAndSelect('worker.certifications', 'certifications')
-        .leftJoinAndSelect('worker.client', 'client')
+        .leftJoinAndMapOne(
+          'worker.clientInfo',
+          WorkerToClient,
+          'workerToClient',
+          'worker.id = workerToClient.workerId AND workerToClient.isActive = :isActive',
+          { isActive: true },
+        )
+        .leftJoinAndMapOne(
+          'worker.clientInfo.client',
+          Client,
+          'client',
+          'workerToClient.clientId = client.id',
+        )
         .leftJoinAndSelect('worker.bankAccount', 'bankAccount')
         // .addSelect('chiefOfficer.apPat', 'chiefOfficerApPat')
         .where('worker.id = :id', { id: id })
