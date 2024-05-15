@@ -16,6 +16,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/bucket": [
+        "libs/bucket/src"
+      ],
+      "@app/bucket/*": [
+        "libs/bucket/src/*"
+      ]
+    }
   }
 }

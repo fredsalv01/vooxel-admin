@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WorkersModule } from './workers/workers.module';
 import { ClientsModule } from './clients/clients.module';
+import { BucketModule } from '@app/bucket';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -25,9 +27,11 @@ import { ClientsModule } from './clients/clients.module';
     UsersModule,
     WorkersModule,
     ClientsModule,
+    BucketModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
-  exports: [AuthModule],
+  exports: [AuthModule, BucketModule],
 })
 export class AppModule {}
