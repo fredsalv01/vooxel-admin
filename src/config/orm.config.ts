@@ -7,6 +7,7 @@ import { Certification } from '../workers/entities/certification.entity';
 import { Client } from '../clients/entities/client.entity';
 import { BankAccount } from '../workers/entities/bank-account.entity';
 import { WorkerToClient } from '../workers/entities/worker-to-client.entity';
+import { File } from '../files/entities/files.entity';
 
 export default registerAs(
   'orm.config',
@@ -25,6 +26,7 @@ export default registerAs(
       EmergencyContact,
       Certification,
       BankAccount,
+      File,
     ],
     synchronize: true,
     dropSchema: Boolean(parseInt(process.env.DB_DROP_SCHEMA)),

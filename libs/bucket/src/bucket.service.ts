@@ -8,9 +8,9 @@ export class BucketService {
   private readonly bucketName: string;
 
   constructor() {
-    const GCP_PROJECT_ID = 'file-upload-app-b9ae4';
-    const GCP_KEY_FILE_PATH = 'key-gcp.json';
-    this.bucketName = 'staging.file-upload-app-b9ae4.appspot.com';
+    const GCP_PROJECT_ID = 'file-upload-app-b9ae4'; // reemplaza
+    const GCP_KEY_FILE_PATH = 'key-gcp.json'; // REEMPLAZAR
+    this.bucketName = 'staging.file-upload-app-b9ae4.appspot.com'; // REEMPLAZAR
     this.storage = new Storage({
       projectId: GCP_PROJECT_ID,
       keyFilename: GCP_KEY_FILE_PATH,
@@ -20,7 +20,7 @@ export class BucketService {
   async generateV4UploadSignedUrl(
     fileName: string,
     fileType: string,
-  ): Promise<{ url: string; filePath: string }> {
+  ): Promise<{ url: string; filePath: string; fileName: string }> {
     let folder = 'files/';
     if (fileType === 'cv') {
       folder += 'cv/';
@@ -54,6 +54,7 @@ export class BucketService {
       const result = {
         url,
         filePath,
+        fileName,
       };
 
       this.logger.debug(
@@ -74,7 +75,7 @@ export class BucketService {
         version: 'v4',
         action: 'read',
         expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-        responseDisposition: 'attachment'
+        responseDisposition: 'attachment',
       };
       this.logger.debug('Generated OPTIONS for download:', options);
 
