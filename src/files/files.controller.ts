@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   Logger,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   SerializeOptions,
@@ -16,6 +18,7 @@ import { GetSignedUrlDto } from './dto/get-signed-url.dto';
 import { GetDownloadUrlDto } from './dto/get-download-url.dto';
 import { AuthGuardJwt } from '../auth/guards/auth-guard-jwt.guard';
 import { CreateFileDto } from './dto/create-file.dto';
+import { GetFilesDto } from './dto/get-files.dto';
 
 @ApiTags('files')
 @ApiBearerAuth()
@@ -34,6 +37,14 @@ export class FilesController {
     this.logger.log(this.create.name);
     this.logger.debug('body', JSON.stringify(body, null, 2));
     return this.filesService.create(body);
+  }
+
+  @Get()
+  @UseGuards(AuthGuardJwt)
+  findOne(@Query() queryParams: GetFilesDto) {
+    this.logger.log(this.findOne.name);
+    this.logger.debug('query', JSON.stringify(queryParams, null, 2));
+    return this.filesService.findOne(queryParams);
   }
 
   // retrive url to presign file

@@ -4,7 +4,7 @@ export class CreateFileDto {
   @IsString()
   @IsNotEmpty()
   table_name: string;
-  
+
   @IsInt()
   @IsNotEmpty()
   tableId: number;

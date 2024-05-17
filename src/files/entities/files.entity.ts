@@ -43,10 +43,4 @@ export class File {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
-
-  @Column('bool', {
-    default: true,
-  })
-  @Expose()
-  isActive: boolean;
 }

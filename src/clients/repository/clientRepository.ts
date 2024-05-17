@@ -82,7 +82,7 @@ export class ClientRepository {
     });
 
     this.logger.debug(
-      `${this.addClient.name} - result`,
+      `${this.findAll.name} - result`,
       JSON.stringify(result, null, 2),
     );
 
@@ -100,7 +100,7 @@ export class ClientRepository {
         );
       }
       this.logger.debug(
-        `${this.addClient.name} - result`,
+        `${this.findOne.name} - result`,
         JSON.stringify(result, null, 2),
       );
       return result;
@@ -121,17 +121,24 @@ export class ClientRepository {
         error: 'Cliente no encontrado',
       });
     }
-
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       await queryRunner.manager.save(client);
       await queryRunner.commitTransaction();
+      this.logger.debug(
+        `${this.updateOne.name} - result`,
+        JSON.stringify(client, null, 2),
+      );
       return client;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       this.logger.error(error);
+      this.logger.error(
+        `${this.updateOne.name} - error`,
+        JSON.stringify(error, null, 2),
+      );
       throw new BadRequestException(error?.detail);
     } finally {
       await queryRunner.release();
@@ -151,7 +158,7 @@ export class ClientRepository {
         },
       );
       this.logger.debug(
-        `${this.addClient.name} - result`,
+        `${this.deleteOne.name} - result`,
         JSON.stringify(result, null, 2),
       );
 
