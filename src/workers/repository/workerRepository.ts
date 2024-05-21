@@ -113,7 +113,12 @@ export class WorkerRepository {
           })
         : null;
 
-      return data;
+      const result = data;
+      this.logger.debug(
+        `${this.getOneWorker.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
     } catch (error) {
       this.logger.error('ERROR AL OBTENER COLABORADOR: ', error);
       throw new Error(error);
@@ -184,10 +189,16 @@ export class WorkerRepository {
       isActive,
     });
 
-    return await paginate(qb, {
+    const result = await paginate(qb, {
       limit: limit ?? 10,
       page: currentPage ?? 1,
     });
+    this.logger.debug(
+      `${this.findWorkers.name} - result`,
+      JSON.stringify(result, null, 2),
+    );
+
+    return result;
   }
 
   async updateWorker(id: number, updateWorkerData: any) {
