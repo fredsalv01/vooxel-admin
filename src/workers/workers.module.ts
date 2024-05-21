@@ -1,3 +1,6 @@
+import { BankAccountService } from './services/bank-account.service';
+import { BankAccountRepository } from './repository/bankAccountRepository';
+import { BankAccountController } from './controllers/bank-account.controller';
 import { Module } from '@nestjs/common';
 import { WorkersService } from './services/workers.service';
 import { WorkersController } from './controllers/workers.controller';
@@ -31,15 +34,18 @@ import { WorkerToClientRepository } from './repository/workerToClientsRepository
     WorkersController,
     EmergencyContactsController,
     CertificationController,
+    BankAccountController,
   ],
   providers: [
     WorkersService,
+    BankAccountService,
     EmergencyContactService,
     CertificationsService,
     WorkerRepository,
     EmergencyContactRepository,
     CertificationRepository,
     WorkerToClientRepository,
+    BankAccountRepository
     // WorkerDoesNotExistsConstrint
   ],
 })

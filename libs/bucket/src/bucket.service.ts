@@ -28,6 +28,8 @@ export class BucketService {
       folder += 'certifications/';
     } else if (fileType === 'psychological_tests') {
       folder += 'psychological_tests/';
+    } else if (fileType === 'profile_photos') {
+      folder += 'profile_photos/';
     }
     const filePath = `${folder}${fileName}`;
     this.logger.debug('Generated FILEPATH:', filePath);

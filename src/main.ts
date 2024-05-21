@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('MAIN')
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
     new ValidationPipe({
@@ -32,5 +33,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
+  logger.log(`Running on port ${process.env.PORT || 3000}`)
 }
 bootstrap();
