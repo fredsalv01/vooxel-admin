@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Validate,
 } from 'class-validator';
 import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
@@ -52,7 +53,7 @@ export class CreateWorkerDto {
     description: 'birthDate',
     example: '1998-07-13',
   })
-  @IsDateString({ strict: true } as any)
+  @Validate(dateFormatValidator)
   @IsNotEmpty()
   birthdate: string; // fecha de nacimiento
 
@@ -64,7 +65,7 @@ export class CreateWorkerDto {
     description: 'hiringDate',
     example: '2024-05-05',
   })
-  @IsDateString({ strict: true } as any)
+  @Validate(dateFormatValidator)
   @IsNotEmpty()
   hiringDate: string; // fecha de inicio de contrato
 
@@ -106,4 +107,12 @@ export class CreateWorkerDto {
   // @IsEmpty()
   // @IsNumber()
   // chiefOfficerId?: number | null; // aca vamos a hacer una asignacion circular en bd
+}
+
+function dateFormatValidator(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+  const date = new Date(value);
+  return !isNaN(date.getTime());
 }
