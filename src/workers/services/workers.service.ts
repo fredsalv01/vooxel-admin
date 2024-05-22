@@ -94,12 +94,12 @@ export class WorkersService {
 
     //validar si el row existe para ver si hay actualizacion de cliente o no
     const existsWorkerToClient =
-      this.workerToClientsRepository.validateNewClientForWorker({
+      await this.workerToClientsRepository.validateNewClientForWorker({
         workerId: id,
         clientId: updateWorkerDto.clientId,
       });
 
-    if (existsWorkerToClient) {
+    if (!existsWorkerToClient) {
       await this.workerToClientsRepository.create({
         workerId: id,
         clientId: updateWorkerDto.clientId,
