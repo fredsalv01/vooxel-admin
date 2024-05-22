@@ -15,7 +15,10 @@ export class WorkerToClientRepository {
     return this.db.createQueryBuilder('e').orderBy('e.created_at', 'DESC');
   }
 
-  public async validateNewClientForWorker(data: {clientId: number, workerId: number}){
+  public async validateNewClientForWorker(data: {
+    clientId: number;
+    workerId: number;
+  }) {
     const exists = this.db.exists({
       where: {
         clientId: data.clientId,
@@ -23,11 +26,13 @@ export class WorkerToClientRepository {
         isActive: true,
       },
     });
-
+    this.logger.debug(
+      `${this.validateNewClientForWorker.name} - result`,
+      JSON.stringify(exists, null, 2),
+    );
     return exists;
   }
 
-  
   public async create(data: { workerId: number; clientId: number }) {
     const getOld = this.db.exists({
       where: {
