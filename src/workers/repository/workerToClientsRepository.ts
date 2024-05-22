@@ -19,7 +19,7 @@ export class WorkerToClientRepository {
     clientId: number;
     workerId: number;
   }) {
-    const exists = this.db.exists({
+    const exists = await this.db.exists({
       where: {
         clientId: data.clientId,
         workerId: data.workerId,
