@@ -42,19 +42,18 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   charge?: string;
   techSkills?: string[];
   hiringDate?: string;
-  emergencyContacts?: EmergencyContactDto[];
   familiarAssignment?: string;
 
   @IsNumber()
   @IsOptional()
   chiefOfficerId?: number;
 
-  @IsArray({
-    each: false,
-    context: CreateCertificationDto,
-  })
-  @IsOptional()
-  certifications: CreateCertificationDto[];
+  // @IsArray({
+  //   each: false,
+  //   context: CreateCertificationDto,
+  // })
+  // @IsOptional()
+  // certifications: CreateCertificationDto[];
 
   @ApiProperty({
     description: 'leaveDate',

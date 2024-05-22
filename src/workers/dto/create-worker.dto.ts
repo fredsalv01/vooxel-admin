@@ -97,16 +97,6 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   techSkills: string[]; // string[]
 
-  @IsArray({
-    each: false,
-    context: EmergencyContactDto,
-  })
-  @IsOptional()
-  emergencyContacts?: EmergencyContactDto[];
-
-  // @IsEmpty()
-  // @IsNumber()
-  // chiefOfficerId?: number | null; // aca vamos a hacer una asignacion circular en bd
 }
 
 function dateFormatValidator(value: string) {

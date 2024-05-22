@@ -23,24 +23,24 @@ export class WorkersService {
     );
     const worker = await this.workerRepository.addWorker(createWorkerDto);
     let emergencyContactArray: any[] = [];
-    if (
-      createWorkerDto?.emergencyContacts &&
-      createWorkerDto?.emergencyContacts.length > 0
-    ) {
-      for (
-        let index = 0;
-        index < createWorkerDto.emergencyContacts.length;
-        index++
-      ) {
-        const element = createWorkerDto.emergencyContacts[index];
-        const data = { ...element, workerId: worker?.id };
-        const emergencyContact = await this.emergencyContactService.create(
-          new EmergencyContact(data),
-        );
-        emergencyContactArray.push(emergencyContact);
-      }
-      worker.emergencyContacts = emergencyContactArray;
-    }
+    // if (
+    //   createWorkerDto?.emergencyContacts &&
+    //   createWorkerDto?.emergencyContacts.length > 0
+    // ) {
+    //   for (
+    //     let index = 0;
+    //     index < createWorkerDto.emergencyContacts.length;
+    //     index++
+    //   ) {
+    //     const element = createWorkerDto.emergencyContacts[index];
+    //     const data = { ...element, workerId: worker?.id };
+    //     const emergencyContact = await this.emergencyContactService.create(
+    //       new EmergencyContact(data),
+    //     );
+    //     emergencyContactArray.push(emergencyContact);
+    //   }
+    //   worker.emergencyContacts = emergencyContactArray;
+    // }
 
     this.logger.debug(
       `DB Response ${this.create.name}:`,
@@ -68,23 +68,23 @@ export class WorkersService {
     };
     console.log('formatData', formatData);
     // validar que tenga certificaciones y contactos de emergencia
-    if (
-      !updateWorkerDto.certifications &&
-      !(updateWorkerDto.certifications.length > 0)
-    ) {
-      throw new BadRequestException({
-        error: 'No ha agregado ninguna certificacion',
-      });
-    }
+    // if (
+    //   !updateWorkerDto.certifications &&
+    //   !(updateWorkerDto.certifications.length > 0)
+    // ) {
+    //   throw new BadRequestException({
+    //     error: 'No ha agregado ninguna certificacion',
+    //   });
+    // }
 
-    if (
-      !updateWorkerDto.emergencyContacts &&
-      !(updateWorkerDto.emergencyContacts.length > 0)
-    ) {
-      throw new BadRequestException({
-        error: 'No ha agregado ningun contacto de emergencia',
-      });
-    }
+    // if (
+    //   !updateWorkerDto.emergencyContacts &&
+    //   !(updateWorkerDto.emergencyContacts.length > 0)
+    // ) {
+    //   throw new BadRequestException({
+    //     error: 'No ha agregado ningun contacto de emergencia',
+    //   });
+    // }
 
     if (!updateWorkerDto.bankAccount) {
       throw new BadRequestException({

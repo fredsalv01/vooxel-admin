@@ -217,19 +217,6 @@ export class WorkerRepository {
     await queryRunner.startTransaction();
     try {
       await queryRunner.manager.save(worker);
-      // Insert EmergencyContacts
-      if (
-        updateWorkerData.emergencyContacts &&
-        updateWorkerData.emergencyContacts.length > 0
-      ) {
-        for (const emergencyContactData of updateWorkerData.emergencyContacts) {
-          const emergencyContact = queryRunner.manager.create(
-            EmergencyContact,
-            emergencyContactData,
-          );
-          await queryRunner.manager.save(emergencyContact);
-        }
-      }
 
       // Insert Certifications
       if (
