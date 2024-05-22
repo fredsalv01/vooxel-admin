@@ -99,7 +99,7 @@ export class WorkersService {
         clientId: updateWorkerDto.clientId,
       });
 
-    if (!existsWorkerToClient) {
+    if (existsWorkerToClient) {
       await this.workerToClientsRepository.create({
         workerId: id,
         clientId: updateWorkerDto.clientId,
