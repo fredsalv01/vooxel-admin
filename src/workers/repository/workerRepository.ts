@@ -233,7 +233,7 @@ export class WorkerRepository {
       }
 
       if (updateWorkerData.bankAccount) {
-        const bankAccount = queryRunner.manager.update(
+        const bankAccount = await queryRunner.manager.update(
           BankAccount,
           { workerId: worker.id },
           updateWorkerData.bankAccount,
