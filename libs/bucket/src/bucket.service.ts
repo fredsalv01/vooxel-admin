@@ -17,6 +17,15 @@ export class BucketService {
     });
   }
 
+  private async corsConfig() {
+    await this.storage.bucket(this.bucketName).setCorsConfiguration([{
+      maxAgeSeconds: 3600,
+      method: ['GET', 'PUT'],
+      origin: ['*'],
+      responseHeader: ['Content-Type'],
+    },])
+  }
+
   async generateV4UploadSignedUrl(
     fileName: string,
     fileType: string,
@@ -41,7 +50,8 @@ export class BucketService {
         contentType: 'application/pdf',
       };
       this.logger.debug('Generated OPTIONS:', options);
-
+      await this.corsConfig();
+      
       const [url] = await this.storage
         .bucket(this.bucketName)
         .file(filePath)
