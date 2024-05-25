@@ -3,10 +3,11 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BankNames } from '../utils/enum-types';
+import { BankAccountTypes, BankNames } from '../utils/enum-types';
 import { Worker } from './worker.entity';
 
 @Entity()
@@ -44,18 +45,23 @@ export class BankAccount {
   @Expose()
   bankAccountNumber: number;
 
-  @OneToOne(() => Worker, (worker) => worker.bankAccount)
-  @JoinColumn({
-    name: 'workerId',
+  @Column({
+    type: 'enum',
+    enum: BankAccountTypes,
+    default: null,
+    nullable: true,
   })
   @Expose()
-  worker: Worker;
+  AccountType: BankAccountTypes;
 
   @Column({
-    type: 'int',
-    nullable: true,
-    default: null,
+    type: 'bool',
+    default: true,
   })
   @Expose()
-  workerId: number;
+  isActive: boolean;
+
+  @ManyToMany(() => Worker, (worker) => worker.bankAccounts)
+  @Expose()
+  workers: Worker[];
 }

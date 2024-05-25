@@ -27,3 +27,10 @@ export enum BankNames {
   BANBIF = 'BANBIF',
   BANCO_LA_NACION = 'BANCO DE LA NACION',
 }
+
+export enum BankAccountTypes {
+  CTS = 'CTA CTS',
+  SUELDO = 'CTA SUELDO',
+  LIQUIDACION = 'CTA LIQUIDACION',
+  AHORROS = 'CTA AHORROS'
+}

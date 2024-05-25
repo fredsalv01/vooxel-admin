@@ -1,6 +1,6 @@
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { BankAccount } from './../entities/bank-account.entity';
 
 export class BankAccountRepository {
@@ -8,16 +8,18 @@ export class BankAccountRepository {
 
   constructor(
     @InjectRepository(BankAccount)
-    private readonly db: Repository<BankAccount>
-  ){}
+    private readonly db: Repository<BankAccount>,
+    private readonly dataSource: DataSource,
+  ) {}
 
-
-  async findBankAccount(workerId: number){
-    const result = await this.db.find({
-      where: {
-        workerId
-      }
-    })
+  async findBankAccount(workerId: number) {
+    const result = await this.dataSource
+      .getRepository(BankAccount)
+      .createQueryBuilder('bankAccount')
+      .innerJoin('bankAccount.workers', 'worker')
+      .where('worker.id =: workerId', { workerId })
+      .where('bankAccount.isActive =: isActive', { isActive: true })
+      .getMany();
 
     this.logger.debug(
       `${this.findBankAccount.name} - result`,
@@ -27,9 +29,9 @@ export class BankAccountRepository {
     return result;
   }
 
-  async create(data: any){
+  async create(data: any) {
     try {
-      const result = await this.db.save(new BankAccount(data))
+      const result = await this.db.save(new BankAccount(data));
       this.logger.debug(
         `${this.create.name} - result`,
         JSON.stringify(result, null, 2),
@@ -41,4 +43,37 @@ export class BankAccountRepository {
     }
   }
 
+  async updateState(id: number) {
+    try {
+      const validateBankAccount = await this.db.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!validateBankAccount) {
+        throw new NotFoundException(
+          `No se encontro el cliente con el id ${id}`,
+        );
+      }
+
+      const result = await this.db.update(id, {
+        isActive: !validateBankAccount,
+      });
+
+      this.logger.debug(
+        `${this.updateState.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+
+      return result;
+    } catch (error) {
+      this.logger.error(error);
+      this.logger.error(
+        `${this.updateState.name} - error`,
+        JSON.stringify(error, null, 2),
+      );
+      throw new BadRequestException(error?.detail);
+    }
+  }
 }
