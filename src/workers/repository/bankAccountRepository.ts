@@ -31,7 +31,19 @@ export class BankAccountRepository {
       this.logger.error('ERROR MOSTRANDO DATOS DE CUENTAS DE BANCO:', error);
       throw new Error(error?.detail);
     }
+  }
 
+  async findOne(id: number) {
+    const result = await this.db.findOne({
+      where: {
+        id
+      }
+    })
+    this.logger.debug(
+      `${this.findOne.name} - result`,
+      JSON.stringify(result, null, 2),
+    );
+    return result;
   }
 
   async create(data: any) {
@@ -63,7 +75,7 @@ export class BankAccountRepository {
       }
 
       const result = await this.db.update(id, {
-        isActive: !validateBankAccount,
+        isActive: !validateBankAccount.isActive,
       });
 
       this.logger.debug(
@@ -71,7 +83,7 @@ export class BankAccountRepository {
         JSON.stringify(result, null, 2),
       );
 
-      return result;
+      return this.findOne(id);
     } catch (error) {
       this.logger.error(error);
       this.logger.error(

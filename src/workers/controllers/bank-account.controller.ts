@@ -14,7 +14,7 @@ export class BankAccountController {
     private readonly bankAccountService: BankAccountService
   ){}
 
-  @Get(':id')
+  @Get('/worker/:id')
   @UseGuards(AuthGuardJwt)
   findBankAccount(
     @Param('id', ParseIntPipe) id: number
@@ -31,5 +31,12 @@ export class BankAccountController {
   ){
     this.logger.log(`${this.create.name} - RequestBody`, JSON.stringify(createBankAccountDto, null, 2));
     return this.bankAccountService.create(createBankAccountDto)
+  }
+
+  @Get('/bank/:bankId')
+  @UseGuards(AuthGuardJwt)
+  updateState(@Param('bankId', ParseIntPipe) bankId: number){
+    this.logger.log(`${this.updateState.name} = bankId: ${bankId} `);
+    return this.bankAccountService.updateState(bankId);
   }
 }

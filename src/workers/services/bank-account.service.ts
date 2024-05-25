@@ -22,4 +22,9 @@ export class BankAccountService {
     return this.bankAccountRepository.create(bankAccountDto);
   }
 
+  updateState(bankId: number) {
+    this.logger.debug(this.updateState.name);
+    return this.bankAccountRepository.updateState(bankId);
+  }
+
 }

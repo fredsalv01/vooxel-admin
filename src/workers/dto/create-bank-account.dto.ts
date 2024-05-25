@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -33,4 +34,8 @@ export class CreateBankAccountDto {
   })
   @IsNotEmpty()
   bankAccountType: BankAccountTypes;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive: boolean;
 }
