@@ -16,7 +16,7 @@ export class BankAccountRepository {
     const result = await this.dataSource
       .getRepository(BankAccount)
       .createQueryBuilder('bankAccount')
-      .innerJoin('bankAccount.workers', 'worker')
+      .innerJoin('bankAccount.workers', 'workers')
       .where('worker.id =: workerId', { workerId })
       .where('bankAccount.isActive =: isActive', { isActive: true })
       .getMany();
