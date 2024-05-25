@@ -7,7 +7,7 @@ import {
   IsPositive,
   Max,
 } from 'class-validator';
-import { BankNames } from '../utils/enum-types';
+import { BankAccountTypes, BankNames } from '../utils/enum-types';
 
 export class CreateBankAccountDto {
   @IsEnum(BankNames)
@@ -27,4 +27,10 @@ export class CreateBankAccountDto {
   @IsNumber()
   @IsOptional()
   workerId: number;
+
+  @IsEnum(BankAccountTypes, {
+    message: `Tipos de cuenta de banco validas: ${BankAccountTypes}` 
+  })
+  @IsNotEmpty()
+  bankAccountType: BankAccountTypes;
 }

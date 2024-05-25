@@ -13,20 +13,25 @@ export class BankAccountRepository {
   ) {}
 
   async findBankAccount(workerId: number) {
-    const result = await this.dataSource
+    try {
+      const result = await this.dataSource
       .getRepository(BankAccount)
       .createQueryBuilder('bankAccount')
       .innerJoin('bankAccount.workers', 'workers')
-      .where('worker.id =: workerId', { workerId })
-      .where('bankAccount.isActive =: isActive', { isActive: true })
+      .where('worker.id = :workerId', { workerId })
+      .where('bankAccount.isActive = :isActive', { isActive: true })
       .getMany();
 
-    this.logger.debug(
-      `${this.findBankAccount.name} - result`,
-      JSON.stringify(result, null, 2),
-    );
+      this.logger.debug(
+        `${this.findBankAccount.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    } catch (error) {
+      this.logger.error('ERROR MOSTRANDO DATOS DE CUENTAS DE BANCO:', error);
+      throw new Error(error?.detail);
+    }
 
-    return result;
   }
 
   async create(data: any) {

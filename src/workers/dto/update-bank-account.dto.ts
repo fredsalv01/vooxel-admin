@@ -1,0 +1,29 @@
+import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, Max } from "class-validator";
+import { CreateBankAccountDto } from "./create-bank-account.dto";
+import { BankAccountTypes, BankNames } from "../utils/enum-types";
+
+export class UpdateBankAccountDto extends CreateBankAccountDto {
+  @IsEnum(BankNames, {
+    message: `Tipos de bancos válidos: ${BankNames}`
+  })
+  @IsOptional()
+  bankName: BankNames;
+
+  @IsInt()
+  @IsPositive()
+  @Max(20)
+  @IsOptional()
+  cci: number;
+
+  @IsInt()
+  @IsPositive()
+  @Max(13)
+  @IsOptional()
+  bankAccountNumber: number;
+
+  @IsEnum(BankAccountTypes, {
+    message: `Tipos de cuenta de banco válidas: ${BankAccountTypes}` 
+  })
+  @IsNotEmpty()
+  bankAccountType: BankAccountTypes;
+}
