@@ -28,6 +28,7 @@ export class BankAccountRepository {
           'bankAccount.bankAccountNumber',
           'bankAccount.AccountType',
           'bankAccount.isActive',
+          'bankAccount.isMain',
         ]);
 
       this.logger.debug('Generated SQL:', query.getSql());
@@ -95,37 +96,31 @@ export class BankAccountRepository {
     }
   }
 
-  async updateState(id: number) {
+  async updateState(id: number, data: any) {
+    const bankAccount: BankAccount = await this.db.preload({
+      id: id,
+      ...data,
+    });
+
+    if (!bankAccount) {
+      throw new NotFoundException({
+        error: 'Colaborador no encontrado',
+      });
+    }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     try {
-      const validateBankAccount = await this.db.findOne({
-        where: {
-          id,
-        },
-      });
+      await queryRunner.manager.save(bankAccount);
 
-      if (!validateBankAccount) {
-        throw new NotFoundException(
-          `No se encontro el cliente con el id ${id}`,
-        );
-      }
-
-      const result = await this.db.update(id, {
-        isActive: !validateBankAccount.isActive,
-      });
-
-      this.logger.debug(
-        `${this.updateState.name} - result`,
-        JSON.stringify(result, null, 2),
-      );
-
-      return this.findOne(id);
+      await queryRunner.commitTransaction();
+      return bankAccount;
     } catch (error) {
+      await queryRunner.rollbackTransaction();
       this.logger.error(error);
-      this.logger.error(
-        `${this.updateState.name} - error`,
-        JSON.stringify(error, null, 2),
-      );
       throw new BadRequestException(error?.detail);
+    } finally {
+      await queryRunner.release();
     }
   }
 }

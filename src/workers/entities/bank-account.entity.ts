@@ -61,6 +61,13 @@ export class BankAccount {
   @Expose()
   isActive: boolean;
 
+  @Column({
+    type: 'bool',
+    default: false,
+  })
+  @Expose()
+  isMain: boolean;
+
   @ManyToMany(() => Worker, (worker) => worker.bankAccounts)
   @Expose()
   workers: Worker[];

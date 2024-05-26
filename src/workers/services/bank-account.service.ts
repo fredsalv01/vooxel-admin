@@ -1,6 +1,7 @@
 import { BankAccountRepository } from './../repository/bankAccountRepository';
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateBankAccountDto } from '../dto/create-bank-account.dto';
+import { UpdateBankAccountDto } from '../dto/update-bank-account.dto';
 
 @Injectable()
 export class BankAccountService {
@@ -18,8 +19,8 @@ export class BankAccountService {
     return this.bankAccountRepository.create(bankAccountDto);
   }
 
-  updateState(bankId: number) {
-    this.logger.debug(this.updateState.name);
-    return this.bankAccountRepository.updateState(bankId);
+  update(bankId: number, body: UpdateBankAccountDto) {
+    this.logger.debug(this.update.name);
+    return this.bankAccountRepository.updateState(bankId, body);
   }
 }

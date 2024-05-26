@@ -52,4 +52,8 @@ export class CreateBankAccountDto {
   @IsBoolean()
   @IsOptional()
   isActive: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isMain: boolean;
 }
