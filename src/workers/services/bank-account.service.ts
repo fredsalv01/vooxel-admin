@@ -23,16 +23,20 @@ export class BankAccountService {
     this.logger.debug(this.update.name);
     const { workerId, ...rest } = body;
     const bankAccounts = await this.findByWorkerId(workerId);
+
     const main = bankAccounts.find((item) => item.isMain === true);
+
     if (
-      main.id !== bankId &&
+      main &&
+      main?.id !== bankId &&
       rest?.isMain === true &&
-      rest.AccountType !== main.AccountType
+      rest.AccountType !== main?.AccountType
     ) {
       await this.bankAccountRepository.updateState(main.id, {
         isMain: false,
       });
     }
+
     return this.bankAccountRepository.updateState(bankId, rest);
   }
 }
