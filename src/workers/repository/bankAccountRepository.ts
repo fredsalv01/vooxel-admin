@@ -103,7 +103,7 @@ export class BankAccountRepository {
 
     if (!bankAccount) {
       throw new NotFoundException({
-        error: 'Colaborador no encontrado',
+        error: 'cuenta de banco no encontrado',
       });
     }
     const queryRunner = this.dataSource.createQueryRunner();
