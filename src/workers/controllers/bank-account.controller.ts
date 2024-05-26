@@ -48,7 +48,10 @@ export class BankAccountController {
     @Body() updateBankAccountDto: UpdateBankAccountDto,
   ) {
     this.logger.log(`${this.update.name} = bankId: ${bankId} `);
-    this.logger.debug('body', JSON.stringify(updateBankAccountDto, null, 2));
+    this.logger.debug(
+      `${this.update.name} - body`,
+      JSON.stringify(updateBankAccountDto, null, 2),
+    );
     return this.bankAccountService.update(bankId, updateBankAccountDto);
   }
 }
