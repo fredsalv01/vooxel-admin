@@ -30,20 +30,20 @@ export class BankAccount {
   bankName: BankNames;
 
   @Column({
-    type: 'bigint',
+    type: 'text',
     default: null,
     nullable: true,
   })
   @Expose()
-  cci: number; // tiene 20 digitos
+  cci: string; // tiene 20 digitos
 
   @Column({
-    type: 'bigint',
+    type: 'text',
     default: null,
     nullable: true,
   })
   @Expose()
-  bankAccountNumber: number;
+  bankAccountNumber: string;
 
   @Column({
     type: 'enum',

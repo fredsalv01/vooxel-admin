@@ -103,7 +103,7 @@ export class WorkerRepository {
           'client',
           'workerToClient.clientId = client.id',
         )
-        .innerJoinAndSelect('worker.bankAccounts', 'bankAccounts')
+        .leftJoinAndSelect('worker.bankAccounts', 'bankAccounts')
         .where('worker.id = :id', { id: id })
         .getOne();
 

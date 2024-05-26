@@ -4,21 +4,18 @@ import { CreateBankAccountDto } from '../dto/create-bank-account.dto';
 
 @Injectable()
 export class BankAccountService {
-  
   private readonly logger = new Logger(BankAccountService.name);
-  constructor(
-    private readonly bankAccountRepository: BankAccountRepository
-  ){}
+  constructor(private readonly bankAccountRepository: BankAccountRepository) {}
 
-  findByWorkerId(id: number){
+  findByWorkerId(id: number) {
+    this.logger.debug(this.findByWorkerId.name);
 
-    this.logger.debug(this.findByWorkerId.name)
-
-    return this.bankAccountRepository.findBankAccount( id );
+    return this.bankAccountRepository.findBankAccount(id);
   }
 
-  create(bankAccountDto: CreateBankAccountDto) {
+  async create(bankAccountDto: CreateBankAccountDto) {
     this.logger.debug(this.create.name);
+    const { workerId, ...rest } = bankAccountDto;
     return this.bankAccountRepository.create(bankAccountDto);
   }
 
@@ -26,5 +23,4 @@ export class BankAccountService {
     this.logger.debug(this.updateState.name);
     return this.bankAccountRepository.updateState(bankId);
   }
-
 }
