@@ -1,4 +1,10 @@
-import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 import { BankAccountTypes, BankNames } from '../utils/enum-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { getRandomInt } from '../../common/functions';
@@ -36,7 +42,7 @@ export class UpdateBankAccountDto {
     message: `Tipos de cuenta de banco válidas: ${BankAccountTypes}`,
   })
   @IsOptional()
-  bankAccountType?: BankAccountTypes;
+  AccountType?: BankAccountTypes;
 
   @IsBoolean()
   @IsOptional()
@@ -45,4 +51,12 @@ export class UpdateBankAccountDto {
   @IsBoolean()
   @IsOptional()
   isMain?: boolean;
+
+  @ApiProperty({
+    description: 'Id del worker',
+    example: `1`,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  workerId: number;
 }
