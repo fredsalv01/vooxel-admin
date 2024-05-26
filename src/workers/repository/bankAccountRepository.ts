@@ -77,7 +77,7 @@ export class BankAccountRepository {
         bankAccountNumber: data.bankAccountNumber,
         cci: data.cci,
         isActive: true,
-        AccountType: data.bankAccountType,
+        AccountType: data.AccountType,
         workers: [worker],
       });
       await this.db.save(result);

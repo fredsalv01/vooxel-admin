@@ -15,7 +15,6 @@ export class BankAccountService {
 
   async create(bankAccountDto: CreateBankAccountDto) {
     this.logger.debug(this.create.name);
-    const { workerId, ...rest } = bankAccountDto;
     return this.bankAccountRepository.create(bankAccountDto);
   }
 

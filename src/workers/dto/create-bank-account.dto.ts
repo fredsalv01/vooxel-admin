@@ -47,7 +47,7 @@ export class CreateBankAccountDto {
     message: `Tipos de cuenta de banco validas: ${BankAccountTypes}`,
   })
   @IsNotEmpty()
-  bankAccountType: BankAccountTypes;
+  AccountType: BankAccountTypes;
 
   @IsBoolean()
   @IsOptional()
