@@ -31,6 +31,5 @@ export enum BankNames {
 export enum BankAccountTypes {
   CTS = 'CTA CTS',
   SUELDO = 'CTA SUELDO',
-  LIQUIDACION = 'CTA LIQUIDACION',
-  AHORROS = 'CTA AHORROS'
+  AHORROS = 'CTA AHORROS',
 }
