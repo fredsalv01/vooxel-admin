@@ -110,6 +110,7 @@ export class BankAccountRepository {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      console.log('bankAccount', bankAccount);
       await queryRunner.manager.save(bankAccount);
 
       await queryRunner.commitTransaction();

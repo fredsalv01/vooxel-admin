@@ -24,19 +24,26 @@ export class BankAccountService {
     const { workerId, ...rest } = body;
     const bankAccounts = await this.findByWorkerId(workerId);
 
-    const main = bankAccounts.find((item) => item.isMain === true);
+    const main = bankAccounts.find(
+      (item) => item.isMain === true && item.AccountType === rest.AccountType,
+    );
 
-    if (
-      main &&
-      main?.id !== bankId &&
-      rest?.isMain === true &&
-      rest.AccountType !== main?.AccountType
-    ) {
-      await this.bankAccountRepository.updateState(main.id, {
-        isMain: false,
-      });
+    if (main) {
+      console.log('paso por aqui');
+      console.log(rest?.isMain === true);
+      console.log(rest.AccountType === main?.AccountType);
+
+      if (
+        main.id !== bankId &&
+        rest?.isMain === true &&
+        rest.AccountType === main?.AccountType
+      ) {
+        console.log('main', main);
+        await this.bankAccountRepository.updateState(main?.id, {
+          isMain: false,
+        });
+      }
     }
-
     return this.bankAccountRepository.updateState(bankId, rest);
   }
 }
