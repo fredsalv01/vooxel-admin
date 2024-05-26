@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -162,9 +163,10 @@ export class Worker {
   })
   chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
 
-  @OneToOne(() => BankAccount, (bankAccount) => bankAccount.worker)
+  @ManyToMany(() => BankAccount, (bankAccount) => bankAccount.workers)
+  @JoinTable()
   @Expose()
-  bankAccount: BankAccount;
+  bankAccounts: BankAccount[];
 
   @OneToMany(() => Certification, (certification) => certification.worker, {
     cascade: true,

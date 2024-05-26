@@ -1,35 +1,89 @@
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { BankAccount } from './../entities/bank-account.entity';
+import { Worker } from '../entities/worker.entity';
 
 export class BankAccountRepository {
   private readonly logger = new Logger(BankAccountRepository.name);
 
   constructor(
     @InjectRepository(BankAccount)
-    private readonly db: Repository<BankAccount>
-  ){}
+    private readonly db: Repository<BankAccount>,
+    private readonly dataSource: DataSource,
+  ) {}
 
+  async findBankAccount(workerId: number) {
+    try {
+      const query = this.dataSource
+        .getRepository(BankAccount)
+        .createQueryBuilder('bankAccount')
+        .innerJoin('bankAccount.workers', 'worker')
+        .where('worker.id = :workerId', { workerId })
+        .andWhere('bankAccount.isActive = :isActive', { isActive: true })
+        .select([
+          'bankAccount.id',
+          'bankAccount.bankName',
+          'bankAccount.cci',
+          'bankAccount.bankAccountNumber',
+          'bankAccount.AccountType',
+          'bankAccount.isActive',
+        ]);
 
-  async findBankAccount(workerId: number){
-    const result = await this.db.find({
+      this.logger.debug('Generated SQL:', query.getSql());
+
+      const result = await query.getMany();
+
+      this.logger.debug(
+        `${this.findBankAccount.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    } catch (error) {
+      this.logger.error('ERROR FETCHING BANK ACCOUNT DATA:', error);
+      throw new Error(error?.detail || error.message);
+    }
+  }
+
+  async findOne(id: number) {
+    const result = await this.db.findOne({
       where: {
-        workerId
-      }
-    })
-
+        id,
+      },
+    });
     this.logger.debug(
-      `${this.findBankAccount.name} - result`,
+      `${this.findOne.name} - result`,
       JSON.stringify(result, null, 2),
     );
-
     return result;
   }
 
-  async create(data: any){
+  async create(data: any) {
     try {
-      const result = await this.db.save(new BankAccount(data))
+      const workerRepository = this.dataSource.getRepository(Worker);
+      const worker = await workerRepository.findOne({
+        where: { id: data.workerId },
+        relations: ['bankAccounts'],
+      });
+
+      if (!worker) {
+        throw new NotFoundException({
+          message: `No se ha encontrado el trabajador con el id ${data.workerId}`,
+        });
+      }
+
+      const result = this.db.create({
+        bankName: data.bankName,
+        bankAccountNumber: data.bankAccountNumber,
+        cci: data.cci,
+        isActive: true,
+        AccountType: data.bankAccountType,
+        workers: [worker],
+      });
+      await this.db.save(result);
+
+      worker.bankAccounts.push(result);
+      await workerRepository.save(worker);
       this.logger.debug(
         `${this.create.name} - result`,
         JSON.stringify(result, null, 2),
@@ -41,4 +95,37 @@ export class BankAccountRepository {
     }
   }
 
+  async updateState(id: number) {
+    try {
+      const validateBankAccount = await this.db.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!validateBankAccount) {
+        throw new NotFoundException(
+          `No se encontro el cliente con el id ${id}`,
+        );
+      }
+
+      const result = await this.db.update(id, {
+        isActive: !validateBankAccount.isActive,
+      });
+
+      this.logger.debug(
+        `${this.updateState.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+
+      return this.findOne(id);
+    } catch (error) {
+      this.logger.error(error);
+      this.logger.error(
+        `${this.updateState.name} - error`,
+        JSON.stringify(error, null, 2),
+      );
+      throw new BadRequestException(error?.detail);
+    }
+  }
 }
