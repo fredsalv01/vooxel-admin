@@ -1,4 +1,4 @@
-import { ContractType, EnglishLevel } from '../utils/enum-types';
+import { EnglishLevel } from '../utils/enum-types';
 
 export interface WorkerData {
   documentType: string;
@@ -9,7 +9,6 @@ export interface WorkerData {
   englishLevel: EnglishLevel;
   charge: string;
   birthdate: string;
-  contractType: ContractType;
   hiringDate: Date;
   phoneNumber: string;
   address: string;

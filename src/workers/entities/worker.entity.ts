@@ -9,12 +9,13 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
+import { DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
 import { Client } from '../../clients/entities/client.entity';
 import { BankAccount } from './bank-account.entity';
 import { WorkerToClient } from './worker-to-client.entity';
+import { ContractWorker } from "../../contract_workers/entities/contract_worker.entity";
 
 @Entity()
 export class Worker {
@@ -77,24 +78,7 @@ export class Worker {
   birthdate: string; // fecha de nacimiento
 
   @Expose()
-  @Column({
-    type: 'enum',
-    enum: ContractType,
-    nullable: true,
-    default: null,
-  })
-  contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
-
-  @Expose()
   hiringTime?: number; // tiempo de contratacion
-
-  @Expose()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  hiringDate: Date; // fecha de inicio de contrato
-
-  @Expose()
-  @Column({ type: 'date', nullable: true, default: null })
-  leaveDate: Date; // fecha de salida de la empresa
 
   @Expose()
   @Column({
@@ -176,27 +160,6 @@ export class Worker {
   certifications: Certification[]; // listado de certificaciones string[]
 
   @Expose()
-  @Column({
-    nullable: true,
-    default: null,
-  })
-  resumeUrl: string;
-
-  @Expose()
-  @Column({
-    nullable: true,
-    default: null,
-  })
-  contractUrl: string;
-
-  @Expose()
-  @Column({
-    nullable: true,
-    default: null,
-  })
-  psychologicalTestUrl: string;
-
-  @Expose()
   vacationDays?: number; // virtual property se genera en el backend
 
   @Expose()
@@ -219,10 +182,7 @@ export class Worker {
   @Expose()
   public workerToClients: WorkerToClient[];
 
-  getHiringTime(): number {
-    const currentTime = new Date();
-    const hiringTimeMs = currentTime.getTime() - this.hiringDate.getTime();
-    // Convertir de milisegundos a días
-    return hiringTimeMs / (1000 * 3600 * 24);
-  }
+  @OneToMany(()=> ContractWorker, (contractWorker) => contractWorker.worker)
+  public contractWorkers: ContractWorker[];
+
 }

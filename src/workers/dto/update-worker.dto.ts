@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateWorkerDto } from './create-worker.dto';
-import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
+import { DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { CreateCertificationDto } from './create-certification.dto';
 import {
@@ -37,50 +37,18 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   department?: string;
   district?: string;
   address?: string;
-  contractType?: ContractType;
   englishLevel?: EnglishLevel;
   charge?: string;
   techSkills?: string[];
-  hiringDate?: string;
   familiarAssignment?: string;
 
   @IsNumber()
   @IsOptional()
   chiefOfficerId?: number;
 
-  // @IsArray({
-  //   each: false,
-  //   context: CreateCertificationDto,
-  // })
-  // @IsOptional()
-  // certifications: CreateCertificationDto[];
-
-  @ApiProperty({
-    description: 'leaveDate',
-    example: null,
-  })
-  @Validate(dateFormatValidator)
-  @IsOptional()
-  leaveDate?: string = null;
-
-  @IsString()
-  @IsOptional()
-  resumeUrl?: string;
-
-  @IsString()
-  @IsOptional()
-  contractUrl?: string;
-
-  @IsString()
-  @IsOptional()
-  psychologicalTestUrl?: string;
-
   @IsNumber()
   @IsOptional()
   clientId?: number;
-
-  @IsOptional()
-  bankAccount?: CreateBankAccountDto;
 }
 
 function dateFormatValidator(value: string) {

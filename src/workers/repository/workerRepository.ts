@@ -8,6 +8,7 @@ import { Certification } from '../entities/certification.entity';
 import { BankAccount } from '../entities/bank-account.entity';
 import { WorkerToClient } from '../entities/worker-to-client.entity';
 import { Client } from '../../clients/entities/client.entity';
+import { ContractWorker } from "../../contract_workers/entities/contract_worker.entity";
 
 export class WorkerRepository {
   private readonly logger = new Logger(WorkerRepository.name);
@@ -35,7 +36,6 @@ export class WorkerRepository {
         'worker.name',
         'worker.apPat',
         'worker.apMat',
-        'worker.contractType',
         'worker.charge',
         'worker.techSkills',
       ])
@@ -104,6 +104,7 @@ export class WorkerRepository {
           'workerToClient.clientId = client.id',
         )
         .leftJoinAndSelect('worker.bankAccounts', 'bankAccounts')
+        .leftJoinAndSelect('worker.contractWorkers', 'contracts')
         .where('worker.id = :id', { id: id })
         .getOne();
 
@@ -143,6 +144,12 @@ export class WorkerRepository {
         'client',
         'workerToClient.clientId = client.id',
       )
+      .leftJoinAndMapOne(
+        'e.contracWorkers',
+        ContractWorker,
+        'contract',
+        'e.id = contract.workerId AND contract.isActive = :isActive'
+      )
       .select([
         'e.id',
         'e.documentType',
@@ -150,7 +157,7 @@ export class WorkerRepository {
         'e.name',
         'e.apPat',
         'e.apMat',
-        'e.contractType',
+        'contract.contractType',
         'e.charge',
         'e.techSkills',
         'e.isActive',
@@ -173,7 +180,7 @@ export class WorkerRepository {
         'CAST(e.name AS TEXT)',
         'CAST(e.apPat AS TEXT)',
         'CAST(e.apMat AS TEXT)',
-        'CAST(e.contractType AS TEXT)',
+        'CAST(contract.contractType AS TEXT)',
         'CAST(e.charge AS TEXT)',
         'CAST(e.techSkills AS TEXT)',
         'CAST(chiefOfficer.name AS TEXT)',
@@ -217,29 +224,6 @@ export class WorkerRepository {
     await queryRunner.startTransaction();
     try {
       await queryRunner.manager.save(worker);
-
-      // Insert Certifications
-      if (
-        updateWorkerData.certifications &&
-        updateWorkerData.certifications.length > 0
-      ) {
-        for (const certificationData of updateWorkerData.certifications) {
-          const certification = queryRunner.manager.create(
-            Certification,
-            certificationData,
-          );
-          await queryRunner.manager.save(certification);
-        }
-      }
-
-      if (updateWorkerData.bankAccount) {
-        await queryRunner.manager.update(
-          BankAccount,
-          { workerId: worker.id },
-          updateWorkerData.bankAccount,
-        );
-        // await queryRunner.manager.save(bankAccount);
-      }
 
       await queryRunner.commitTransaction();
       return worker;

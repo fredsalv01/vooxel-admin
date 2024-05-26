@@ -9,6 +9,8 @@ import { WorkersModule } from './workers/workers.module';
 import { ClientsModule } from './clients/clients.module';
 import { BucketModule } from '@app/bucket';
 import { FilesModule } from './files/files.module';
+import { ContractWorkersModule } from './contract_workers/contract_workers.module';
+import { ContractClientsModule } from './contract_clients/contract_clients.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { FilesModule } from './files/files.module';
     ClientsModule,
     BucketModule,
     FilesModule,
+    ContractWorkersModule,
+    ContractClientsModule,
   ],
   controllers: [],
   providers: [],

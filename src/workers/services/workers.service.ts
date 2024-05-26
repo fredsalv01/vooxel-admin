@@ -66,31 +66,7 @@ export class WorkersService {
     const formatData = {
       ...updateWorkerDto,
     };
-    console.log('formatData', formatData);
-    // validar que tenga certificaciones y contactos de emergencia
-    // if (
-    //   !updateWorkerDto.certifications &&
-    //   !(updateWorkerDto.certifications.length > 0)
-    // ) {
-    //   throw new BadRequestException({
-    //     error: 'No ha agregado ninguna certificacion',
-    //   });
-    // }
-
-    // if (
-    //   !updateWorkerDto.emergencyContacts &&
-    //   !(updateWorkerDto.emergencyContacts.length > 0)
-    // ) {
-    //   throw new BadRequestException({
-    //     error: 'No ha agregado ningun contacto de emergencia',
-    //   });
-    // }
-
-    if (!updateWorkerDto.bankAccount) {
-      throw new BadRequestException({
-        error: 'No se ha agregado ninguna cuenta bancaria',
-      });
-    }
+    
 
     //validar si el row existe para ver si hay actualizacion de cliente o no
     const existsWorkerToClient =

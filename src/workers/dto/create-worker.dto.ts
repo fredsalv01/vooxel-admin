@@ -9,10 +9,11 @@ import {
   IsString,
   Validate,
 } from 'class-validator';
-import { ContractType, DocumentType, EnglishLevel } from '../utils/enum-types';
+import {  DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
+import { dateFormatValidator } from "../../common/functions";
 
 export class CreateWorkerDto {
   @IsNotEmpty()
@@ -57,18 +58,6 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   birthdate: string; // fecha de nacimiento
 
-  @IsEnum(ContractType)
-  @IsNotEmpty()
-  contractType: ContractType; // tipo de contrato enum: [CONTRATO POR OBRAS, CONTRATO POR PLANILLA, RECIBO POR HONORARIOS]
-
-  @ApiProperty({
-    description: 'hiringDate',
-    example: '2024-05-05',
-  })
-  @Validate(dateFormatValidator)
-  @IsNotEmpty()
-  hiringDate: string; // fecha de inicio de contrato
-
   @IsNotEmpty()
   @IsString()
   phoneNumber: string; // numero de telefono cel o telefono
@@ -97,12 +86,4 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   techSkills: string[]; // string[]
 
-}
-
-function dateFormatValidator(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false;
-  }
-  const date = new Date(value);
-  return !isNaN(date.getTime());
 }

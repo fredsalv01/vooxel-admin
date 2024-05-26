@@ -39,6 +39,10 @@ export class CreateBankAccountDto {
   @IsOptional()
   workerId: number;
 
+  @ApiProperty({
+    description: 'Tipo de cuenta bancaria',
+    example: `${BankAccountTypes.SUELDO}`,
+  })
   @IsEnum(BankAccountTypes, {
     message: `Tipos de cuenta de banco validas: ${BankAccountTypes}`,
   })
