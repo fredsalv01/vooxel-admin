@@ -20,7 +20,6 @@ export class BankAccountRepository {
         .createQueryBuilder('bankAccount')
         .innerJoin('bankAccount.workers', 'worker')
         .where('worker.id = :workerId', { workerId })
-        .andWhere('bankAccount.isActive = :isActive', { isActive: true })
         .select([
           'bankAccount.id',
           'bankAccount.bankName',

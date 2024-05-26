@@ -19,8 +19,14 @@ export class BankAccountService {
     return this.bankAccountRepository.create(bankAccountDto);
   }
 
-  update(bankId: number, body: UpdateBankAccountDto) {
+  async update(bankId: number, body: UpdateBankAccountDto) {
     this.logger.debug(this.update.name);
-    return this.bankAccountRepository.updateState(bankId, body);
+    const {workerId, ...rest} = body
+    const bankAccounts = await this.findByWorkerId(workerId);
+    const main = bankAccounts.find((item) => item.isMain === true)
+    if(main.id !== bankId){
+      await this.bankAccountRepository.updateState(main.id, {isActive: false});
+    }
+    return this.bankAccountRepository.updateState(bankId, rest);
   }
 }
