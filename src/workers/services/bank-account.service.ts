@@ -21,11 +21,13 @@ export class BankAccountService {
 
   async update(bankId: number, body: UpdateBankAccountDto) {
     this.logger.debug(this.update.name);
-    const {workerId, ...rest} = body
+    const { workerId, ...rest } = body;
     const bankAccounts = await this.findByWorkerId(workerId);
-    const main = bankAccounts.find((item) => item.isMain === true)
-    if(main.id !== bankId){
-      await this.bankAccountRepository.updateState(main.id, {isActive: false});
+    const main = bankAccounts.find((item) => item.isMain === true);
+    if (main.id !== bankId && rest?.isMain === true) {
+      await this.bankAccountRepository.updateState(main.id, {
+        isMain: false,
+      });
     }
     return this.bankAccountRepository.updateState(bankId, rest);
   }
