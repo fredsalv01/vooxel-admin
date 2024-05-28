@@ -13,7 +13,10 @@ export class CertificationRepository {
 
   async addCertification(data: CreateCertificationDto) {
     try {
-      const result = await this.db.save(data);
+      const result = await this.db.save({
+        certificationName: data.certificationName.toUpperCase(),
+        ...data,
+      });
       this.logger.debug(
         `${this.addCertification.name} - result`,
         JSON.stringify(result, null, 2),

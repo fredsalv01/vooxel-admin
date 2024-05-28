@@ -2,6 +2,7 @@ import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -20,12 +21,22 @@ export class Certification {
   id: number;
 
   @Expose()
-  @Column()
-  name: string;
+  @Column('text')
+  certificationName: string; // nombre de la certificacion.
 
+  @Column('text')
   @Expose()
-  @Column()
-  urlFile: string;
+  keyFile: string; // nombre del archivo
+
+  @Column('text')
+  @Expose()
+  path: string; // path del archivo en el bucket
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  created_at: Date;
 
   @ManyToOne(() => Worker, (worker) => worker.certifications)
   @JoinColumn({ name: 'workerId' })

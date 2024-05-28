@@ -3,11 +3,15 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateCertificationDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  certificationName: string;
 
   @IsString()
   @IsNotEmpty()
-  urlFile: string;
+  keyFile: string;
+
+  @IsString()
+  @IsNotEmpty()
+  path: string;
 
   @IsNumber()
   @IsNotEmpty()

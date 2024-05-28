@@ -18,12 +18,14 @@ export class BucketService {
   }
 
   private async corsConfig() {
-    await this.storage.bucket(this.bucketName).setCorsConfiguration([{
-      maxAgeSeconds: 3600,
-      method: ['GET', 'PUT'],
-      origin: ['*'],
-      responseHeader: ['Content-Type'],
-    },])
+    await this.storage.bucket(this.bucketName).setCorsConfiguration([
+      {
+        maxAgeSeconds: 3600,
+        method: ['GET', 'PUT'],
+        origin: ['*'],
+        responseHeader: ['Content-Type'],
+      },
+    ]);
   }
 
   async generateV4UploadSignedUrl(
@@ -33,11 +35,11 @@ export class BucketService {
     let folder = 'files/';
     if (fileType === 'cv') {
       folder += 'cv/';
-    } else if (fileType === 'certifications') {
+    } else if (fileType === 'certification') {
       folder += 'certifications/';
-    } else if (fileType === 'psychological_tests') {
+    } else if (fileType === 'psychological_test') {
       folder += 'psychological_tests/';
-    } else if (fileType === 'profile_photos') {
+    } else if (fileType === 'profile_photo') {
       folder += 'profile_photos/';
     }
     const filePath = `${folder}${fileName}`;
@@ -51,7 +53,7 @@ export class BucketService {
       };
       this.logger.debug('Generated OPTIONS:', options);
       await this.corsConfig();
-      
+
       const [url] = await this.storage
         .bucket(this.bucketName)
         .file(filePath)
