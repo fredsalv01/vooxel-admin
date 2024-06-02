@@ -41,7 +41,10 @@ export class BucketService {
       folder += 'psychological_tests/';
     } else if (fileType === 'profile_photo') {
       folder += 'profile_photos/';
+    } else if (fileType === 'contract') {
+      folder += 'contracts/';
     }
+
     const filePath = `${folder}${fileName}`;
     this.logger.debug('Generated FILEPATH:', filePath);
     try {

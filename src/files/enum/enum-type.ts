@@ -3,4 +3,5 @@ export enum FileTypes {
   CERTIFICATION = 'certification',
   PSYCHOLOGICAL_TEST = 'psychological_test',
   PROFILE_PHOTO = 'profile_photo',
+  CONTRACT = 'contract',
 }
