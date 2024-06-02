@@ -13,7 +13,7 @@ export class ContractWorkersRepository {
   ) {}
 
   private getContractsBaseQuery(): SelectQueryBuilder<ContractWorker> {
-    return this.db.createQueryBuilder('contract').orderBy('e.id', 'DESC');
+    return this.db.createQueryBuilder('contract').orderBy('contract.id', 'DESC');
   }
 
   async createContract(data: any) {
@@ -33,7 +33,9 @@ export class ContractWorkersRepository {
   }
 
   async getLatestContractByWorkerId(workerId: number) {
-    const result = this.getContractsBaseQuery()
+    const result = this.db
+      .createQueryBuilder('contract')
+      .orderBy('contract.id', 'DESC')
       .where('contract.workerId = :workerId', { workerId })
       .andWhere('contract.isActive = :isActive', { isActive: true })
       .select([
