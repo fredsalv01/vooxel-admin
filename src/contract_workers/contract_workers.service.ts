@@ -10,8 +10,14 @@ export class ContractWorkersService {
     private readonly contractWorkerRepository: ContractWorkersRepository,
   ) {}
 
-  create(createContractWorkerDto: CreateContractWorkerDto) {
+  async create(createContractWorkerDto: CreateContractWorkerDto) {
     this.logger.debug(this.create.name);
+    const hasContract = await this.findOne(createContractWorkerDto.workerId);
+
+    if(hasContract){
+      this.update(hasContract.id, {isActive: false});
+    }
+
     return this.contractWorkerRepository.createContract(
       createContractWorkerDto,
     );
