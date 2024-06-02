@@ -8,7 +8,7 @@ import { Certification } from '../entities/certification.entity';
 import { BankAccount } from '../entities/bank-account.entity';
 import { WorkerToClient } from '../entities/worker-to-client.entity';
 import { Client } from '../../clients/entities/client.entity';
-import { ContractWorker } from "../../contract_workers/entities/contract_worker.entity";
+import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
 
 export class WorkerRepository {
   private readonly logger = new Logger(WorkerRepository.name);
@@ -145,10 +145,10 @@ export class WorkerRepository {
         'workerToClient.clientId = client.id',
       )
       .leftJoinAndMapOne(
-        'e.contracWorkers',
+        'e.contractWorkers',
         ContractWorker,
         'contract',
-        'e.id = contract.workerId AND contract.isActive = :isActive'
+        'e.id = contract.workerId AND contract.isActive = :isActive',
       )
       .select([
         'e.id',

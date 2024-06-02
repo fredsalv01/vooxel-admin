@@ -6,6 +6,7 @@ import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 import { WorkerToClientRepository } from '../repository/workerToClientsRepository';
+import { FindWorkersResponse } from '../../common/worker-interfaces';
 
 @Injectable()
 export class WorkersService {
@@ -22,25 +23,6 @@ export class WorkersService {
       JSON.stringify(createWorkerDto, null, 2),
     );
     const worker = await this.workerRepository.addWorker(createWorkerDto);
-    let emergencyContactArray: any[] = [];
-    // if (
-    //   createWorkerDto?.emergencyContacts &&
-    //   createWorkerDto?.emergencyContacts.length > 0
-    // ) {
-    //   for (
-    //     let index = 0;
-    //     index < createWorkerDto.emergencyContacts.length;
-    //     index++
-    //   ) {
-    //     const element = createWorkerDto.emergencyContacts[index];
-    //     const data = { ...element, workerId: worker?.id };
-    //     const emergencyContact = await this.emergencyContactService.create(
-    //       new EmergencyContact(data),
-    //     );
-    //     emergencyContactArray.push(emergencyContact);
-    //   }
-    //   worker.emergencyContacts = emergencyContactArray;
-    // }
 
     this.logger.debug(
       `DB Response ${this.create.name}:`,
@@ -51,11 +33,44 @@ export class WorkersService {
 
   async findAll({ limit, page, ...filters }: filterWorkersPaginatedDto) {
     const filterProperties = { ...filters } as unknown as any;
-    return this.workerRepository.findWorkers({
+    const result = await this.workerRepository.findWorkers({
       limit,
       currentPage: page,
       filters: filterProperties,
     });
+
+    const items = result.items as unknown as FindWorkersResponse[];
+    const formatItems = items.map((item) => {
+      if (item.emergencyContacts.length > 0) {
+        item.emergencyContacts = item.emergencyContacts.map(
+          (contact: EmergencyContact) => {
+            return {
+              id: contact.id,
+              name: contact.name,
+              phone: contact.phone,
+              relation: contact.relation,
+            };
+          },
+        );
+      }
+      if (item.clientInfo) {
+        item.clientInfo = {
+          id: item.clientInfo.id,
+          businessName: item.clientInfo.businessName,
+          ruc: item.clientInfo.ruc,
+        };
+      }
+
+      return {
+        ...item,
+        contractType: item.contractWorkers?.contractType || 'No tiene contrato',
+      };
+    });
+
+    return {
+      ...result,
+      items: formatItems,
+    };
   }
 
   findOne(id: number) {
@@ -66,7 +81,6 @@ export class WorkersService {
     const formatData = {
       ...updateWorkerDto,
     };
-    
 
     //validar si el row existe para ver si hay actualizacion de cliente o no
     const existsWorkerToClient =
