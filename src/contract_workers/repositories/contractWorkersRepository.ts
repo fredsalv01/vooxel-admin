@@ -13,7 +13,9 @@ export class ContractWorkersRepository {
   ) {}
 
   private getContractsBaseQuery(): SelectQueryBuilder<ContractWorker> {
-    return this.db.createQueryBuilder('contract').orderBy('contract.id', 'DESC');
+    return this.db
+      .createQueryBuilder('contract')
+      .orderBy('contract.id', 'DESC');
   }
 
   async createContract(data: any) {
@@ -33,7 +35,7 @@ export class ContractWorkersRepository {
   }
 
   async getLatestContractByWorkerId(workerId: number) {
-    const result = this.db
+    const result = await this.db
       .createQueryBuilder('contract')
       .orderBy('contract.id', 'DESC')
       .where('contract.workerId = :workerId', { workerId })
@@ -46,6 +48,16 @@ export class ContractWorkersRepository {
         'contract.isActive',
       ])
       .getOne();
+
+    const file = await this.dataSource.getRepository('File').findOne({
+      where: {
+        table_name: 'contract',
+        tag: 'contract',
+        tableId: result.id,
+      },
+    });
+
+    result['file'] = file || 'No se ha subido contrato';
 
     this.logger.debug(
       `${this.getLatestContractByWorkerId.name} - result`,
@@ -61,6 +73,19 @@ export class ContractWorkersRepository {
         workerId,
       },
     });
+
+    //obtener el file del contrato por id de contrato
+    for (const contract of result) {
+      const file = await this.dataSource.getRepository('File').findOne({
+        where: {
+          table_name: 'contract',
+          tag: 'contract',
+          tableId: contract.id,
+        },
+      });
+
+      contract['file'] = file || 'No se ha subido contrato';
+    }
 
     this.logger.debug(
       `${this.getAllContracts.name} - result`,
