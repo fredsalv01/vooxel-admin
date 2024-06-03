@@ -12,15 +12,19 @@ export class ContractWorkersService {
 
   async create(createContractWorkerDto: CreateContractWorkerDto) {
     this.logger.debug(this.create.name);
-    const hasContract = await this.findOne(createContractWorkerDto.workerId);
+    try {
+      const hasContract = await this.findOne(createContractWorkerDto.workerId);
 
-    if(hasContract){
-      this.update(hasContract.id, {isActive: false});
+      if (hasContract) {
+        this.update(hasContract.id, { isActive: false });
+      }
+    } catch (error) {
+      this.logger.error('ERROR BUSCANDO CONTRATO:', error);
+    } finally {
+      return this.contractWorkerRepository.createContract(
+        createContractWorkerDto,
+      );
     }
-
-    return this.contractWorkerRepository.createContract(
-      createContractWorkerDto,
-    );
   }
 
   findAll(workerId: number) {
