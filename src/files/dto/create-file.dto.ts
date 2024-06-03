@@ -1,23 +1,23 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateFileDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   table_name: string;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   tableId: number;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   tag: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   keyFile: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   path: string;
 }

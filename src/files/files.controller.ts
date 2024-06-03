@@ -5,6 +5,7 @@ import {
   Logger,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   SerializeOptions,
@@ -64,6 +65,15 @@ export class FilesController {
     this.logger.log(this.findOne.name);
     this.logger.debug('query', JSON.stringify(queryParams, null, 2));
     return this.filesService.findOne(queryParams);
+  }
+
+  @Patch(':id')
+  @UseGuards(AuthGuardJwt)
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: CreateFileDto) {
+    this.logger.log(this.update.name);
+    this.logger.debug('id', id);
+    this.logger.debug('body', JSON.stringify(body, null, 2));
+    return this.filesService.update(id, body);
   }
 
   // retrive url to presign file

@@ -55,4 +55,25 @@ export class FilesRepository {
       throw new Error(error);
     }
   }
+
+  async updateFile(id: number, data: any) {
+    try {
+      const result = await this.db.update(id, data);
+
+      this.logger.debug(
+        `${this.updateFile.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+
+      if (result.affected === 0) {
+        throw new NotFoundException(
+          `No se encontro el archivo con el id ${id}`,
+        );
+      }
+      return this.db.findOne({ where: { id } });
+    } catch (error) {
+      this.logger.error('ERROR ACTUALIZANDO ARCHIVO:', error);
+      throw new Error(error);
+    }
+  }
 }

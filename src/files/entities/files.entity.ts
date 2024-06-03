@@ -19,7 +19,9 @@ export class File {
   @Column('text')
   table_name: string;
 
-  @Column('int')
+  @Column('int', {
+    nullable: true,
+  })
   tableId: number;
 
   @Column('text')

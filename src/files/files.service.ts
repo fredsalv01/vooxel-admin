@@ -17,4 +17,9 @@ export class FilesService {
     this.logger.debug(this.findOne.name);
     return this.filesRepository.getOneFile(params);
   }
+
+  update(id: number, data: CreateFileDto) {
+    this.logger.debug(this.update.name);
+    return this.filesRepository.updateFile(id, data);
+  }
 }
