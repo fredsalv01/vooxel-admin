@@ -51,7 +51,7 @@ export class ContractWorkersRepository {
 
     const file = await this.dataSource.getRepository('File').findOne({
       where: {
-        table_name: 'contract',
+        table_name: 'contractWorkers',
         tag: 'contract',
         tableId: result.id,
       },
