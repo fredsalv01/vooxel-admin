@@ -46,13 +46,12 @@ export class WorkerToClient {
   updated_at: Date;
 
   @ManyToOne(() => Client, (client) => client.workerToClients)
-  @JoinColumn({name: 'clientId'})
+  @JoinColumn({ name: 'clientId' })
   @Expose()
   client: Client;
 
-  
   @ManyToOne(() => Worker, (worker) => worker.workerToClients)
-  @JoinColumn({name: 'workerId'})
+  @JoinColumn({ name: 'workerId' })
   @Expose()
   worker: Worker;
 }

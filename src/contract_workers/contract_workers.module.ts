@@ -6,11 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContractWorkersRepository } from './repositories/contractWorkersRepository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      ContractWorker
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([ContractWorker])],
   controllers: [ContractWorkersController],
   providers: [ContractWorkersService, ContractWorkersRepository],
 })

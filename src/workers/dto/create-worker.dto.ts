@@ -9,11 +9,11 @@ import {
   IsString,
   Validate,
 } from 'class-validator';
-import {  DocumentType, EnglishLevel } from '../utils/enum-types';
+import { DocumentType, EnglishLevel } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
-import { dateFormatValidator } from "../../common/functions";
+import { dateFormatValidator } from '../../common/functions';
 
 export class CreateWorkerDto {
   @IsNotEmpty()
@@ -85,5 +85,4 @@ export class CreateWorkerDto {
   @IsArray()
   @IsNotEmpty()
   techSkills: string[]; // string[]
-
 }

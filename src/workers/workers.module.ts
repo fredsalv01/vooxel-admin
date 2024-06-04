@@ -45,7 +45,7 @@ import { WorkerToClientRepository } from './repository/workerToClientsRepository
     EmergencyContactRepository,
     CertificationRepository,
     WorkerToClientRepository,
-    BankAccountRepository
+    BankAccountRepository,
     // WorkerDoesNotExistsConstrint
   ],
 })
