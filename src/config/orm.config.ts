@@ -9,6 +9,7 @@ import { BankAccount } from '../workers/entities/bank-account.entity';
 import { WorkerToClient } from '../workers/entities/worker-to-client.entity';
 import { File } from '../files/entities/files.entity';
 import { ContractWorker } from '../contract_workers/entities/contract_worker.entity';
+import { ContractClient } from '../contract_clients/entities/contract_client.entity';
 
 export default registerAs(
   'orm.config',
@@ -23,6 +24,7 @@ export default registerAs(
       User,
       Client,
       Worker,
+      ContractClient,
       WorkerToClient,
       EmergencyContact,
       Certification,

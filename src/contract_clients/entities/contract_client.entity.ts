@@ -1,7 +1,14 @@
 import { Expose } from 'class-transformer';
 import { Client } from '../../clients/entities/client.entity';
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
+@Entity()
 export class ContractClient {
   constructor(partial?: Partial<ContractClient>) {
     Object.assign(this, partial);
@@ -31,7 +38,7 @@ export class ContractClient {
   isActive: Boolean;
 
   @ManyToOne(() => Client, (client) => client.contractClients)
-  @JoinColumn({ name: 'workerId' })
+  @JoinColumn({ name: 'clientId' })
   client: Client;
 
   @Column({
