@@ -19,6 +19,19 @@ export class ContractClientsRepository {
 
   async createContract(data: any) {
     try {
+      // validate if client has an active contract if not create a new one if it has one update the last one to inactive
+      const clientContracts = await this.getContractsBaseQuery()
+        .where('contract.clientId = :clientId', { clientId: data.clientId })
+        .andWhere('contract.isActive = :isActive', { isActive: true })
+        .getMany();
+
+      if (clientContracts.length > 0) {
+        await this.db.update(
+          { id: clientContracts[0].id },
+          { isActive: false },
+        );
+      }
+
       const result = await this.db.save(new ContractClient(data));
       this.logger.debug(
         `${this.createContract.name} - result`,
