@@ -36,22 +36,20 @@ export class CertificationRepository {
         workerId,
       });
 
-      if (result.length === 0) {
-        for (const certification of result) {
-          console.log('certification', certification.id);
-          const file = await this.dataSource.getRepository('File').findOne({
-            where: {
-              table_name: 'certifications',
-              tag: 'certification',
-              tableId: certification.id,
-            },
-            order: {
-              id: 'DESC',
-            },
-          });
+      for (const certification of result) {
+        console.log('certification', certification.id);
+        const file = await this.dataSource.getRepository('File').findOne({
+          where: {
+            table_name: 'certifications',
+            tag: 'certification',
+            tableId: certification.id,
+          },
+          order: {
+            id: 'DESC',
+          },
+        });
 
-          certification['file'] = file || 'No se ha subido certificacion';
-        }
+        certification['file'] = file || 'No se ha subido certificacion';
       }
 
       this.logger.debug(`${this.findAllCertifications.name} - result`, result);
