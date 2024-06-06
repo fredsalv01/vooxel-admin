@@ -5,14 +5,6 @@ export class CreateCertificationDto {
   @IsNotEmpty()
   certificationName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  keyFile: string;
-
-  @IsString()
-  @IsNotEmpty()
-  path: string;
-
   @IsNumber()
   @IsNotEmpty()
   workerId: number;

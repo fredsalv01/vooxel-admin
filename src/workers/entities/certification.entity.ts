@@ -24,14 +24,6 @@ export class Certification {
   @Column('text')
   certificationName: string; // nombre de la certificacion.
 
-  @Column('text')
-  @Expose()
-  keyFile: string; // nombre del archivo
-
-  @Column('text')
-  @Expose()
-  path: string; // path del archivo en el bucket
-
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
