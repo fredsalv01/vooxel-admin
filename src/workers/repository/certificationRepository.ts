@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Certification } from '../entities/certification.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCertificationDto } from '../dto/create-certification.dto';
@@ -9,6 +9,8 @@ export class CertificationRepository {
   constructor(
     @InjectRepository(Certification)
     private readonly db: Repository<Certification>,
+
+    private readonly dataSource: DataSource,
   ) {}
 
   async addCertification(data: CreateCertificationDto) {
@@ -33,6 +35,21 @@ export class CertificationRepository {
       const result = await this.db.findBy({
         workerId,
       });
+
+      if (result.length === 0) {
+        for (const certification of result) {
+          const file = await this.dataSource.getRepository('File').findOne({
+            where: {
+              table_name: 'certifications',
+              tag: 'certification',
+              tableId: certification.id,
+            },
+          });
+
+          certification['file'] = file || 'No se ha subido certificacion';
+        }
+      }
+
       this.logger.debug(`${this.findAllCertifications.name} - result`, result);
       return result;
     } catch (error) {
