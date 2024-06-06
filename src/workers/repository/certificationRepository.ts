@@ -57,4 +57,19 @@ export class CertificationRepository {
       throw new BadRequestException('ERROR AL LISTAR CERTIFICACIONES');
     }
   }
+
+  // update
+  async updateCertification(id: number, data: CreateCertificationDto) {
+    try {
+      const result = await this.db.update({ id }, data);
+      this.logger.debug(
+        `${this.updateCertification.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    } catch (error) {
+      this.logger.error('ERROR ACTUALIZANDO CERTIFICACION:', error);
+      throw new Error(`ERROR ACTUALIZANDO CERTIFICACION: ${error}`);
+    }
+  }
 }

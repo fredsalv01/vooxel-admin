@@ -5,6 +5,8 @@ import {
   HttpCode,
   Logger,
   Param,
+  ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -37,5 +39,19 @@ export class CertificationController {
   async getAll(@Param('workerId') workerId: string) {
     this.logger.log(`${this.getAll.name} - QueryParams`, workerId);
     return this.certificationsService.findAll(+workerId);
+  }
+
+  @Patch(':id')
+  @HttpCode(200)
+  @UseGuards(AuthGuardJwt)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createCertificationDto: CreateCertificationDto,
+  ) {
+    this.logger.log(
+      `${this.update.name} - RequestBody`,
+      JSON.stringify(createCertificationDto, null, 2),
+    );
+    return this.certificationsService.update(id, createCertificationDto);
   }
 }
