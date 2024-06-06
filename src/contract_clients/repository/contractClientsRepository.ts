@@ -102,6 +102,9 @@ export class ContractClientsRepository {
       where: {
         clientId,
       },
+      order: {
+        id: 'DESC',
+      },
     });
 
     //obtener el file del contrato por id de contrato
