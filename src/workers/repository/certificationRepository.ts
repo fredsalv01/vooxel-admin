@@ -44,6 +44,9 @@ export class CertificationRepository {
               tag: 'certification',
               tableId: certification.id,
             },
+            order: {
+              id: 'DESC',
+            },
           });
 
           certification['file'] = file || 'No se ha subido certificacion';
