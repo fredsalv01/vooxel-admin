@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Logger,
@@ -53,5 +54,13 @@ export class CertificationController {
       JSON.stringify(createCertificationDto, null, 2),
     );
     return this.certificationsService.update(id, createCertificationDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  @UseGuards(AuthGuardJwt)
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    this.logger.log(`${this.delete.name} - QueryParams`, id);
+    return this.certificationsService.delete(id);
   }
 }

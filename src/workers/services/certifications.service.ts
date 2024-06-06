@@ -24,4 +24,9 @@ export class CertificationsService {
     this.logger.debug(`${this.update.name} - params`, { id, data });
     return this.certificationRepository.updateCertification(id, data);
   }
+
+  async delete(id: number) {
+    this.logger.debug(`${this.delete.name} - params`, id);
+    return this.certificationRepository.deleteCertification(id);
+  }
 }

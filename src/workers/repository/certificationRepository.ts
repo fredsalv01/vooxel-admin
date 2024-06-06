@@ -72,4 +72,19 @@ export class CertificationRepository {
       throw new Error(`ERROR ACTUALIZANDO CERTIFICACION: ${error}`);
     }
   }
+
+  // delete
+  async deleteCertification(id: number) {
+    try {
+      const result = await this.db.delete({ id });
+      this.logger.debug(
+        `${this.deleteCertification.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    } catch (error) {
+      this.logger.error('ERROR ELIMINANDO CERTIFICACION:', error);
+      throw new Error(`ERROR ELIMINANDO CERTIFICACION: ${error}`);
+    }
+  }
 }
