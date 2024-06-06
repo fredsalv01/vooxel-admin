@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Certification } from '../entities/certification.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCertificationDto } from '../dto/create-certification.dto';
-import { BadRequestException, Logger } from '@nestjs/common';
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 
 export class CertificationRepository {
   private readonly logger = new Logger(CertificationRepository.name);
@@ -38,6 +38,7 @@ export class CertificationRepository {
 
       if (result.length === 0) {
         for (const certification of result) {
+          console.log('certification', certification.id);
           const file = await this.dataSource.getRepository('File').findOne({
             where: {
               table_name: 'certifications',
@@ -64,12 +65,31 @@ export class CertificationRepository {
   // update
   async updateCertification(id: number, data: CreateCertificationDto) {
     try {
-      const result = await this.db.update({ id }, data);
-      this.logger.debug(
-        `${this.updateCertification.name} - result`,
-        JSON.stringify(result, null, 2),
-      );
-      return result;
+      const certification: Certification = await this.db.preload({
+        id: id,
+        ...CreateCertificationDto,
+      });
+
+      if (!certification) {
+        throw new NotFoundException({
+          error: 'Certificado no encontrado',
+        });
+      }
+      const queryRunner = this.dataSource.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try {
+        await queryRunner.manager.save(certification);
+
+        await queryRunner.commitTransaction();
+        return certification;
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        this.logger.error(error);
+        throw new BadRequestException(error?.detail);
+      } finally {
+        await queryRunner.release();
+      }
     } catch (error) {
       this.logger.error('ERROR ACTUALIZANDO CERTIFICACION:', error);
       throw new Error(`ERROR ACTUALIZANDO CERTIFICACION: ${error}`);
