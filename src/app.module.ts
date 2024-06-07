@@ -11,6 +11,7 @@ import { BucketModule } from '@app/bucket';
 import { FilesModule } from './files/files.module';
 import { ContractWorkersModule } from './contract_workers/contract_workers.module';
 import { ContractClientsModule } from './contract_clients/contract_clients.module';
+import { VacationsModule } from './vacations/vacations.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ContractClientsModule } from './contract_clients/contract_clients.modul
     FilesModule,
     ContractWorkersModule,
     ContractClientsModule,
+    VacationsModule,
   ],
   controllers: [],
   providers: [],

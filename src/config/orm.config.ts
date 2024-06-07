@@ -10,6 +10,8 @@ import { WorkerToClient } from '../workers/entities/worker-to-client.entity';
 import { File } from '../files/entities/files.entity';
 import { ContractWorker } from '../contract_workers/entities/contract_worker.entity';
 import { ContractClient } from '../contract_clients/entities/contract_client.entity';
+import { Vacation } from '../vacations/entities/vacation.entity';
+import { VacationDetail } from '../vacations/entities/vacationDetail.entity';
 
 export default registerAs(
   'orm.config',
@@ -31,6 +33,8 @@ export default registerAs(
       BankAccount,
       ContractWorker,
       File,
+      Vacation,
+      VacationDetail,
     ],
     synchronize: true,
     dropSchema: Boolean(parseInt(process.env.DB_DROP_SCHEMA)),

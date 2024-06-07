@@ -37,7 +37,6 @@ export class CertificationRepository {
       });
 
       for (const certification of result) {
-        console.log('certification', certification.id);
         const file = await this.dataSource.getRepository('File').findOne({
           where: {
             table_name: 'certifications',
@@ -45,9 +44,10 @@ export class CertificationRepository {
             tableId: certification.id,
           },
           order: {
-            id: 'DESC',
+            id: 'ASC',
           },
         });
+        console.log('file', file);
 
         certification['file'] = file || 'No se ha subido certificacion';
       }
