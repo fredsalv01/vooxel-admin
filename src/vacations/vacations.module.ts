@@ -10,6 +10,6 @@ import { ContractWorkersRepository } from 'src/contract_workers/repositories/con
 @Module({
   imports: [TypeOrmModule.forFeature([Vacation, VacationDetail])],
   controllers: [VacationsController],
-  providers: [VacationsService, VacationsRepository, ContractWorkersRepository],
+  providers: [VacationsService, VacationsRepository],
 })
 export class VacationsModule {}
