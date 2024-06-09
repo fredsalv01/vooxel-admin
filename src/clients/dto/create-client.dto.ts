@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  Validate,
 } from 'class-validator';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
 
@@ -54,27 +53,5 @@ export class CreateClientDto {
   @IsOptional()
   email: string;
 
-  @ApiProperty({
-    description: 'fecha de inicio del contrato del cliente',
-    example: '2023-07-13',
-  })
-  @Validate(dateFormatValidator) // Custom validation
-  @IsNotEmpty()
-  contractStartDate: Date;
-
-  @ApiProperty({
-    description: 'fecha de fin del contrato del cliente',
-    example: '2024-07-13',
-  })
-  @Validate(dateFormatValidator) // Custom validation
-  @IsNotEmpty()
-  contractEndDate: Date;
 }
 
-function dateFormatValidator(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false;
-  }
-  const date = new Date(value);
-  return !isNaN(date.getTime());
-}

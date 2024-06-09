@@ -30,8 +30,6 @@ export class ClientRepository {
         'client.isActive',
         'client.phone',
         'client.email',
-        'client.contractStartDate',
-        'client.contractEndDate',
         'COUNT(workerToClient.workerToClientId) AS workerToClientCount',
         // Add more fields as needed
       ])
@@ -55,7 +53,12 @@ export class ClientRepository {
   async findAll({ limit, currentPage, filters }) {
     console.log('VALIDATE FILTERS', filters);
 
-    const qb = this.getClientsBaseQuery();
+    const qb = this.getClientsBaseQuery()
+      // get latest contract clients
+      .leftJoinAndSelect('client.contractClients', 'contractClient')
+      .where('contractClient.isActive = :isActive', { isActive: true })
+      .orderBy('contractClient.startDate', 'DESC')
+      .addGroupBy('contractClient.id');
 
     if (filters.input && filters.input !== '') {
       const fieldsToSearch = [
