@@ -114,6 +114,21 @@ export class WorkerRepository {
           })
         : null;
 
+      // get count per file type for worker using the tag field
+      const files = await this.dataSource.getRepository('File').find({
+        where: {
+          table_name: 'worker',
+          tableId: id,
+        },
+      });
+
+      const filesCount = files.reduce((acc, file) => {
+        acc[file.tag] = acc[file.tag] ? acc[file.tag] + 1 : 1;
+        return acc;
+      }, {});
+
+      data['filesCount'] = filesCount;
+
       const result = data;
       this.logger.debug(
         `${this.getOneWorker.name} - result`,

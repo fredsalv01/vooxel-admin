@@ -19,4 +19,14 @@ export class CertificationsService {
     this.logger.debug(`${this.findAll.name} - params`, workerId);
     return this.certificationRepository.findAllCertifications(workerId);
   }
+
+  async update(id: number, data: CreateCertificationDto) {
+    this.logger.debug(`${this.update.name} - params`, { id, data });
+    return this.certificationRepository.updateCertification(id, data);
+  }
+
+  async delete(id: number) {
+    this.logger.debug(`${this.delete.name} - params`, id);
+    return this.certificationRepository.deleteCertification(id);
+  }
 }
