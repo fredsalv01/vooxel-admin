@@ -9,7 +9,7 @@ import {
 import { Worker } from '../../workers/entities/worker.entity';
 import { ContractType } from '../enum/enum-contract-types';
 import { Expose } from 'class-transformer';
-import { Vacation } from "../../vacations/entities/vacation.entity";
+import { Vacation } from '../../vacations/entities/vacation.entity';
 
 @Entity()
 export class ContractWorker {

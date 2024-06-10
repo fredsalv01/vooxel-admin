@@ -6,9 +6,7 @@ import { ContractClient } from './entities/contract_client.entity';
 import { ContractClientsRepository } from './repository/contractClientsRepository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ContractClient])
-  ],
+  imports: [TypeOrmModule.forFeature([ContractClient])],
   controllers: [ContractClientsController],
   providers: [ContractClientsService, ContractClientsRepository],
 })

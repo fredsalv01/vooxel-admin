@@ -1,10 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
 
 export class CreateClientDto {
@@ -52,6 +47,4 @@ export class CreateClientDto {
   @IsEmail()
   @IsOptional()
   email: string;
-
 }
-
