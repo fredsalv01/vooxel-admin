@@ -3,14 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Worker } from '../../workers/entities/worker.entity';
 import { WorkerToClient } from 'src/workers/entities/worker-to-client.entity';
+import { ContractClient } from '../../contract_clients/entities/contract_client.entity';
 
 @Entity()
 export class Client {
@@ -44,16 +42,11 @@ export class Client {
   @Expose()
   email: string;
 
-  @Column({ type: 'date' })
-  @Expose()
-  contractStartDate: Date;
-
-  @Column({ type: 'date' })
-  @Expose()
-  contractEndDate: Date;
-
   @OneToMany(() => WorkerToClient, (workerToClient) => workerToClient.client)
   public workerToClients: WorkerToClient[];
+
+  @OneToMany(() => ContractClient, (contractClient) => contractClient.client)
+  contractClients: ContractClient[];
 
   @CreateDateColumn({
     type: 'timestamp',

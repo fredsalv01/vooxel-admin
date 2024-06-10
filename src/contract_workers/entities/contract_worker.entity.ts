@@ -36,7 +36,7 @@ export class ContractWorker {
     default: true,
   })
   @Expose()
-  isActive: Boolean;
+  isActive: boolean;
 
   @ManyToOne(() => Worker, (worker) => worker.contractWorkers)
   @JoinColumn({ name: 'workerId' })
