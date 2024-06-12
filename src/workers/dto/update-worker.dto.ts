@@ -50,11 +50,3 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   @IsOptional()
   clientId?: number;
 }
-
-function dateFormatValidator(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false;
-  }
-  const date = new Date(value);
-  return !isNaN(date.getTime());
-}

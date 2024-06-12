@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateWorkerDto } from '../dto/create-worker.dto';
 import { UpdateWorkerDto } from '../dto/update-worker.dto';
 import { WorkerRepository } from '../repository/workerRepository';
-import { EmergencyContactService } from './emergency-contact.service';
 import { EmergencyContact } from '../entities/emergency-contact.entity';
 import { filterWorkersPaginatedDto } from '../dto/filter-get-workers.dto';
 import { WorkerToClientRepository } from '../repository/workerToClientsRepository';
@@ -13,7 +12,6 @@ export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
   constructor(
     private readonly workerRepository: WorkerRepository,
-    private readonly emergencyContactService: EmergencyContactService,
     private readonly workerToClientsRepository: WorkerToClientRepository,
   ) {}
 

@@ -1,4 +1,4 @@
 export enum VacationDetailType {
-  PAGADAS = 'pagadas',
+  COMPRADAS = 'compradas',
   TOMADAS = 'tomadas',
 }

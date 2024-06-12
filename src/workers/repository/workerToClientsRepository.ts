@@ -34,7 +34,7 @@ export class WorkerToClientRepository {
   }
 
   public async create(data: { workerId: number; clientId: number }) {
-    const getOld = this.db.exists({
+    const getOld = await this.db.exists({
       where: {
         clientId: data.clientId,
         workerId: data.workerId,
@@ -57,9 +57,10 @@ export class WorkerToClientRepository {
 
     try {
       //crear nuevo
-      const result: WorkerToClient = await this.db.save(
-        new WorkerToClient({ ...data }),
-      );
+      const result = await this.db.save({
+        clientId: data.clientId,
+        workerId: data.workerId,
+      });
 
       this.logger.debug(
         `${this.create.name} - result`,
