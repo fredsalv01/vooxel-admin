@@ -1,11 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateWorkerDto } from './create-worker.dto';
-import { DocumentType, EnglishLevel } from '../utils/enum-types';
+import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { CreateCertificationDto } from './create-certification.dto';
 import {
   IsArray,
   IsDateString,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -39,6 +40,11 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   address?: string;
   englishLevel?: EnglishLevel;
   charge?: string;
+
+  @IsOptional()
+  @IsEnum(Seniority)
+  seniority?: Seniority;
+
   techSkills?: string[];
   familiarAssignment?: string;
 

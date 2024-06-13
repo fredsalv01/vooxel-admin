@@ -9,7 +9,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { DocumentType, EnglishLevel } from '../utils/enum-types';
+import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
 import { Client } from '../../clients/entities/client.entity';
@@ -73,12 +73,18 @@ export class Worker {
 
   @Expose()
   @Column({
+    type: 'enum',
+    enum: Seniority,
+    default: null,
+    nullable: true,
+  })
+  seniority: Seniority;
+
+  @Expose()
+  @Column({
     default: null,
   })
   birthdate: string; // fecha de nacimiento
-
-  @Expose()
-  hiringTime?: number; // tiempo de contratacion
 
   @Expose()
   @Column({
@@ -158,15 +164,6 @@ export class Worker {
   })
   @Expose()
   certifications: Certification[]; // listado de certificaciones string[]
-
-  @Expose()
-  vacationDays?: number; // virtual property se genera en el backend
-
-  @Expose()
-  usedVacationDays?: number; // virtual property
-
-  @Expose()
-  truncatedVacations?: number;
 
   @Column({
     type: 'bool',

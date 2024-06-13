@@ -33,3 +33,9 @@ export enum BankAccountTypes {
   SUELDO = 'CTA SUELDO',
   AHORROS = 'CTA AHORROS',
 }
+
+export enum Seniority {
+  JUNIOR = 'Junior',
+  SEMI_SENIOR = 'Semi Senior',
+  SENIOR = 'Senior',
+}

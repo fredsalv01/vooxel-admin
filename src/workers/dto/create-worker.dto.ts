@@ -9,7 +9,7 @@ import {
   IsString,
   Validate,
 } from 'class-validator';
-import { DocumentType, EnglishLevel } from '../utils/enum-types';
+import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
@@ -49,6 +49,10 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   @IsString()
   charge: string; // cargo
+
+  @IsNotEmpty()
+  @IsEnum(Seniority)
+  seniority: Seniority;
 
   @ApiProperty({
     description: 'birthDate',
