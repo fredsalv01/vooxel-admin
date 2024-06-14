@@ -17,7 +17,6 @@ import {
 } from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
-import { Client } from '../../clients/entities/client.entity';
 import { BankAccount } from './bank-account.entity';
 import { WorkerToClient } from './worker-to-client.entity';
 import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';

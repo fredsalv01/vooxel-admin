@@ -6,20 +6,13 @@ import {
   Seniority,
   WorkerStatus,
 } from '../utils/enum-types';
-import { EmergencyContactDto } from './create-emergencyContact.dto';
-import { CreateCertificationDto } from './create-certification.dto';
 import {
-  IsArray,
-  IsDateString,
   IsEnum,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
   Validate,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateBankAccountDto } from './create-bank-account.dto';
 import { isUnique, methodEnum } from 'src/validation/isUnique.constraint';
 import { dateFormatValidator } from 'src/common/functions';
 

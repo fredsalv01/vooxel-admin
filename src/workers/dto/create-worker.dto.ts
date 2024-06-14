@@ -1,12 +1,8 @@
 import {
   IsArray,
-  IsDateString,
   IsEmail,
-  IsEmpty,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
-  IsOptional,
   IsString,
   Validate,
 } from 'class-validator';
@@ -16,7 +12,6 @@ import {
   Seniority,
   WorkerStatus,
 } from '../utils/enum-types';
-import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
 import { dateFormatValidator } from '../../common/functions';
