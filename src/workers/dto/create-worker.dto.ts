@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsDateString,
+  IsEmail,
   IsEmpty,
   IsEnum,
   IsNotEmpty,
@@ -9,13 +10,22 @@ import {
   IsString,
   Validate,
 } from 'class-validator';
-import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
+import {
+  DocumentType,
+  EnglishLevel,
+  Seniority,
+  WorkerStatus,
+} from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { isUnique, methodEnum } from '../../validation/isUnique.constraint';
 import { dateFormatValidator } from '../../common/functions';
 
 export class CreateWorkerDto {
+  @ApiProperty({
+    description: 'tipo de documento del trabajador',
+    example: DocumentType.DNI,
+  })
   @IsNotEmpty()
   @IsEnum(DocumentType)
   documentType: DocumentType; // tipo de documento enum: ['DNI', 'CE', 'PASAPORTE']
@@ -42,6 +52,10 @@ export class CreateWorkerDto {
   @IsString()
   name: string; // nombre
 
+  @ApiProperty({
+    description: 'Nivel de ingles del trabajador',
+    example: EnglishLevel.INTERM,
+  })
   @IsNotEmpty()
   @IsEnum(EnglishLevel)
   englishLevel: EnglishLevel; // nivel de ingles enum: [INTERMEDIO, AVANZADO, NATIVO, BASICO]
@@ -50,6 +64,10 @@ export class CreateWorkerDto {
   @IsString()
   charge: string; // cargo
 
+  @ApiProperty({
+    description: 'seniority del trabajador',
+    example: Seniority.JUNIOR,
+  })
   @IsNotEmpty()
   @IsEnum(Seniority)
   seniority: Seniority;
@@ -62,9 +80,29 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   birthdate: string; // fecha de nacimiento
 
+  @ApiProperty({
+    description: 'startDate',
+    example: '2021-01-01',
+  })
+  @Validate(dateFormatValidator)
+  @IsNotEmpty()
+  startDate: string; // fecha de nacimiento
+
+  @ApiProperty({
+    description: 'estado del trabajador',
+    example: WorkerStatus.PENDIENTE,
+  })
+  @IsNotEmpty()
+  @IsEnum(WorkerStatus)
+  workerStatus: WorkerStatus;
+
   @IsNotEmpty()
   @IsString()
   phoneNumber: string; // numero de telefono cel o telefono
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string; // email personal del trabajador
 
   @IsString()
   @IsNotEmpty()

@@ -39,3 +39,9 @@ export enum Seniority {
   SEMI_SENIOR = 'Semi Senior',
   SENIOR = 'Senior',
 }
+
+export enum WorkerStatus {
+  LABORANDO = 'Laborando',
+  PENDIENTE = 'Pendiente',
+  NO_LABORANDO = 'No Laborando',
+}

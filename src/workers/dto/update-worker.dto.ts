@@ -1,6 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateWorkerDto } from './create-worker.dto';
-import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
+import {
+  DocumentType,
+  EnglishLevel,
+  Seniority,
+  WorkerStatus,
+} from '../utils/enum-types';
 import { EmergencyContactDto } from './create-emergencyContact.dto';
 import { CreateCertificationDto } from './create-certification.dto';
 import {
@@ -16,6 +21,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateBankAccountDto } from './create-bank-account.dto';
 import { isUnique, methodEnum } from 'src/validation/isUnique.constraint';
+import { dateFormatValidator } from 'src/common/functions';
 
 export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   constructor() {
@@ -34,6 +40,7 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   documentNumber?: string;
   birthdate?: string;
   phoneNumber?: string;
+  email?: string;
   province?: string;
   department?: string;
   district?: string;
@@ -41,9 +48,29 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   englishLevel?: EnglishLevel;
   charge?: string;
 
+  @ApiProperty({
+    description: 'seniority del trabajador',
+    example: Seniority.SENIOR,
+  })
   @IsOptional()
   @IsEnum(Seniority)
   seniority?: Seniority;
+
+  @IsOptional()
+  @Validate(dateFormatValidator)
+  startDate?: string;
+
+  @IsOptional()
+  @Validate(dateFormatValidator)
+  endDate?: string;
+
+  @ApiProperty({
+    description: 'estado del trabajador',
+    example: WorkerStatus.LABORANDO,
+  })
+  @IsOptional()
+  @IsEnum(WorkerStatus)
+  workerStatus?: WorkerStatus;
 
   techSkills?: string[];
   familiarAssignment?: string;

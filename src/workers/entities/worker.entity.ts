@@ -9,7 +9,12 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
+import {
+  DocumentType,
+  EnglishLevel,
+  Seniority,
+  WorkerStatus,
+} from '../utils/enum-types';
 import { EmergencyContact } from './emergency-contact.entity';
 import { Certification } from './certification.entity';
 import { Client } from '../../clients/entities/client.entity';
@@ -86,12 +91,41 @@ export class Worker {
   })
   birthdate: string; // fecha de nacimiento
 
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  @Expose()
+  startDate: Date;
+
+  @Column({
+    type: 'date',
+    nullable: true,
+    default: null,
+  })
+  @Expose()
+  endDate: Date;
+
+  @Column({
+    type: 'enum',
+    enum: WorkerStatus,
+    default: WorkerStatus.PENDIENTE,
+    nullable: true,
+  })
+  workerStatus: WorkerStatus;
+
   @Expose()
   @Column({
     default: null,
   })
   phoneNumber: string; // numero de telefono cel o telefono
 
+  @Expose()
+  @Column({
+    default: null,
+  })
+  email: string; // numero de telefono cel o telefono
+  
   @Expose()
   @Column({
     default: null,
