@@ -1,12 +1,20 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
+import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
+import { CreateVacationsDetailsDto } from '../dto/create-vacation-detail.dto';
 
 @Injectable()
 export class VacationsDetailsService {
-  constructor() {}
+  constructor(
+    private readonly vacationsDetailsRepository: VacationsDetailsRepository,
+  ) {}
 
   // create a new vacation detail
-  async createVacationDetail() {
-    // create a new vacation detail
+  async createVacationDetail(
+    createVacationsDetailsDto: CreateVacationsDetailsDto,
+  ) {
+    return this.vacationsDetailsRepository.createVacationDetail(
+      createVacationsDetailsDto,
+    );
   }
 
   // get all vacation details
@@ -15,18 +23,17 @@ export class VacationsDetailsService {
   }
 
   // get vacation detail by id
-  async getVacationDetailById() {
-    // get vacation detail by id
+  async getVacationDetailById(id: number) {
+    return this.vacationsDetailsRepository.getVacationDetail(id);
   }
 
   // update vacation detail
-  async updateVacationDetail() {
+  async updateVacationDetails() {
     // update vacation detail
   }
 
   // delete vacation detail
-  async deleteVacationDetail() {
+  async deleteVacationDetails() {
     // delete vacation detail
   }
-
 }

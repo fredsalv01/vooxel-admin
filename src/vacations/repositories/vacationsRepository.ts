@@ -69,6 +69,7 @@ export class VacationsRepository {
       const result = await this.db.find({
         where: { contractWorkerId },
         order: { id: 'DESC' },
+        relations: ['vacation_details'],
       });
       this.logger.debug(
         `${this.getAllVacations.name} - result`,
