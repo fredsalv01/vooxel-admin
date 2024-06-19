@@ -28,6 +28,9 @@ export class Vacation {
   @Column('int', { nullable: false, default: 0 })
   remainingVacations: number; // este se va a actualizar (vacaciones pendientes)
 
+  @Column('int', { nullable: false, default: 0 })
+  expiredDays: number; // este se va a actualizar (dias vencidos)
+
   @OneToOne(() => ContractWorker, (contractWorker) => contractWorker.vacation)
   @JoinColumn({ name: 'contractWorkerId' })
   contractWorker: ContractWorker;

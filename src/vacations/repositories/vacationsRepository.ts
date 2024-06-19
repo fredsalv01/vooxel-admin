@@ -18,10 +18,13 @@ export class VacationsRepository {
     try {
       // create planned vacations
       const contractWorker = (await this.dataSource
-        .getRepository('contract_workers')
+        .getRepository('contract_worker')
         .findOne({
           where: { id: vacation.contractWorkerId },
+          relations: ['worker'],
         })) as ContractWorker;
+
+      console.log('contractWorker', contractWorker);
 
       if (!contractWorker) {
         throw new NotFoundException({
@@ -29,17 +32,25 @@ export class VacationsRepository {
         });
       }
 
-      const plannedVacations =
-        (new Date(contractWorker.hiringDate).getDay() / 30 +
-          new Date(contractWorker.endDate).getDay() / 30) *
-        2.5;
+      //vacaciones acumuladas
+      if (vacation?.accumulatedVacations === 0) {
+        // mes actual - mes de inicio de labores del trabajador * 2.5
+        const accumulatedVacations =
+          (new Date(contractWorker.worker.startDate).getMonth() -
+            new Date().getMonth()) *
+          2.5;
 
-      // redondear a entero mas bajo
-      vacation.plannedVacations = Math.floor(plannedVacations);
+        // redondear a entero mas bajo
+        vacation.accumulatedVacations = Math.floor(accumulatedVacations);
 
-      console.log('plannedVacations', plannedVacations);
+        console.log('accumulatedVacations', accumulatedVacations);
+      }
 
-      const newVacation = this.db.create(vacation);
+      const newVacation = this.db.create({
+        ...vacation,
+        remainingVacations:
+          vacation.accumulatedVacations - vacation.takenVacations,
+      });
       const result = await this.db.save(newVacation);
       this.logger.debug(
         `${this.createVacation.name} - result`,
@@ -73,9 +84,36 @@ export class VacationsRepository {
   // get a vacation by id
   async getVacationById(vacationId: number): Promise<Vacation> {
     try {
-      const result = await this.db.findOne({
+      let result = await this.db.findOne({
         where: { id: vacationId },
       });
+
+      //validate if the updatedat is greater than date now
+      if (new Date(result.updatedAt).getDate() < new Date().getDate()) {
+        //get the worker start date
+        const contractWorker = (await this.dataSource
+          .getRepository('contract_worker')
+          .findOne({
+            where: { id: result.contractWorkerId },
+            relations: ['worker'],
+          })) as ContractWorker;
+
+        const accumulatedVacations = Math.floor(
+          (new Date(contractWorker.worker.startDate).getMonth() -
+            new Date().getMonth()) *
+            2.5,
+        );
+
+        await this.updateVacation(vacationId, {
+          accumulatedVacations,
+          remainingVacations: accumulatedVacations - result.takenVacations,
+        } as unknown as any);
+
+        result = await this.db.findOne({
+          where: { id: vacationId },
+        });
+      }
+
       this.logger.debug(
         `${this.getVacationById.name} - result`,
         JSON.stringify(result, null, 2),

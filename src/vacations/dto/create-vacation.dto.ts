@@ -1,4 +1,11 @@
-import { IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsPositive,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateVacationDto {
   // use the same properties as the entity except for plannedVacations
@@ -12,7 +19,23 @@ export class CreateVacationDto {
   contractWorkerId: number;
 
   @IsInt()
-  @IsPositive()
+  @Min(0)
+  @Max(30)
   @IsOptional()
-  plannedVacations?: number;
+  plannedVacations?: number = 0;
+
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  accumulatedVacations?: number = 0;
+
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  takenVacations?: number = 0;
+
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  remainingVacations?: number = 0;
 }
