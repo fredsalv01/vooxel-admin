@@ -106,4 +106,19 @@ export class VacationsDetailsRepository {
       throw new Error(error);
     }
   }
+
+  // get all vacation detail from vacationId
+  async getAllVacationDetails(vacationId: number): Promise<VacationDetail[]> {
+    try {
+      const vacationDetails = await this.db.find({
+        where: {
+          vacationId: vacationId,
+        },
+      });
+      return vacationDetails;
+    } catch (error) {
+      this.logger.error('ERROR GETTING ALL VACATION DETAILS:', error);
+      throw new Error(error);
+    }
+  }
 }

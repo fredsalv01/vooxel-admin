@@ -7,23 +7,32 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { VacationsDetailsService } from '../services/vacationsDetails.service';
 import { CreateVacationsDetailsDto } from '../dto/create-vacation-detail.dto';
 import { VacationDetail } from '../entities/vacationDetail.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuardJwt } from 'src/auth/guards/auth-guard-jwt.guard';
 
+@ApiTags('vacation-details')
+@ApiBearerAuth()
 @Controller('vacation-details')
 export class VacationDetailsController {
   constructor(
     private readonly vacationDetailsService: VacationsDetailsService,
   ) {}
 
-  // @Get()
-  // async getAllVacationDetails(): Promise<CreateVacationsDetailsDto[]> {
-  //   return this.vacationDetailsService.getAllVacationDetails();
-  // }
+  @Get('/vacation/:vacationId')
+  @UseGuards(AuthGuardJwt)
+  async getAllVacationDetails(
+    @Param('vacationId', ParseIntPipe) vacationId: number,
+  ) {
+    return this.vacationDetailsService.getAllVacationDetails(vacationId);
+  }
 
   @Get(':id')
+  @UseGuards(AuthGuardJwt)
   async getVacationDetailsById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<VacationDetail> {
@@ -31,25 +40,30 @@ export class VacationDetailsController {
   }
 
   @Post()
+  @UseGuards(AuthGuardJwt)
   async createVacationDetails(
     @Body() vacationDetailsDto: CreateVacationsDetailsDto,
   ) {
     return this.vacationDetailsService.createVacationDetail(vacationDetailsDto);
   }
 
-  // @Put(':id')
-  // async updateVacationDetails(
-  //   @Param('id') id: string,
-  //   @Body() vacationDetailsDto: VacationDetailsDto,
-  // ): Promise<VacationDetailsDto> {
-  //   return this.vacationDetailsService.updateVacationDetails(
-  //     id,
-  //     vacationDetailsDto,
-  //   );
-  // }
+  @Put(':id')
+  @UseGuards(AuthGuardJwt)
+  async updateVacationDetails(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() vacationDetailsDto: CreateVacationsDetailsDto,
+  ) {
+    return this.vacationDetailsService.updateVacationDetails(
+      id,
+      vacationDetailsDto,
+    );
+  }
 
-  // @Delete(':id')
-  // async deleteVacationDetails(@Param('id') id: string): Promise<void> {
-  //   return this.vacationDetailsService.deleteVacationDetails(id);
-  // }
+  @Delete(':id')
+  @UseGuards(AuthGuardJwt)
+  async deleteVacationDetails(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    return this.vacationDetailsService.deleteVacationDetails(id);
+  }
 }

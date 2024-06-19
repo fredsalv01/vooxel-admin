@@ -18,8 +18,8 @@ export class VacationsDetailsService {
   }
 
   // get all vacation details
-  async getAllVacationDetails() {
-    // get all vacation details
+  async getAllVacationDetails(vacationId: number) {
+    return this.vacationsDetailsRepository.getAllVacationDetails(vacationId);
   }
 
   // get vacation detail by id
@@ -28,12 +28,18 @@ export class VacationsDetailsService {
   }
 
   // update vacation detail
-  async updateVacationDetails() {
-    // update vacation detail
+  async updateVacationDetails(
+    id: number,
+    createVacationsDetailsDto: CreateVacationsDetailsDto,
+  ) {
+    return this.vacationsDetailsRepository.updateVacationDetail(
+      id,
+      createVacationsDetailsDto,
+    );
   }
 
   // delete vacation detail
-  async deleteVacationDetails() {
-    // delete vacation detail
+  async deleteVacationDetails(id: number) {
+    return this.vacationsDetailsRepository.deleteVacationDetail(id);
   }
 }
