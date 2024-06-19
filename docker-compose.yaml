@@ -1,16 +1,33 @@
 version: '3.8'
 
 services:
+  vooxell-admin:
+    build: ./
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./vooxell-admin/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - APP_URL=mywebsite.com
+      - AUTH_SECRET=secret123
+      - DB_DATABASE=vooxelldb
+      - DB_DROP_SCHEMA=0
+      - DB_HOST=postgres
+      - DB_PASSWORD=123456
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - PORT=3000
+      - SUPPORT_EMAIL=support@${APP_URL}
+
   postgres:
     image: postgres:13.1
     restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: example
-    ports:
-      - 5432:5432
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=vooxelldb
+    # ports:
+    #   - 5432:5432
