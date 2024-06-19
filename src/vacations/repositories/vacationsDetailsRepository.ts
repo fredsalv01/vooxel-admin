@@ -2,10 +2,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { VacationDetail } from '../entities/vacationDetail.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
-import { CreateVacationsDetailsDto } from '../dto/create-vacation-detail.dto';
+import { CreateVacationDetailDto } from '../dto/create-vacation-detail.dto';
 import { Vacation } from '../entities/vacation.entity';
 import { Moment } from '../../common/functions';
 import moment from 'moment-timezone';
+import { VacationDetailType } from '../enum/vacationDetailType';
 
 export class VacationsDetailsRepository {
   private readonly logger = new Logger(VacationsDetailsRepository.name);
@@ -16,17 +17,11 @@ export class VacationsDetailsRepository {
   ) {}
 
   async createVacationDetail(
-    createVacationDetailDto: CreateVacationsDetailsDto,
+    createVacationDetailDto: CreateVacationDetailDto,
   ): Promise<VacationDetail> {
     try {
       const newVacationDetail = this.db.create(createVacationDetailDto);
-
       const result = await this.db.save(newVacationDetail);
-
-      // vacation is type tomadas update the field in vacationId for plannedVacations with the days from startDate to EndDate
-      const TakenVacationsUpdate =
-        moment(Moment(createVacationDetailDto?.startDate)).day() -
-        moment(Moment(createVacationDetailDto?.endDate)).day();
 
       const vacationRepository = this.dataSource.getRepository('vacation');
 
@@ -41,9 +36,10 @@ export class VacationsDetailsRepository {
           id: createVacationDetailDto.vacationId,
         },
         {
-          takenVacations: vacation.takenVacations + TakenVacationsUpdate,
+          takenVacations:
+            vacation.takenVacations + createVacationDetailDto.quantity,
           remainingVacations:
-            vacation.remainingVacations - TakenVacationsUpdate,
+            vacation.remainingVacations - createVacationDetailDto.quantity,
         },
       );
       this.logger.debug(
@@ -85,6 +81,14 @@ export class VacationsDetailsRepository {
         vacationDetail,
         updateVacationDetailDto,
       );
+
+      // TODO:
+      /*
+        TOMAR EN CUENTA QUE SI SE ACTUALIZAN LAS FECHAS
+        SE DEBE DE REALIZAR EL CALCULO DE LAS VACACIONES TOMADAS
+        
+      */
+
       const result = await this.db.save(updatedVacationDetail);
       this.logger.debug(
         `${this.updateVacationDetail.name} - result`,

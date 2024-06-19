@@ -24,7 +24,7 @@ export class VacationDetail {
 
   @Column({
     enum: VacationDetailType,
-    default: null,
+    default: VacationDetailType.PENDIENTES
   })
   vacationType: VacationDetailType;
 
@@ -48,6 +48,12 @@ export class VacationDetail {
     nullable: true,
   })
   endDate: Date;
+
+  @Column({
+    type: 'int',
+    default: 1,
+  })
+  quantity: number;
 
   @Column({
     type: 'bool',

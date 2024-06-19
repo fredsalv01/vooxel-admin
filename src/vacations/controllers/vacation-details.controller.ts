@@ -10,10 +10,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { VacationsDetailsService } from '../services/vacationsDetails.service';
-import { CreateVacationsDetailsDto } from '../dto/create-vacation-detail.dto';
+import { CreateVacationDetailDto } from '../dto/create-vacation-detail.dto';
 import { VacationDetail } from '../entities/vacationDetail.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuardJwt } from 'src/auth/guards/auth-guard-jwt.guard';
+import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
 
 @ApiTags('vacation-details')
 @ApiBearerAuth()
@@ -42,7 +43,7 @@ export class VacationDetailsController {
   @Post()
   @UseGuards(AuthGuardJwt)
   async createVacationDetails(
-    @Body() vacationDetailsDto: CreateVacationsDetailsDto,
+    @Body() vacationDetailsDto: CreateVacationDetailDto,
   ) {
     return this.vacationDetailsService.createVacationDetail(vacationDetailsDto);
   }
@@ -51,7 +52,7 @@ export class VacationDetailsController {
   @UseGuards(AuthGuardJwt)
   async updateVacationDetails(
     @Param('id', ParseIntPipe) id: number,
-    @Body() vacationDetailsDto: CreateVacationsDetailsDto,
+    @Body() vacationDetailsDto: UpdateVacationDetailsDto,
   ) {
     return this.vacationDetailsService.updateVacationDetails(
       id,

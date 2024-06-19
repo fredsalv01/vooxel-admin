@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   Validate,
 } from 'class-validator';
@@ -10,10 +11,15 @@ import { dateFormatValidator } from '../../common/functions';
 import { VacationDetailType } from '../enum/vacationDetailType';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateVacationsDetailsDto {
+export class CreateVacationDetailDto {
   @IsNumber()
   @IsNotEmpty()
   vacationId: number;
+
+  @IsNumber()
+  @IsPositive()
+  @IsNotEmpty()
+  quantity: number;
 
   @ApiProperty({
     description: 'seniority del trabajador',
@@ -25,7 +31,7 @@ export class CreateVacationsDetailsDto {
 
   @ApiProperty({
     description: 'reason text',
-    example: '2021-01-15',
+    example: 'reason text',
   })
   @IsString()
   @IsNotEmpty()
@@ -36,7 +42,7 @@ export class CreateVacationsDetailsDto {
     example: '2021-01-15',
   })
   @Validate(dateFormatValidator)
-  @IsNotEmpty()
+  @IsOptional()
   startDate: string;
 
   @ApiProperty({
@@ -44,6 +50,6 @@ export class CreateVacationsDetailsDto {
     example: '2021-01-30',
   })
   @Validate(dateFormatValidator)
-  @IsNotEmpty()
+  @IsOptional()
   endDate: string;
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
-import { CreateVacationsDetailsDto } from '../dto/create-vacation-detail.dto';
+import { CreateVacationDetailDto } from '../dto/create-vacation-detail.dto';
+import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
 
 @Injectable()
 export class VacationsDetailsService {
@@ -10,7 +11,7 @@ export class VacationsDetailsService {
 
   // create a new vacation detail
   async createVacationDetail(
-    createVacationsDetailsDto: CreateVacationsDetailsDto,
+    createVacationsDetailsDto: CreateVacationDetailDto,
   ) {
     return this.vacationsDetailsRepository.createVacationDetail(
       createVacationsDetailsDto,
@@ -30,7 +31,7 @@ export class VacationsDetailsService {
   // update vacation detail
   async updateVacationDetails(
     id: number,
-    createVacationsDetailsDto: CreateVacationsDetailsDto,
+    createVacationsDetailsDto: UpdateVacationDetailsDto,
   ) {
     return this.vacationsDetailsRepository.updateVacationDetail(
       id,
