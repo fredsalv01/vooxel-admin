@@ -90,35 +90,59 @@ export class VacationsRepository {
       });
 
       //validate if the updatedat is greater than date now
-      if (new Date(result.updatedAt).getDate() < new Date().getDate()) {
-        //get the worker start date
-        const contractWorker = (await this.dataSource
-          .getRepository('contract_worker')
-          .findOne({
-            where: { id: result.contractWorkerId },
-            relations: ['worker'],
-          })) as ContractWorker;
-
-        const accumulatedVacations = Math.floor(
-          (new Date(contractWorker.worker.startDate).getMonth() -
-            new Date().getMonth()) *
-            2.5,
+      if (new Date(result.updatedAt).getDate() === new Date().getDate()) {
+        //TODO: MOMENT TZ
+        this.logger.debug(
+          `${this.getVacationById.name} - result`,
+          JSON.stringify(result, null, 2),
         );
-
-        await this.updateVacation(vacationId, {
-          accumulatedVacations,
-          remainingVacations: accumulatedVacations - result.takenVacations,
-        } as unknown as any);
-
-        result = await this.db.findOne({
-          where: { id: vacationId },
-        });
+        return result;
       }
 
+      // if (result.expiredDays > 0) {
+      //   // return result;
+      //TODO: notificar que la persona ya tiene dias vencidos
+      // }
+
+      //get the worker start date
+      const contractWorker = (await this.dataSource
+        .getRepository('contract_worker')
+        .findOne({
+          where: { id: result.contractWorkerId },
+          relations: ['worker'],
+          select: {
+            worker: { startDate: true },
+          },
+        })) as ContractWorker;
+
+      const accumulatedVacationsUpdated = Math.floor(
+        (new Date(contractWorker.worker.startDate).getMonth() -
+          new Date().getMonth()) *
+          2.5,
+      );
+
+      // if the accumulated vacations are more than 30, then the expiredDays
+      //will be the difference between the accumulated vacations and the taken vacations
+      let expiredDaysUpdated = 0;
+      if (accumulatedVacationsUpdated >= 30) {
+        expiredDaysUpdated =
+          accumulatedVacationsUpdated - result.remainingVacations;
+      }
+
+      await this.updateVacation(vacationId, {
+        accumulatedVacations: accumulatedVacationsUpdated,
+        remainingVacations: accumulatedVacationsUpdated - result.takenVacations,
+        expiredDays: expiredDaysUpdated,
+      } as unknown as any);
+
+      result = await this.db.findOne({
+        where: { id: vacationId },
+      });
       this.logger.debug(
         `${this.getVacationById.name} - result`,
         JSON.stringify(result, null, 2),
       );
+
       return result;
     } catch (error) {
       this.logger.error('ERROR OBTENIENDO VACACION:', error);

@@ -7,10 +7,11 @@ import { VacationDetail } from './entities/vacationDetail.entity';
 import { VacationsRepository } from './repositories/vacationsRepository';
 import { VacationsDetailsService } from './services/vacationsDetails.service';
 import { VacationsDetailsRepository } from './repositories/vacationsDetailsRepository';
+import { VacationDetailsController } from './controllers/vacation-details.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Vacation, VacationDetail])],
-  controllers: [VacationsController],
+  controllers: [VacationsController, VacationDetailsController],
   providers: [
     VacationsService,
     VacationsRepository,

@@ -16,33 +16,34 @@ export class VacationsDetailsRepository {
   ) {}
 
   async createVacationDetail(
-    vacationDetail: CreateVacationsDetailsDto,
+    createVacationDetailDto: CreateVacationsDetailsDto,
   ): Promise<VacationDetail> {
     try {
-      const newVacationDetail = this.db.create(vacationDetail);
+      const newVacationDetail = this.db.create(createVacationDetailDto);
 
       const result = await this.db.save(newVacationDetail);
 
       // vacation is type tomadas update the field in vacationId for plannedVacations with the days from startDate to EndDate
-      const plannedVacations =
-        moment(Moment(vacationDetail?.startDate)).day() -
-        moment(Moment(vacationDetail?.endDate)).day();
+      const TakenVacationsUpdate =
+        moment(Moment(createVacationDetailDto?.startDate)).day() -
+        moment(Moment(createVacationDetailDto?.endDate)).day();
+
       const vacationRepository = this.dataSource.getRepository('vacation');
 
       const vacation = (await vacationRepository.findOne({
         where: {
-          id: vacationDetail.vacationId,
+          id: createVacationDetailDto.vacationId,
         },
       })) as Vacation;
 
       await vacationRepository.update(
         {
-          id: vacationDetail.vacationId,
+          id: createVacationDetailDto.vacationId,
         },
         {
-          plannedVacations,
-          takenVacations: plannedVacations,
-          remainingVacations: vacation.remainingVacations - plannedVacations,
+          takenVacations: vacation.takenVacations + TakenVacationsUpdate,
+          remainingVacations:
+            vacation.remainingVacations - TakenVacationsUpdate,
         },
       );
       this.logger.debug(
