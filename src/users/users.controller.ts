@@ -31,7 +31,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  @UseGuards(AuthGuardJwt)
+  // @UseGuards(AuthGuardJwt)
   @HttpCode(201)
   async AddUser(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
     const user = await this.usersService.register(createUserDto);
