@@ -107,6 +107,7 @@ export class WorkerRepository {
 
       data.chiefOfficer = data.chiefOfficer
         ? new Worker({
+            id: data.chiefOfficer.id,
             name: `${data.chiefOfficer?.name} ${data.chiefOfficer?.apPat}`,
           })
         : null;
