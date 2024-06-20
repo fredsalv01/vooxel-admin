@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Validate,
 } from 'class-validator';
@@ -87,7 +88,7 @@ export class CreateWorkerDto {
     description: 'estado del trabajador',
     example: WorkerStatus.PENDIENTE,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(WorkerStatus)
   workerStatus: WorkerStatus;
 
