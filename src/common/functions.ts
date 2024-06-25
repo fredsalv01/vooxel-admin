@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+const moment = require('moment-timezone');
 
 export const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min);
@@ -14,6 +14,6 @@ export function dateFormatValidator(value: string) {
   return !isNaN(date.getTime());
 }
 
-export function Moment(date: string) {
+export function Moment(date: string): string {
   return moment(date).tz('America/Lima').format('YYYY-MM-DD');
 }

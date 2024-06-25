@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { VacationDetail } from './vacationDetail.entity';
 import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
+import { Expose } from 'class-transformer';
 
 @Entity('vacations')
 export class Vacation {
@@ -42,7 +43,15 @@ export class Vacation {
   @Column('int', { nullable: false })
   contractWorkerId: number;
 
-  @OneToMany(() => VacationDetail, (vacationDetail) => vacationDetail.vacation)
+  @OneToMany(
+    () => VacationDetail,
+    (vacationDetail) => vacationDetail.vacation,
+    {
+      cascade: true,
+      eager: true,
+    },
+  )
+  @Expose()
   vacationDetails: VacationDetail[];
 
   @Column({

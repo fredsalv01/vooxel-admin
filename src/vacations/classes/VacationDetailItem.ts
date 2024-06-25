@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -10,6 +11,7 @@ import {
 import { VacationDetailType } from '../enum/vacationDetailType';
 import { dateFormatValidator } from '../../common/functions';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class VacationDetailItem {
   constructor(partial?: Partial<VacationDetailItem>) {
@@ -38,7 +40,7 @@ export class VacationDetailItem {
   })
   @IsNotEmpty()
   @IsEnum(VacationDetailType)
-  vacationType?: string;
+  vacationType: string;
 
   @ApiProperty({
     description: 'quantity',
@@ -72,4 +74,11 @@ export class VacationDetailItem {
   @Validate(dateFormatValidator)
   @IsOptional()
   endDate?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ obj, key }) => {
+    return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
+  })
+  isActive?: boolean;
 }

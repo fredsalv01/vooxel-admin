@@ -124,7 +124,7 @@ export class Worker {
     default: null,
   })
   email: string; // numero de telefono cel o telefono
-  
+
   @Expose()
   @Column({
     default: null,

@@ -12,6 +12,10 @@ import { VacationDetailType } from '../enum/vacationDetailType';
 
 @Entity('vacation_details')
 export class VacationDetail {
+  constructor(partial?: Partial<VacationDetail>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn('identity')
   id: number;
 
@@ -24,7 +28,7 @@ export class VacationDetail {
 
   @Column({
     enum: VacationDetailType,
-    default: VacationDetailType.PENDIENTES
+    default: VacationDetailType.PENDIENTES,
   })
   vacationType: VacationDetailType;
 

@@ -25,7 +25,7 @@ export class CreateVacationDetailDto {
     description: 'seniority del trabajador',
     example: VacationDetailType.TOMADAS,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(VacationDetailType)
   vacationType: VacationDetailType;
 

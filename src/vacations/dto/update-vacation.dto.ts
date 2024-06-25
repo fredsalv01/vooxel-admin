@@ -22,4 +22,9 @@ export class UpdateVacationDto extends PartialType(CreateVacationDto) {
   @IsPositive()
   @IsOptional()
   remainingVacations?: number;
+
+  @IsInt()
+  @IsPositive()
+  @IsOptional()
+  expiredDays?: number;
 }

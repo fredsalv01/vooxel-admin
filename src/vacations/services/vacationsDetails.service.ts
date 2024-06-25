@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
 import { CreateVacationDetailDto } from '../dto/create-vacation-detail.dto';
 import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
+import { VacationDetailItem } from '../classes/VacationDetailItem';
+import { VacationsRepository } from '../repositories/vacationsRepository';
+import { VacationDetailType } from '../enum/vacationDetailType';
 
 @Injectable()
 export class VacationsDetailsService {
   constructor(
     private readonly vacationsDetailsRepository: VacationsDetailsRepository,
+    private readonly vacationsRepository: VacationsRepository,
   ) {}
 
   // create a new vacation detail
@@ -32,18 +36,59 @@ export class VacationsDetailsService {
   async updateVacationDetails(
     updateVacationDetailsDto: UpdateVacationDetailsDto,
   ) {
+    const items = updateVacationDetailsDto.items;
+    // obtenr primero la vacacion en cuestion
+    const vacation = await this.vacationsRepository.getVacationById(
+      items[0].vacationId,
+    );
+    // obtener todos los ids de los detalles de vacaciones
+    const ids = items.map((vacationDetail) => vacationDetail.id);
+    // obtener todos los detalles de vacaciones uno por uno mapeandolos
+    const vacationDetails = await Promise.all(
+      ids.map(
+        async (id) =>
+          await this.vacationsDetailsRepository.getVacationDetail(id),
+      ),
+    );
 
-    // CONST
-    
-    
+    // luego actualizar la vacacion con los detalles
+    const updateVacation = vacationDetails.map(async (vacationDetail) => {
+      if (
+        vacationDetail.vacationType === VacationDetailType.TOMADAS ||
+        vacationDetail.vacationType === VacationDetailType.COMPRADAS
+      ) {
+        const takenVacations =
+          vacation.takenVacations - vacationDetail.quantity;
+        const remainingVacations =
+          vacation.remainingVacations + vacationDetail.quantity;
+        const plannedVacations =
+          vacation.plannedVacations - vacationDetail.quantity;
+        const expiredDays =
+          remainingVacations - 30 > 0 ? remainingVacations - 30 : 0;
+        await this.vacationsRepository.updateVacation(
+          vacationDetail.vacationId,
+          {
+            takenVacations,
+            remainingVacations,
+            plannedVacations,
+            expiredDays,
+          },
+        );
+      }
+    });
 
-    
-    // const result =  this.vacationsDetailsRepository.updateVacationDetail(
-    //   id,
-    //   updateVacationDetailsDto,
-    // );
+    await Promise.all(updateVacation);
 
-    
+    // obtener primero el listado de las vacaciones para el id de todas los detalles
+    // y luego actualizar los detalles uno por uno
+    const promises = items.map((vacationDetail) => {
+      return this.vacationsDetailsRepository.updateVacationDetail(
+        vacationDetail.id,
+        new VacationDetailItem(vacationDetail),
+      );
+    });
+
+    return Promise.all(promises) as unknown as VacationDetailItem[];
   }
 
   // delete vacation detail
