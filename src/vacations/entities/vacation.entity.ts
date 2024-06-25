@@ -13,6 +13,10 @@ import { ContractWorker } from '../../contract_workers/entities/contract_worker.
 
 @Entity('vacations')
 export class Vacation {
+  constructor(partial?: Partial<Vacation>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn('identity')
   id: number;
 

@@ -2,6 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ContractWorker } from '../entities/contract_worker.entity';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import { VacationDetail } from '../../vacations/entities/vacationDetail.entity';
+import { Vacation } from '../../vacations/entities/vacation.entity';
 
 export class ContractWorkersRepository {
   private readonly logger = new Logger(ContractWorkersRepository.name);
@@ -20,7 +22,74 @@ export class ContractWorkersRepository {
 
   async createContract(data: any) {
     try {
-      const result = await this.db.save(new ContractWorker(data));
+      // si tiene un contrato antiguo desactivarlo
+      const vacationRepository = this.dataSource.getRepository('vacations');
+      const vacationDetailRepository = this.dataSource
+        .getRepository('vacation_details')
+        .createQueryBuilder();
+
+      const previousContract = await this.db.findOne({
+        where: {
+          workerId: data.workerId,
+          isActive: true,
+        },
+        relations: {
+          vacation: true,
+        },
+        order: {
+          id: 'desc',
+        },
+      });
+
+      let result: ContractWorker;
+      if (previousContract) {
+        await this.updateContract(previousContract.id, {
+          isActive: false,
+        });
+        // desactivar las vacaciones
+        if (previousContract.vacation) {
+          await vacationRepository.update(
+            {
+              id: previousContract.vacation.id,
+            },
+            {
+              isActive: false,
+            },
+          );
+
+          if (
+            previousContract?.vacation?.vacationDetails &&
+            previousContract?.vacation?.vacationDetails.length > 0
+          ) {
+            await vacationDetailRepository
+              .update(VacationDetail)
+              .set({ isActive: false })
+              .where({ vacationId: previousContract.vacation.id })
+              .execute();
+          }
+          const expiredDays =
+            previousContract?.vacation?.remainingVacations - 30;
+
+          result = await this.db.save(
+            new ContractWorker({
+              ...data,
+            }),
+          );
+
+          // create vacation from result id
+
+          const vacation = new Vacation({
+            contractWorkerId: result.id,
+            expiredDays: expiredDays >= 0 ? expiredDays : 0,
+            accumulatedVacations:
+              previousContract?.vacation?.accumulatedVacations,
+            remainingVacations: previousContract?.vacation?.remainingVacations,
+          });
+          await vacationRepository.save(vacation);
+        }
+      } else {
+        result = await this.db.save(data);
+      }
 
       this.logger.debug(
         `${this.createContract.name} - result`,

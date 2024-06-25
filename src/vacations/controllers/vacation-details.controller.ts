@@ -48,14 +48,12 @@ export class VacationDetailsController {
     return this.vacationDetailsService.createVacationDetail(vacationDetailsDto);
   }
 
-  @Put(':id')
+  @Put('/vacation/:vacationId')
   @UseGuards(AuthGuardJwt)
   async updateVacationDetails(
-    @Param('id', ParseIntPipe) id: number,
     @Body() vacationDetailsDto: UpdateVacationDetailsDto,
   ) {
     return this.vacationDetailsService.updateVacationDetails(
-      id,
       vacationDetailsDto,
     );
   }

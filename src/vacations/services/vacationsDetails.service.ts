@@ -30,13 +30,20 @@ export class VacationsDetailsService {
 
   // update vacation detail
   async updateVacationDetails(
-    id: number,
-    createVacationsDetailsDto: UpdateVacationDetailsDto,
+    updateVacationDetailsDto: UpdateVacationDetailsDto,
   ) {
-    return this.vacationsDetailsRepository.updateVacationDetail(
-      id,
-      createVacationsDetailsDto,
-    );
+
+    // CONST
+    
+    
+
+    
+    // const result =  this.vacationsDetailsRepository.updateVacationDetail(
+    //   id,
+    //   updateVacationDetailsDto,
+    // );
+
+    
   }
 
   // delete vacation detail

@@ -36,12 +36,12 @@ export class VacationsController {
     return this.vacationsService.create(createVacationDto);
   }
 
-  @Get('/contractWorkerId/:contractWorkerId')
-  findAll(@Param('contractWorkerId', ParseIntPipe) contractWorkerId: number) {
+  @Get('/workerId/:workerId')
+  findAll(@Param('workerId', ParseIntPipe) workerId: number) {
     this.logger.log(
-      `${this.findAll.name} - contractWorkerId: ${contractWorkerId}`,
+      `${this.findAll.name} - contractWorkerId: ${workerId}`,
     );
-    return this.vacationsService.findAll(contractWorkerId);
+    return this.vacationsService.findAll(workerId);
   }
 
   @Get(':id')

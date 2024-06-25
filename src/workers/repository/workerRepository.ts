@@ -105,7 +105,13 @@ export class WorkerRepository {
         .where('worker.id = :id', { id: id })
         .getOne();
 
-      data.chiefOfficer = data.chiefOfficer
+      if (!data) {
+        throw new NotFoundException({
+          message: 'Trabajador no encontrado',
+        });
+      }
+
+      data.chiefOfficer = data?.chiefOfficer
         ? new Worker({
             id: data.chiefOfficer.id,
             name: `${data.chiefOfficer?.name} ${data.chiefOfficer?.apPat}`,
@@ -135,7 +141,7 @@ export class WorkerRepository {
       return result;
     } catch (error) {
       this.logger.error('ERROR AL OBTENER COLABORADOR: ', error);
-      throw new Error(error);
+      throw new Error(error.detail);
     }
   }
 

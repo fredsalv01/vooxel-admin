@@ -18,5 +18,3 @@ export class UpdateVacationDetailsDto {
   @ApiProperty()
   items: Array<Partial<VacationDetailItem>>;
 }
-
-

@@ -12,8 +12,8 @@ export class VacationsService {
     return this.vacationsRepository.createVacation(createVacationDto);
   }
 
-  findAll(contractWorkerId: number) {
-    return this.vacationsRepository.getAllVacations(contractWorkerId);
+  findAll(workerId: number) {
+    return this.vacationsRepository.getAllVacations(workerId);
   }
 
   findOne(id: number) {

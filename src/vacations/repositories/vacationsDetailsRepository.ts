@@ -7,6 +7,7 @@ import { Vacation } from '../entities/vacation.entity';
 import { Moment } from '../../common/functions';
 import moment from 'moment-timezone';
 import { VacationDetailType } from '../enum/vacationDetailType';
+import { VacationDetailItem } from '../classes/VacationDetailItem';
 
 export class VacationsDetailsRepository {
   private readonly logger = new Logger(VacationsDetailsRepository.name);
@@ -73,22 +74,14 @@ export class VacationsDetailsRepository {
 
   async updateVacationDetail(
     id: number,
-    updateVacationDetailDto: any,
+    VacationDetailItem: VacationDetailItem,
   ): Promise<VacationDetail> {
     try {
       const vacationDetail = await this.getVacationDetail(id);
       const updatedVacationDetail = Object.assign(
         vacationDetail,
-        updateVacationDetailDto,
+        VacationDetailItem,
       );
-
-      // TODO:
-      /*
-        TOMAR EN CUENTA QUE SI SE ACTUALIZAN LAS FECHAS
-        SE DEBE DE REALIZAR EL CALCULO DE LAS VACACIONES TOMADAS
-        
-      */
-
       const result = await this.db.save(updatedVacationDetail);
       this.logger.debug(
         `${this.updateVacationDetail.name} - result`,

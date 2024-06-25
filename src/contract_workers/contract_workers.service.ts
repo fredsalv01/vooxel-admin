@@ -13,11 +13,7 @@ export class ContractWorkersService {
   async create(createContractWorkerDto: CreateContractWorkerDto) {
     this.logger.debug(this.create.name);
     try {
-      const hasContract = await this.findOne(createContractWorkerDto.workerId);
-
-      if (hasContract) {
-        this.update(hasContract.id, { isActive: false });
-      }
+      await this.findOne(createContractWorkerDto.workerId);
     } catch (error) {
       this.logger.error('ERROR BUSCANDO CONTRATO:', error);
     } finally {
