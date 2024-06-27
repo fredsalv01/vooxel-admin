@@ -34,7 +34,7 @@ export class CreateVacationDetailDto {
     example: 'reason text',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   reason: string;
 
   @ApiProperty({
