@@ -225,7 +225,7 @@ export class VacationsRepository {
       .getRepository('contract_worker')
       .findOne({
         where: { id: vacation.contractWorkerId },
-        relations: ['worker'],
+        relations: ['worker', 'vacation'],
         select: {
           worker: { startDate: true },
         },
@@ -240,7 +240,9 @@ export class VacationsRepository {
 
   private calcVacations(startDate: Date) {
     return Math.floor(
-      (new Date(startDate).getMonth() - new Date().getMonth()) * 2.5,
+      (new Date(startDate).getMonth() - new Date().getMonth() +1) * 2.5, 
     );
   }
 }
+
+

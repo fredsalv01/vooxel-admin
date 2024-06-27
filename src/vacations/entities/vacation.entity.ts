@@ -34,7 +34,7 @@ export class Vacation {
   remainingVacations: number; // este se va a actualizar (vacaciones pendientes)
 
   @Column('int', { nullable: false, default: 0 })
-  expiredDays: number; // este se va a actualizar (dias vencidos)
+  expiredDays: number; // este se va a actualizar (dias vencidos: vacaciones que no se tomaron en el año anterior)
 
   @OneToOne(() => ContractWorker, (contractWorker) => contractWorker.vacation)
   @JoinColumn({ name: 'contractWorkerId' })

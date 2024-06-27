@@ -4,6 +4,7 @@ import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { VacationDetail } from '../../vacations/entities/vacationDetail.entity';
 import { Vacation } from '../../vacations/entities/vacation.entity';
+const moment = require('moment-timezone');
 
 export class ContractWorkersRepository {
   private readonly logger = new Logger(ContractWorkersRepository.name);
@@ -34,6 +35,7 @@ export class ContractWorkersRepository {
           isActive: true,
         },
         relations: {
+          worker: true,
           vacation: true,
         },
         order: {
@@ -67,8 +69,16 @@ export class ContractWorkersRepository {
               .where({ vacationId: previousContract.vacation.id })
               .execute();
           }
-          const expiredDays =
-            previousContract?.vacation?.remainingVacations - 30;
+
+          // si es mas de un año desde el inicio del trabajador
+          // calcular dias vencidos
+          let expiredDays = 0;
+          if (
+            moment(previousContract.worker.startDate).year() - moment().year() >
+            1
+          ) {
+            expiredDays = previousContract?.vacation?.remainingVacations - 30;
+          }
 
           result = await this.db.save(
             new ContractWorker({
@@ -77,7 +87,8 @@ export class ContractWorkersRepository {
           );
 
           // create vacation from result id
-
+          // aca no se toman en cuenta las vacaciones tomadas, porque quedan con el contrato anterior
+          // lo unico que importa son las vacaciones pendientes, las vacaciones acumuladas y dias vencidos
           const vacation = new Vacation({
             contractWorkerId: result.id,
             expiredDays: expiredDays >= 0 ? expiredDays : 0,
