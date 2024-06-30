@@ -23,7 +23,7 @@ export class VacationDetailItem {
     example: '1',
   })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   id: number;
 
   @ApiProperty({
