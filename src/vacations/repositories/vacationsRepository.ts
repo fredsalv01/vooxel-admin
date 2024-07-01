@@ -12,7 +12,7 @@ export class VacationsRepository {
     @InjectRepository(Vacation)
     private readonly db: Repository<Vacation>,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   // create a new vacation
   async createVacation(vacation: CreateVacationDto): Promise<Vacation> {
@@ -220,7 +220,7 @@ export class VacationsRepository {
     }
   }
 
-  private async calcAccVacationUpdate(vacation: Vacation): Promise<number> {
+  public async calcAccVacationUpdate(vacation: Vacation): Promise<number> {
     const contractWorker = (await this.dataSource
       .getRepository('contract_worker')
       .findOne({
@@ -240,7 +240,7 @@ export class VacationsRepository {
 
   private calcVacations(startDate: Date) {
     return Math.floor(
-      (new Date(startDate).getMonth() - new Date().getMonth() +1) * 2.5, 
+      (new Date(startDate).getMonth() - new Date().getMonth() + 1) * 2.5,
     );
   }
 }

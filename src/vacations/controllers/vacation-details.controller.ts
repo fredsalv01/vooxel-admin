@@ -22,7 +22,7 @@ import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
 export class VacationDetailsController {
   constructor(
     private readonly vacationDetailsService: VacationsDetailsService,
-  ) {}
+  ) { }
 
   @Get('/vacation/:vacationId')
   @UseGuards(AuthGuardJwt)
@@ -51,10 +51,15 @@ export class VacationDetailsController {
   @Put('/vacation/:vacationId')
   @UseGuards(AuthGuardJwt)
   async updateVacationDetails(
+    @Param('vacationId', ParseIntPipe) vacationId: number,
     @Body() vacationDetailsDto: UpdateVacationDetailsDto,
   ) {
+    console.log("🚀 ~ VacationDetailsController ~ vacationId:", vacationId)
+    console.log("🚀 ~ VacationDetailsController ~ vacationDetailsDto:", vacationDetailsDto)
+
     return this.vacationDetailsService.updateVacationDetails(
       vacationDetailsDto,
+      vacationId
     );
   }
 
