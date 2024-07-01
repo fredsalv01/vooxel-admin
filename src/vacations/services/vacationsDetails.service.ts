@@ -43,9 +43,14 @@ export class VacationsDetailsService {
     );
 
     // filtrar los detalles de vacaciones que se van a actualizar y los que tienen que crearse
-    const vacationDetailsToUpdate = items
-      .filter((vacationDetail) => vacationDetail?.id)
-      .map((vacationDetail) => vacationDetail.id);
+    const vacationDetailsToUpdate = items.filter(
+      (vacationDetail) => vacationDetail?.id,
+    );
+
+    const vacationDetailsIdsToUpdate = vacationDetailsToUpdate.map(
+      (vacationDetail) => vacationDetail.id,
+    );
+
     const vacationDetailsToCreate = items.filter(
       (vacationDetail) => !vacationDetail.id,
     );
@@ -67,7 +72,7 @@ export class VacationsDetailsService {
 
     // obtener todos los detalles de vacaciones uno por uno mapeandolos
     const vacationDetails = await Promise.all(
-      vacationDetailsToUpdate.map(
+      vacationDetailsIdsToUpdate.map(
         async (id) =>
           await this.vacationsDetailsRepository.getVacationDetail(id),
       ),
@@ -103,7 +108,7 @@ export class VacationsDetailsService {
 
     // obtener primero el listado de las vacaciones para el id de todas los detalles
     // y luego actualizar los detalles uno por uno
-    const promises = items.map((vacationDetail) => {
+    const promises = vacationDetailsToUpdate.map((vacationDetail) => {
       return this.vacationsDetailsRepository.updateVacationDetail(
         vacationDetail.id,
         new VacationDetailItem(vacationDetail),
