@@ -12,7 +12,7 @@ export class VacationsRepository {
     @InjectRepository(Vacation)
     private readonly db: Repository<Vacation>,
     private readonly dataSource: DataSource,
-  ) { }
+  ) {}
 
   // create a new vacation
   async createVacation(vacation: CreateVacationDto): Promise<Vacation> {
@@ -66,7 +66,7 @@ export class VacationsRepository {
         .getRepository('contract_worker')
         .find({
           where: { workerId },
-          relations: ['vacation'],
+          relations: ['vacation', 'worker'],
           select: {
             vacation: true,
           },
@@ -74,7 +74,23 @@ export class VacationsRepository {
 
       const result = contractWorkers.map(
         async (item: ContractWorker): Promise<Vacation> => {
-          if (item.vacation.isActive) {
+          // si no tiene vacaciones aun
+          if (!item.vacation && item.isActive) {
+            const accumulatedVacations = this.calcVacations(
+              item.worker.startDate,
+            );
+
+            item.vacation = await this.createVacation({
+              contractWorkerId: item.id,
+              accumulatedVacations,
+              remainingVacations: accumulatedVacations,
+              takenVacations: 0,
+              expiredDays: 0,
+            } as CreateVacationDto);
+          }
+
+          // si tiene vacaciones y esta activa
+          else if (item?.vacation && item?.vacation.isActive) {
             const accumulatedVacations = await this.calcAccVacationUpdate(
               item.vacation,
             );
@@ -95,7 +111,8 @@ export class VacationsRepository {
               item.vacation.remainingVacations = remainingVacations;
             }
           }
-          return item.vacation;
+
+          return item?.vacation || null;
         },
       );
       const promiseResult = await Promise.all(result);
@@ -105,7 +122,7 @@ export class VacationsRepository {
         JSON.stringify(promiseResult, null, 2),
       );
 
-      return promiseResult;
+      return promiseResult.filter((item) => item !== null);
     } catch (error) {
       this.logger.error('ERROR OBTENIENDO VACACIONES:', error);
       throw new Error(error);
@@ -244,5 +261,3 @@ export class VacationsRepository {
     );
   }
 }
-
-

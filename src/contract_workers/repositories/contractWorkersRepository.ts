@@ -97,6 +97,21 @@ export class ContractWorkersRepository {
             remainingVacations: previousContract?.vacation?.remainingVacations,
           });
           await vacationRepository.save(vacation);
+        } else {
+          result = await this.db.save(
+            new ContractWorker({
+              ...data,
+            }),
+          );
+          const vacation = new Vacation({
+            contractWorkerId: result.id,
+            expiredDays: 0,
+            accumulatedVacations: 0,
+            remainingVacations: 0,
+            takenVacations: 0,
+            plannedVacations: 0,
+          });
+          await vacationRepository.save(vacation);
         }
       } else {
         result = await this.db.save(data);
