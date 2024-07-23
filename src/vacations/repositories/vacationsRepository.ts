@@ -5,6 +5,7 @@ import { CreateVacationDto } from '../dto/create-vacation.dto';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
 import { UpdateVacationDto } from '../dto/update-vacation.dto';
+import { DAY } from '../../common/constants';
 
 export class VacationsRepository {
   private readonly logger = new Logger(VacationsRepository.name);
@@ -74,6 +75,29 @@ export class VacationsRepository {
 
       const result = contractWorkers.map(
         async (item: ContractWorker): Promise<Vacation> => {
+          if (item?.vacation && item?.vacation.isActive) {
+            const accumulatedVacations = this.calcVacations(
+              item.worker.startDate,
+            );
+
+            const remainingVacations =
+              accumulatedVacations - item.vacation.takenVacations;
+
+            const expiredDays =
+              remainingVacations >= 30 ? remainingVacations - 30 : 0;
+            
+            //actualizar la vacacion
+            await this.updateVacation(item.vacation.id, {
+              accumulatedVacations,
+              remainingVacations,
+              expiredDays,
+            });
+
+            item.vacation.accumulatedVacations = accumulatedVacations;
+            item.vacation.remainingVacations = remainingVacations;
+            item.vacation.expiredDays = expiredDays;
+          }
+
           // si no tiene vacaciones aun
           if (!item.vacation && item.isActive) {
             const accumulatedVacations = this.calcVacations(
@@ -87,30 +111,10 @@ export class VacationsRepository {
               takenVacations: 0,
               expiredDays: 0,
             } as CreateVacationDto);
+            console.log('item', item);
           }
 
           // si tiene vacaciones y esta activa
-          else if (item?.vacation && item?.vacation.isActive) {
-            const accumulatedVacations = await this.calcAccVacationUpdate(
-              item.vacation,
-            );
-
-            const remainingVacations =
-              accumulatedVacations - item.vacation.takenVacations;
-            if (
-              new Date(item.vacation.updatedAt).getDate() !==
-              new Date().getDate()
-            ) {
-              //actualizar la vacacion
-              await this.updateVacation(item.vacation.id, {
-                accumulatedVacations,
-                remainingVacations,
-              });
-
-              item.vacation.accumulatedVacations = accumulatedVacations;
-              item.vacation.remainingVacations = remainingVacations;
-            }
-          }
 
           return item?.vacation || null;
         },
@@ -256,8 +260,8 @@ export class VacationsRepository {
   }
 
   private calcVacations(startDate: Date) {
-    return Math.floor(
-      (new Date(startDate).getMonth() - new Date().getMonth() + 1) * 2.5,
-    );
+    const time = new Date().getTime() - new Date(startDate).getTime();
+    // to month
+    return Math.floor((time / (30 * DAY)) * 2.5);
   }
 }
