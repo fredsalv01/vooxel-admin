@@ -173,7 +173,7 @@ export class Worker {
   @Expose()
   techSkills: string[]; // string[]
 
-  @OneToMany(() => Worker, (worker) => worker.chiefOfficer)
+  @OneToOne(() => Worker, (worker) => worker.chiefOfficer)
   @JoinColumn({
     name: 'chiefOfficerId',
   })
