@@ -47,6 +47,7 @@ export class VacationsDetailsRepository {
       const vacationDetail = await this.db.findOne({
         where: {
           id: id,
+          isActive: true
         },
       });
       if (!vacationDetail) {
