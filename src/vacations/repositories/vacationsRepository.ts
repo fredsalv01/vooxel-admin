@@ -98,39 +98,24 @@ export class VacationsRepository {
   // get a vacation by id
   async getVacationById(vacationId: number): Promise<Vacation> {
     try {
+
+      // encontrar la vacacion por vacacionId
       let result = await this.db.findOne({
         where: { id: vacationId },
       });
 
-      //validate if the updatedat is greater than date now
-      if (new Date(result.updatedAt).getDate() === new Date().getDate()) {
-        //TODO: MOMENT TZ
-        this.logger.debug(
-          `${this.getVacationById.name} - result`,
-          JSON.stringify(result, null, 2),
-        );
-        return result;
-      }
-      const accumulatedVacationsUpdated =
-        await this.calcAccVacationUpdate(result);
+      const worker = (await this.dataSource.getRepository('worker').findOne({
+        where: { id: result.workerId },
+        relations: ['vacation'],
+        select: {
+          vacation: true,
+        },
+      })) as Worker;
 
-      // if the accumulated vacations are more than 30, then the expiredDays
-      // will be the difference between the accumulated vacations and the taken vacations
-      let expiredDaysUpdated = 0;
-      if (accumulatedVacationsUpdated >= 30) {
-        expiredDaysUpdated =
-          accumulatedVacationsUpdated - result.remainingVacations;
-      }
+      const accumulatedVacations = this.calcVacations(worker.startDate);
+      result.accumulatedVacations = accumulatedVacations;
+      result.remainingVacations = accumulatedVacations - result.takenVacations;
 
-      await this.updateVacation(vacationId, {
-        accumulatedVacations: accumulatedVacationsUpdated,
-        remainingVacations: accumulatedVacationsUpdated - result.takenVacations,
-        expiredDays: expiredDaysUpdated,
-      } as unknown as any);
-
-      result = await this.db.findOne({
-        where: { id: vacationId },
-      });
       this.logger.debug(
         `${this.getVacationById.name} - result`,
         JSON.stringify(result, null, 2),

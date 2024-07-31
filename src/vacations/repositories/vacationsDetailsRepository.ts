@@ -15,7 +15,7 @@ export class VacationsDetailsRepository {
     @InjectRepository(VacationDetail)
     private readonly db: Repository<VacationDetail>,
     private readonly dataSource: DataSource,
-  ) { }
+  ) {}
 
   async createVacationDetail(
     createVacationDetailDto: CreateVacationDetailDto,
@@ -91,11 +91,17 @@ export class VacationsDetailsRepository {
     }
   }
 
-  async deleteVacationDetail(id: number): Promise<void> {
+  async deleteVacationDetail(id: number): Promise<boolean> {
     try {
-      const vacationDetail = await this.getVacationDetail(id);
-      await this.db.remove(vacationDetail);
+      await this.db.update(
+        {
+          id: id,
+        },
+        { isActive: false },
+      );
       this.logger.debug('Vacation detail deleted successfully');
+
+      return true;
     } catch (error) {
       this.logger.error('ERROR DELETING VACATION DETAIL:', error);
       throw new Error(error);

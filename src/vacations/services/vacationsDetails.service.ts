@@ -46,16 +46,11 @@ export class VacationsDetailsService {
       }
       return acc;
     }, { newVacDetails: [], oldVacDetails: [] });
-    console.log("🚀 ~ VacationsDetailsService ~ newVacDetails:", newVacDetails)
-    console.log("🚀 ~ VacationsDetailsService ~ oldVacDetails:", oldVacDetails)
+    // console.log("🚀 ~ VacationsDetailsService ~ newVacDetails:", newVacDetails)
+    // console.log("🚀 ~ VacationsDetailsService ~ oldVacDetails:", oldVacDetails)
 
 
     let vacationHeader = await this.vacationsRepository.getVacationById(vacationId);
-    const accumulatedVac = await this.vacationsRepository.calcAccVacationUpdate(vacationHeader);
-    vacationHeader.accumulatedVacations = accumulatedVac;
-    vacationHeader.remainingVacations = accumulatedVac - vacationHeader.takenVacations;
-    // expiracion de vacaciones falta
-
     let total = 0;
 
     if (newVacDetails.length) {
@@ -101,7 +96,6 @@ export class VacationsDetailsService {
     }
 
     if (total) {
-
       vacationHeader.takenVacations = total;
       vacationHeader.remainingVacations = vacationHeader.accumulatedVacations - total;
       console.log("🚀 ~ VacationsDetailsService ~ vacationHeader:", vacationHeader)
@@ -114,123 +108,6 @@ export class VacationsDetailsService {
     }
 
     return true;
-
-    // obtenr primero la vacacion en cuestion
-    // const vacationHeader = await this.vacationsRepository.getVacationById(
-    //   items[0].vacationId,
-    // );
-
-
-
-    // filtrar los detalles de vacaciones que se van a actualizar y los que tienen que crearse
-    // const vacationDetailsToUpdate = items.filter(
-    //   (vacationDetail) => vacationDetail?.id,
-    // );
-
-    // const vacationDetailsIdsToUpdate = vacationDetailsToUpdate.map(
-    //   (vacationDetail) => vacationDetail.id,
-    // );
-
-    // const vacationDetailsToCreate = items.filter(
-    //   (vacationDetail) => !vacationDetail.id,
-    // );
-
-    // crear los detalles de vacaciones que no existen
-    // await Promise.all(
-    //   vacationDetailsToCreate.map(
-    //     async (vacationDetail) =>
-    //       await this.vacationsDetailsRepository.createVacationDetail({
-    //         vacationId: vacationHeader.id,
-    //         vacationType: vacationDetail.vacationType,
-    //         quantity: vacationDetail.quantity,
-    //         reason: vacationDetail.reason,
-    //         startDate: vacationDetail.startDate,
-    //         endDate: vacationDetail.endDate,
-    //       } as CreateVacationDetailDto),
-    //   ),
-    // );
-
-    // // obtener todos los detalles de vacaciones uno por uno mapeandolos
-    // const vacationDetailsBD = await Promise.all(
-    //   vacationDetailsIdsToUpdate.map(
-    //     async (id) =>
-    //       await this.vacationsDetailsRepository.getVacationDetail(id),
-    //   ),
-    // );
-
-
-    /* 
-    
-      vacaciones acumuladas = 20; 
-      vacaciones tomadas = 15;
-      vacaciones pend = 5;
-
-      bd
-      d1 = 5
-      d2 = 10
-
-      front
-      d1 = 4
-      d2 = 8 
-
-      dd = 3
-
-      vacaciones acumuladas = 20;
-      
-      vacaciones tomadas = 15 - (bd - f) = 10;
-
-      vacaciones pend = 12;
-
-    */
-
-    //   for (const   of vacationDetailsIdsToUpdate) {
-
-    //   }
-
-    // const diff = vacationDetailsIdsToUpdate.length 
-
-
-    // luego actualizar la vacacion con los detalles
-    // const updateVacation = vacationDetailsBD.map(async (vacationDetail) => {
-    //   if (
-    //     vacationDetail.vacationType === VacationDetailType.TOMADAS ||
-    //     vacationDetail.vacationType === VacationDetailType.COMPRADAS
-    //   ) {
-    //     const takenVacations =
-    //       vacationHeader.takenVacations - vacationDetail.quantity;
-
-    //     const remainingVacations =
-    //       vacationHeader.remainingVacations + vacationDetail.quantity;
-
-    //     // const plannedVacations =
-    //     //   vacation.plannedVacations - vacationDetail.quantity;
-
-    //     const expiredDays =
-    //       remainingVacations - 30 > 0 ? remainingVacations - 30 : 0;
-    //     await this.vacationsRepository.updateVacation(
-    //       vacationDetail.vacationId,
-    //       {
-    //         takenVacations,
-    //         remainingVacations,
-    //         plannedVacations,
-    //         expiredDays,
-    //       },
-    //     );
-    //   }
-    // });
-
-    // await Promise.all(updateVacation);
-
-    // // obtener primero el listado de las vacaciones para el id de todas los detalles
-    // // y luego actualizar los detalles uno por uno
-    // const promises = vacationDetailsToUpdate.map((vacationDetail) => {
-    //   return this.vacationsDetailsRepository.updateVacationDetail(
-    //     vacationDetail.id,
-    //     new VacationDetailItem(vacationDetail),
-    //   );
-    // });
-
-    // return Promise.all(promises) as unknown as VacationDetailItem[];
   }
 
   // delete vacation detail
