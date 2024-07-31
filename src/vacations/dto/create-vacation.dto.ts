@@ -16,7 +16,7 @@ export class CreateVacationDto {
   @IsInt()
   @IsPositive()
   @IsNotEmpty()
-  contractWorkerId: number;
+  workerId: number;
 
   @IsInt()
   @Min(0)

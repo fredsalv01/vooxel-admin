@@ -11,9 +11,11 @@ import {
 import { VacationDetail } from './vacationDetail.entity';
 import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
 import { Expose } from 'class-transformer';
+import { Worker } from "../../workers/entities/worker.entity";
 
 @Entity('vacations')
 export class Vacation {
+
   constructor(partial?: Partial<Vacation>) {
     Object.assign(this, partial);
   }
@@ -36,12 +38,12 @@ export class Vacation {
   @Column('int', { nullable: false, default: 0 })
   expiredDays: number; // este se va a actualizar (dias vencidos: vacaciones que no se tomaron en el año anterior)
 
-  @OneToOne(() => ContractWorker, (contractWorker) => contractWorker.vacation)
-  @JoinColumn({ name: 'contractWorkerId' })
-  contractWorker: ContractWorker;
+  @OneToOne(() => Worker, (worker) => worker.vacation)
+  @JoinColumn({ name: 'workerId' })
+  worker: Worker;
 
   @Column('int', { nullable: false })
-  contractWorkerId: number;
+  workerId: number;
 
   @OneToMany(
     () => VacationDetail,

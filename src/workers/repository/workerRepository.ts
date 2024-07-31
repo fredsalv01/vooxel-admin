@@ -111,12 +111,12 @@ export class WorkerRepository {
         });
       }
 
-      data.chiefOfficer = data?.chiefOfficer
-        ? new Worker({
-            id: data.chiefOfficer.id,
-            name: `${data.chiefOfficer?.name} ${data.chiefOfficer?.apPat}`,
-          })
-        : null;
+      // data.chiefOfficer = data?.chiefOfficer
+      //   ? new Worker({
+      //       id: data.chiefOfficer.id,
+      //       name: `${data.chiefOfficer?.name} ${data.chiefOfficer?.apPat}`,
+      //     })
+      //   : null;
 
       // get count per file type for worker using the tag field
       const files = await this.dataSource.getRepository('File').find({
@@ -230,6 +230,7 @@ export class WorkerRepository {
   async updateWorker(id: number, updateWorkerData: any) {
     const worker: Worker = await this.db.preload({
       id: id,
+      chiefOfficer: updateWorkerData.chiefOfficerId,
       ...updateWorkerData,
     });
 

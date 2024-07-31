@@ -59,7 +59,4 @@ export class ContractWorker {
   })
   @Expose()
   workerId: number;
-
-  @OneToOne(() => Vacation, (vacation) => vacation.contractWorker)
-  vacation: Vacation;
 }

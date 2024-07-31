@@ -9,6 +9,7 @@ export class VacationsService {
   constructor(private readonly vacationsRepository: VacationsRepository) {}
 
   create(createVacationDto: CreateVacationDto) {
+    //validar si el worker existe
     return this.vacationsRepository.createVacation(createVacationDto);
   }
 

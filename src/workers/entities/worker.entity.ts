@@ -20,6 +20,7 @@ import { Certification } from './certification.entity';
 import { BankAccount } from './bank-account.entity';
 import { WorkerToClient } from './worker-to-client.entity';
 import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
+import { Vacation } from "../../vacations/entities/vacation.entity";
 
 @Entity()
 export class Worker {
@@ -214,4 +215,7 @@ export class Worker {
 
   @OneToMany(() => ContractWorker, (contractWorker) => contractWorker.worker)
   public contractWorkers: ContractWorker[];
+
+  @OneToOne(() => Vacation, (vacation) => vacation.worker)
+  vacation: Vacation;
 }

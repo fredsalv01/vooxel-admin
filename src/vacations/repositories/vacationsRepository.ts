@@ -3,9 +3,9 @@ import { Vacation } from '../entities/vacation.entity';
 import { DataSource, Repository } from 'typeorm';
 import { CreateVacationDto } from '../dto/create-vacation.dto';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
-import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
 import { UpdateVacationDto } from '../dto/update-vacation.dto';
 import { DAY } from '../../common/constants';
+import { Worker } from '../../workers/entities/worker.entity';
 
 export class VacationsRepository {
   private readonly logger = new Logger(VacationsRepository.name);
@@ -18,28 +18,14 @@ export class VacationsRepository {
   // create a new vacation
   async createVacation(vacation: CreateVacationDto): Promise<Vacation> {
     try {
-      // create planned vacations
-      const contractWorker = (await this.dataSource
-        .getRepository('contract_worker')
-        .findOne({
-          where: { id: vacation.contractWorkerId },
-          relations: ['worker'],
-        })) as ContractWorker;
-
-      console.log('contractWorker', contractWorker);
-
-      if (!contractWorker) {
-        throw new NotFoundException({
-          error: 'contrato con trabajador no encontrado',
-        });
-      }
+      const worker = await this.dataSource.getRepository('worker').findOne({
+        where: { id: vacation.workerId },
+      });
 
       //vacaciones acumuladas
-      if (vacation?.accumulatedVacations === 0 && contractWorker.isActive) {
+      if (vacation?.accumulatedVacations === 0) {
         // mes actual - mes de inicio de labores del trabajador * 2.5
-        vacation.accumulatedVacations = this.calcVacations(
-          contractWorker.worker.startDate,
-        );
+        vacation.accumulatedVacations = this.calcVacations(worker.startDate);
       }
 
       const newVacation = this.db.create({
@@ -47,6 +33,7 @@ export class VacationsRepository {
         remainingVacations:
           vacation.accumulatedVacations - vacation.takenVacations,
       });
+
       const result = await this.db.save(newVacation);
       this.logger.debug(
         `${this.createVacation.name} - result`,
@@ -60,73 +47,58 @@ export class VacationsRepository {
   }
 
   // get all vacation
-  async getAllVacations(workerId: number): Promise<Vacation[]> {
+  async getAllVacations(workerId: number): Promise<Vacation> {
     try {
-      // obtener el listado de los id de todos los contratos del trabajador
-      const contractWorkers = (await this.dataSource
-        .getRepository('contract_worker')
-        .find({
-          where: { workerId },
-          relations: ['vacation', 'worker'],
-          select: {
-            vacation: true,
-          },
-        })) as ContractWorker[];
 
-      const result = contractWorkers.map(
-        async (item: ContractWorker): Promise<Vacation> => {
-          if (item?.vacation && item?.vacation.isActive) {
-            const accumulatedVacations = this.calcVacations(
-              item.worker.startDate,
-            );
-
-            const remainingVacations =
-              accumulatedVacations - item.vacation.takenVacations;
-
-            const expiredDays =
-              remainingVacations >= 30 ? remainingVacations - 30 : 0;
-            
-            //actualizar la vacacion
-            await this.updateVacation(item.vacation.id, {
-              accumulatedVacations,
-              remainingVacations,
-              expiredDays,
-            });
-
-            item.vacation.accumulatedVacations = accumulatedVacations;
-            item.vacation.remainingVacations = remainingVacations;
-            item.vacation.expiredDays = expiredDays;
-          }
-
-          // si no tiene vacaciones aun
-          if (!item.vacation && item.isActive) {
-            const accumulatedVacations = this.calcVacations(
-              item.worker.startDate,
-            );
-
-            item.vacation = await this.createVacation({
-              contractWorkerId: item.id,
-              accumulatedVacations,
-              remainingVacations: accumulatedVacations,
-              takenVacations: 0,
-              expiredDays: 0,
-            } as CreateVacationDto);
-            console.log('item', item);
-          }
-
-          // si tiene vacaciones y esta activa
-
-          return item?.vacation || null;
+      const worker = (await this.dataSource.getRepository('worker').findOne({
+        where: { id: workerId },
+        relations: ['vacation'],
+        select: {
+          vacation: true,
         },
-      );
-      const promiseResult = await Promise.all(result);
+      })) as Worker;
+
+      const accumulatedVacations = this.calcVacations(worker.startDate);
+
+      const remainingVacations =
+        accumulatedVacations - worker.vacation.takenVacations;
+
+      const expiredDays =
+        remainingVacations >= 30 ? remainingVacations - 30 : 0;
+
+      await this.updateVacation(worker.vacation.id, {
+        accumulatedVacations,
+        remainingVacations,
+        expiredDays,
+      });
+
+      worker.vacation.accumulatedVacations = accumulatedVacations;
+      worker.vacation.remainingVacations = remainingVacations;
+      worker.vacation.expiredDays = expiredDays;
+
+      // si aun no tiene una vacacion creada para ese trabajador, se le crea
+
+      if (!worker?.vacation) {
+        const accumulatedVacations = this.calcVacations(worker.startDate);
+
+        worker.vacation = await this.createVacation({
+          workerId: worker.id,
+          accumulatedVacations,
+          remainingVacations: accumulatedVacations,
+          takenVacations: 0,
+          expiredDays: 0,
+        } as CreateVacationDto);
+        console.log('worker', worker);
+      }
+
+      const promiseResult = worker.vacation;
 
       this.logger.debug(
         `${this.getAllVacations.name} - result`,
         JSON.stringify(promiseResult, null, 2),
       );
 
-      return promiseResult.filter((item) => item !== null);
+      return promiseResult;
     } catch (error) {
       this.logger.error('ERROR OBTENIENDO VACACIONES:', error);
       throw new Error(error);
@@ -242,18 +214,18 @@ export class VacationsRepository {
   }
 
   public async calcAccVacationUpdate(vacation: Vacation): Promise<number> {
-    const contractWorker = (await this.dataSource
-      .getRepository('contract_worker')
+    const worker = (await this.dataSource
+      .getRepository('worker')
       .findOne({
-        where: { id: vacation.contractWorkerId },
-        relations: ['worker', 'vacation'],
+        where: { id: vacation.workerId },
+        relations: ['vacation'],
         select: {
           worker: { startDate: true },
         },
-      })) as ContractWorker;
+      })) as Worker;
 
     const accumulatedVacationsUpdated = this.calcVacations(
-      contractWorker.worker.startDate,
+      worker.startDate,
     );
 
     return accumulatedVacationsUpdated;
