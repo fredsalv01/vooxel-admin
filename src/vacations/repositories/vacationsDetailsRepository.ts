@@ -21,11 +21,11 @@ export class VacationsDetailsRepository {
     createVacationDetailDto: CreateVacationDetailDto,
   ): Promise<VacationDetail> {
     try {
-      // await this.updateVacation(
-      //   createVacationDetailDto.vacationId,
-      //   createVacationDetailDto.vacationType,
-      //   createVacationDetailDto.quantity,
-      // );
+      await this.updateVacation(
+        createVacationDetailDto.vacationId,
+        createVacationDetailDto.vacationType,
+        createVacationDetailDto.quantity,
+      );
 
       const result = await this.db.save(createVacationDetailDto);
       // compradas todo pasa a ser 0 y la vacacion se actualiza
@@ -66,22 +66,6 @@ export class VacationsDetailsRepository {
     try {
       const vacationDetail = await this.getVacationDetail(id);
 
-      // validar si lo que se quiere cambiar es el tipo de vacacion
-      // si es pendiente y se desea actualizar a tomada o comprada
-      // se debe actualizar la vacacion correspondiente
-      // if (
-      //   vacationDetail.vacationType === VacationDetailType.PENDIENTES &&
-      //   (VacationDetailItem.vacationType === VacationDetailType.TOMADAS ||
-      //     VacationDetailItem.vacationType === VacationDetailType.COMPRADAS)
-      // ) {
-      //   await this.updateVacation(
-      //     VacationDetailItem.vacationId,
-      //     VacationDetailItem.vacationType,
-      //     VacationDetailItem.quantity || vacationDetail.quantity,
-      //   );
-      // }
-      // si es tomada o comprada y se desea actualizar a pendiente
-      // debe dar error
       if (
         (vacationDetail.vacationType === VacationDetailType.TOMADAS ||
           vacationDetail.vacationType === VacationDetailType.COMPRADAS) &&
