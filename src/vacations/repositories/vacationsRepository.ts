@@ -6,6 +6,7 @@ import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { UpdateVacationDto } from '../dto/update-vacation.dto';
 import { DAY } from '../../common/constants';
 import { Worker } from '../../workers/entities/worker.entity';
+import { VacationDetailType } from '../enum/vacationDetailType';
 
 export class VacationsRepository {
   private readonly logger = new Logger(VacationsRepository.name);
@@ -57,7 +58,6 @@ export class VacationsRepository {
       const expiredDays = Math.floor(accumulatedVacations / 30) * 30;
 
       if (!worker?.vacation) {
-
         worker.vacation = await this.createVacation({
           workerId: worker.id,
           accumulatedVacations,
@@ -65,7 +65,6 @@ export class VacationsRepository {
           takenVacations: 0,
           expiredDays,
         } as CreateVacationDto);
-
       } else {
         const remainingVacations =
           accumulatedVacations - worker.vacation.takenVacations;
@@ -81,6 +80,19 @@ export class VacationsRepository {
         worker.vacation.expiredDays = expiredDays;
       }
 
+      const filterVacationDetails = worker.vacation.vacationDetails.filter(
+        (item) =>
+          item.isActive &&
+          [VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(
+            item.vacationType,
+          ),
+      );
+
+      console.log(
+        '🚀 ~ VacationsRepository ~ filterVacationDetails',
+        filterVacationDetails,
+      );
+      worker.vacation.vacationDetails = filterVacationDetails;
       const result = worker.vacation;
 
       this.logger.debug(
@@ -98,7 +110,6 @@ export class VacationsRepository {
   // get a vacation by id
   async getVacationById(vacationId: number): Promise<Vacation> {
     try {
-
       // encontrar la vacacion por vacacionId
       let result = await this.db.findOne({
         where: { id: vacationId },

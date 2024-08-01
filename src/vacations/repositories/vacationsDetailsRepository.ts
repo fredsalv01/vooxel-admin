@@ -47,7 +47,7 @@ export class VacationsDetailsRepository {
       const vacationDetail = await this.db.findOne({
         where: {
           id: id,
-          isActive: true
+          isActive: true,
         },
       });
       if (!vacationDetail) {
@@ -115,28 +115,29 @@ export class VacationsDetailsRepository {
       const vacationDetails = (await this.db.find({
         where: {
           vacationId: vacationId,
+          isActive: true,
         },
       })) as VacationDetail[];
-
+      
       // actualizar el estado de los detalles de vacaiones tomadas en caso ya hayan expirado
-      const currentDate = Moment(new Date().toISOString());
+      // const currentDate = Moment(new Date().toISOString());
 
-      console.log('currentDate', Moment(new Date().toISOString()));
-      vacationDetails.forEach(async (vacationDetail) => {
-        if (
-          vacationDetail.endDate &&
-          moment(vacationDetail.endDate).isBefore(currentDate)
-        ) {
-          await this.db.update(
-            {
-              id: vacationDetail.id,
-            },
-            {
-              isActive: false,
-            },
-          );
-        }
-      });
+      // console.log('currentDate', Moment(new Date().toISOString()));
+      // vacationDetails.forEach(async (vacationDetail) => {
+      //   if (
+      //     vacationDetail.endDate &&
+      //     moment(vacationDetail.endDate).isBefore(currentDate)
+      //   ) {
+      //     await this.db.update(
+      //       {
+      //         id: vacationDetail.id,
+      //       },
+      //       {
+      //         isActive: false,
+      //       },
+      //     );
+      //   }
+      // });
 
       this.logger.debug(
         `${this.getAllVacationDetails.name} - vacationDetails`,
