@@ -62,6 +62,7 @@ export class VacationsDetailsService {
           reason: newVacDet.reason,
           startDate: newVacDet.startDate,
           endDate: newVacDet.endDate,
+          
         });
 
         if ([VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(newVacDet.vacationType)) {

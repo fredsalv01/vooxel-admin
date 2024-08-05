@@ -21,6 +21,7 @@ export class VacationsDetailsRepository {
     createVacationDetailDto: CreateVacationDetailDto,
   ): Promise<VacationDetail> {
     try {
+      
       await this.updateVacation(
         createVacationDetailDto.vacationId,
         createVacationDetailDto.vacationType,
@@ -180,6 +181,16 @@ export class VacationsDetailsRepository {
         {
           takenVacations: vacation.takenVacations + quantity,
           remainingVacations: vacation.remainingVacations - quantity,
+        },
+      );
+    }
+    if (vacationType === VacationDetailType.PENDIENTES && quantity > 0) {
+      await vacationRepository.update(
+        {
+          id: vacationId,
+        },
+        {
+          remainingVacations: vacation.remainingVacations + quantity,
         },
       );
     }
