@@ -215,7 +215,22 @@ export class VacationsRepository {
 
   private calcVacations(startDate: Date) {
     const time = new Date().getTime() - new Date(startDate).getTime();
-    // to month
-    return Math.floor((time / (30 * DAY)) * 2.5);
+    // Convertir el tiempo transcurrido en días completos
+    const daysElapsed = Math.floor(time / DAY);
+
+    // Calcular cuántos meses completos han transcurrido (usando 30 días como aproximación de un mes)
+    const completeMonths = Math.floor(daysElapsed / 30);
+
+    // Calcular los días restantes en el mes actual
+    const daysInCurrentMonth = daysElapsed % 30;
+
+    // Si el mes actual es completo, multiplicar por 2.5, de lo contrario, no contar el mes actual
+    if (daysInCurrentMonth === 0 && completeMonths > 0) {
+      console.log('🚀 ~ calcVacations ~ completeMonths', completeMonths * 2.5);
+      return Math.floor(completeMonths * 2.5);
+    } else {
+      // No contar el mes actual si no está completo
+        return Math.floor((completeMonths - 1) * 2.5);
+    }
   }
 }
