@@ -214,23 +214,36 @@ export class VacationsRepository {
   }
 
   private calcVacations(startDate: Date) {
-    const time = new Date().getTime() - new Date(startDate).getTime();
-    // Convertir el tiempo transcurrido en días completos
-    const daysElapsed = Math.floor(time / DAY);
 
-    // Calcular cuántos meses completos han transcurrido (usando 30 días como aproximación de un mes)
-    const completeMonths = Math.floor(daysElapsed / 30);
+    const currentDate = new Date();
+    const parseStartDate = new Date(startDate);
 
-    // Calcular los días restantes en el mes actual
-    const daysInCurrentMonth = daysElapsed % 30;
+    // Calcular la diferencia en años y meses
+    const yearsDifference =
+      currentDate.getFullYear() - parseStartDate.getFullYear();
+    const monthsDifference = currentDate.getMonth() - parseStartDate.getMonth();
 
-    // Si el mes actual es completo, multiplicar por 2.5, de lo contrario, no contar el mes actual
-    if (daysInCurrentMonth === 0 && completeMonths > 0) {
-      console.log('🚀 ~ calcVacations ~ completeMonths', completeMonths * 2.5);
-      return Math.floor(completeMonths * 2.5);
-    } else {
-      // No contar el mes actual si no está completo
-        return Math.floor((completeMonths - 1) * 2.5);
+    // Calcular el total de meses completos transcurridos
+    const totalMonths = yearsDifference * 12 + monthsDifference;
+    console.log('🚀 ~ calcVacations ~ totalMonths', totalMonths);
+
+    // Verificar si el día actual es mayor o igual al día de inicio (esto indica si el mes actual está completo)
+    const isCurrentMonthComplete =
+      currentDate.getDate() >= parseStartDate.getDate();
+    console.log(
+      '🚀 ~ calcVacations ~ isCurrentMonthComplete',
+      isCurrentMonthComplete,
+    );
+
+    // Si el mes actual no está completo, restamos un mes
+    const monthsToCalculate = isCurrentMonthComplete
+      ? totalMonths - 1
+      : totalMonths;
+    if (!isCurrentMonthComplete) {
+      return Math.floor((monthsToCalculate - 1) * 2.5);
+    }else{
+      // Multiplicar por 2.5 para obtener los días de vacaciones
+      return Math.floor(monthsToCalculate * 2.5);
     }
   }
 }
