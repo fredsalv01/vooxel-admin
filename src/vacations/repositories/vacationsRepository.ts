@@ -77,19 +77,6 @@ export class VacationsRepository {
         worker.vacation.expiredDays = expiredDays;
       }
 
-      // const filterVacationDetails = worker.vacation.vacationDetails.filter(
-      //   (item) =>
-      //     item.isActive &&
-      //     [VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(
-      //       item.vacationType,
-      //     ),
-      // );
-
-      // console.log(
-      //   '🚀 ~ VacationsRepository ~ filterVacationDetails',
-      //   filterVacationDetails,
-      // );
-      // worker.vacation.vacationDetails = filterVacationDetails;
       const result = worker.vacation;
 
       this.logger.debug(
