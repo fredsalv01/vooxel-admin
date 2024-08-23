@@ -15,7 +15,7 @@ export class VacationsDetailsRepository {
     @InjectRepository(VacationDetail)
     private readonly db: Repository<VacationDetail>,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   async createVacationDetail(
     createVacationDetailDto: CreateVacationDetailDto,
@@ -29,12 +29,6 @@ export class VacationsDetailsRepository {
 
       const result = await this.db.save(createVacationDetailDto);
       // compradas todo pasa a ser 0 y la vacacion se actualiza
-
-      this.logger.debug(
-        `${this.createVacationDetail.name} - result`,
-        JSON.stringify(result, null, 2),
-      );
-
       return result;
     } catch (error) {
       this.logger.error('ERROR GUARDANDO DETALLE DE VACACION:', error);
@@ -81,10 +75,6 @@ export class VacationsDetailsRepository {
       );
 
       const result = await this.db.save(updatedVacationDetail);
-      this.logger.debug(
-        `${this.updateVacationDetail.name} - result`,
-        JSON.stringify(result, null, 2),
-      );
       return result;
     } catch (error) {
       this.logger.error('ERROR UPDATING VACATION DETAIL:', error);
@@ -118,7 +108,7 @@ export class VacationsDetailsRepository {
           isActive: true,
         },
       })) as VacationDetail[];
-      
+
       // actualizar el estado de los detalles de vacaiones tomadas en caso ya hayan expirado
       // const currentDate = Moment(new Date().toISOString());
 

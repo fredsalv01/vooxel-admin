@@ -14,7 +14,7 @@ export class VacationsRepository {
     @InjectRepository(Vacation)
     private readonly db: Repository<Vacation>,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   // create a new vacation
   async createVacation(vacation: CreateVacationDto): Promise<Vacation> {
@@ -47,11 +47,8 @@ export class VacationsRepository {
   async getAllVacations(workerId: number): Promise<Vacation> {
     try {
       const worker = (await this.dataSource.getRepository('worker').findOne({
-        where: { id: workerId },
-        relations: ['vacation'],
-        select: {
-          vacation: true,
-        },
+        where: { id: workerId, vacation: { vacationDetails: { isActive: true } } },
+        relations: ['vacation', 'vacation.vacationDetails']
       })) as Worker;
 
       const accumulatedVacations = this.calcVacations(worker.startDate);
@@ -80,19 +77,19 @@ export class VacationsRepository {
         worker.vacation.expiredDays = expiredDays;
       }
 
-      const filterVacationDetails = worker.vacation.vacationDetails.filter(
-        (item) =>
-          item.isActive &&
-          [VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(
-            item.vacationType,
-          ),
-      );
+      // const filterVacationDetails = worker.vacation.vacationDetails.filter(
+      //   (item) =>
+      //     item.isActive &&
+      //     [VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(
+      //       item.vacationType,
+      //     ),
+      // );
 
-      console.log(
-        '🚀 ~ VacationsRepository ~ filterVacationDetails',
-        filterVacationDetails,
-      );
-      worker.vacation.vacationDetails = filterVacationDetails;
+      // console.log(
+      //   '🚀 ~ VacationsRepository ~ filterVacationDetails',
+      //   filterVacationDetails,
+      // );
+      // worker.vacation.vacationDetails = filterVacationDetails;
       const result = worker.vacation;
 
       this.logger.debug(

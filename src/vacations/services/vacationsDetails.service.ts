@@ -37,7 +37,6 @@ export class VacationsDetailsService {
     updateVacationDetailsDto: UpdateVacationDetailsDto,
     vacationId: number,
   ) {
-    console.log("🚀 ~ VacationsDetailsService ~ updateVacationDetailsDto:", typeof updateVacationDetailsDto.items)
     const { newVacDetails, oldVacDetails } = updateVacationDetailsDto.items.reduce((acc, item) => {
       if (item.id) {
         acc.oldVacDetails.push(item);
@@ -46,8 +45,6 @@ export class VacationsDetailsService {
       }
       return acc;
     }, { newVacDetails: [], oldVacDetails: [] });
-    // console.log("🚀 ~ VacationsDetailsService ~ newVacDetails:", newVacDetails)
-    // console.log("🚀 ~ VacationsDetailsService ~ oldVacDetails:", oldVacDetails)
 
 
     let vacationHeader = await this.vacationsRepository.getVacationById(vacationId);
@@ -55,7 +52,7 @@ export class VacationsDetailsService {
 
     if (newVacDetails.length) {
       for (const newVacDet of newVacDetails) {
-        await this.vacationsDetailsRepository.createVacationDetail({
+        const newVaction = await this.vacationsDetailsRepository.createVacationDetail({
           vacationId,
           vacationType: newVacDet.vacationType,
           quantity: newVacDet.quantity,
@@ -63,6 +60,7 @@ export class VacationsDetailsService {
           startDate: newVacDet.startDate,
           endDate: newVacDet.endDate,
         });
+        console.log("🚀 ~ VacationsDetailsService ~ forawait ~ newVaction:", newVaction)
 
         if ([VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(newVacDet.vacationType)) {
           total += newVacDet.quantity;
@@ -72,16 +70,13 @@ export class VacationsDetailsService {
 
     if (oldVacDetails.length) {
       console.log("🚀 ~ VacationsDetailsService ~ oldVacDetails:", oldVacDetails)
-
-      // total = 0;
-
       const vacationDetailsBD = await Promise.all(
         oldVacDetails.map(
           async (item) =>
             await this.vacationsDetailsRepository.getVacationDetail(item.id),
         ),
       );
-      for await (const oldVacDet of oldVacDetails) {
+      for (const oldVacDet of oldVacDetails) {
         await this.vacationsDetailsRepository.updateVacationDetail(oldVacDet.id, oldVacDet);
 
         if ([VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(oldVacDet.vacationType)) {
@@ -92,7 +87,6 @@ export class VacationsDetailsService {
           }
         }
       }
-
     }
 
     if (total) {
@@ -107,7 +101,7 @@ export class VacationsDetailsService {
       })
     }
 
-    return true;
+    return vacationHeader.workerId;
   }
 
   // delete vacation detail
