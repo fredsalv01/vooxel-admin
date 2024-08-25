@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
-import { ClientRepository } from './repository/clientRepository';
-import { filterClientsPaginatedDto } from './dto/filter-client-paginated.dto';
+import { CreateClientDto } from './../dto/create-client.dto';
+import { UpdateClientDto } from './../dto/update-client.dto';
+import { ClientRepository } from './../repository/clientRepository';
+import { filterClientsPaginatedDto } from './../dto/filter-client-paginated.dto';
 
 @Injectable()
 export class ClientsService {

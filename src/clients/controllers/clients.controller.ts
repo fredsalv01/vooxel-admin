@@ -15,12 +15,12 @@ import {
   Logger,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ClientsService } from './clients.service';
-import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
+import { ClientsService } from './../services/clients.service';
+import { CreateClientDto } from './../dto/create-client.dto';
+import { UpdateClientDto } from './../dto/update-client.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { filterClientsPaginatedDto } from './dto/filter-client-paginated.dto';
-import { AuthGuardJwt } from 'src/auth/guards/auth-guard-jwt.guard';
+import { filterClientsPaginatedDto } from './../dto/filter-client-paginated.dto';
+import { AuthGuardJwt } from '../../auth/guards/auth-guard-jwt.guard';
 
 @ApiTags('clients')
 @ApiBearerAuth()

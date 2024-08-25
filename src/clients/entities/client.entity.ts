@@ -9,20 +9,17 @@ import {
 } from 'typeorm';
 import { WorkerToClient } from 'src/workers/entities/worker-to-client.entity';
 import { ContractClient } from '../../contract_clients/entities/contract_client.entity';
+import { Contact } from './contact.entity';
 
 @Entity()
 export class Client {
   constructor(partial?: Partial<Client>) {
     Object.assign(this, partial);
   }
-
+  
   @PrimaryGeneratedColumn('increment')
   @Expose()
   id: number;
-
-  @Column('text')
-  @Expose()
-  fullName: string;
 
   @Column('text')
   @Expose()
@@ -41,6 +38,10 @@ export class Client {
   @Column('text')
   @Expose()
   email: string;
+
+  @Column('text')
+  @Expose()
+  address: string;
 
   @OneToMany(() => WorkerToClient, (workerToClient) => workerToClient.client)
   public workerToClients: WorkerToClient[];
@@ -66,4 +67,15 @@ export class Client {
   })
   @Expose()
   isActive: boolean;
+
+  @OneToMany(
+    () => Contact,
+    (contact) => contact.client,
+    {
+      cascade: true,
+      eager: true,
+    },
+  )
+  @Expose()
+  contacts: Contact[];
 }

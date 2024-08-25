@@ -5,14 +5,6 @@ import { isUnique, methodEnum } from 'src/validation/isUnique.constraint';
 
 export class UpdateClientDto {
   @ApiProperty({
-    description: 'Nombre del representante legal del cliente',
-    example: 'Juan Perez',
-  })
-  @IsString()
-  @IsOptional()
-  fullName: string;
-
-  @ApiProperty({
     description: 'Nombre del cliente',
     example: 'Grupo Systems V&V',
   })
@@ -48,6 +40,14 @@ export class UpdateClientDto {
   @IsEmail()
   @IsOptional()
   email: string;
+
+  @ApiProperty({
+    description: 'direccion del cliente',
+    example: 'Calle Avenida La Paz 125, Lima',
+  })
+  @IsString()
+  @IsOptional()
+  address: string;
 
   @IsBoolean()
   @ApiProperty({

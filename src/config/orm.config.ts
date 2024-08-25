@@ -12,6 +12,7 @@ import { ContractWorker } from '../contract_workers/entities/contract_worker.ent
 import { ContractClient } from '../contract_clients/entities/contract_client.entity';
 import { Vacation } from '../vacations/entities/vacation.entity';
 import { VacationDetail } from '../vacations/entities/vacationDetail.entity';
+import { Contact } from "../clients/entities/contact.entity";
 
 export default registerAs(
   'orm.config',
@@ -29,6 +30,7 @@ export default registerAs(
       ContractClient,
       WorkerToClient,
       EmergencyContact,
+      Contact,
       Certification,
       BankAccount,
       ContractWorker,
