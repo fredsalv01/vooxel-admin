@@ -2,7 +2,10 @@ import { Body, Controller, Logger, Post, UseGuards } from "@nestjs/common";
 import { AuthGuardJwt } from "../../auth/guards/auth-guard-jwt.guard";
 import { CreateContactDto } from "../dto/create-contact.dto";
 import { ContactService } from "../services/contact.service";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags('contact')
+@ApiBearerAuth()
 @Controller('contact')
 export class ContactController {
   private readonly logger = new Logger(ContactController.name);
