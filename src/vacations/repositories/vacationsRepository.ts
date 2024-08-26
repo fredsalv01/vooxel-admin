@@ -14,7 +14,7 @@ export class VacationsRepository {
     @InjectRepository(Vacation)
     private readonly db: Repository<Vacation>,
     private readonly dataSource: DataSource,
-  ) { }
+  ) {}
 
   // create a new vacation
   async createVacation(vacation: CreateVacationDto): Promise<Vacation> {
@@ -47,8 +47,11 @@ export class VacationsRepository {
   async getAllVacations(workerId: number): Promise<Vacation> {
     try {
       const worker = (await this.dataSource.getRepository('worker').findOne({
-        where: { id: workerId, vacation: { vacationDetails: { isActive: true } } },
-        relations: ['vacation', 'vacation.vacationDetails']
+        where: {
+          id: workerId,
+          vacation: { vacationDetails: { isActive: true } },
+        },
+        relations: ['vacation', 'vacation.vacationDetails'],
       })) as Worker;
 
       const accumulatedVacations = this.calcVacations(worker.startDate);

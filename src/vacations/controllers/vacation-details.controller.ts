@@ -24,7 +24,7 @@ export class VacationDetailsController {
   constructor(
     private readonly vacationDetailsService: VacationsDetailsService,
     private readonly vacationService: VacationsService,
-  ) { }
+  ) {}
 
   @Get('/vacation/:vacationId')
   @UseGuards(AuthGuardJwt)
@@ -56,15 +56,18 @@ export class VacationDetailsController {
     @Param('vacationId', ParseIntPipe) vacationId: number,
     @Body() vacationDetailsDto: UpdateVacationDetailsDto,
   ) {
-    console.log("🚀 ~ VacationDetailsController ~ vacationId:", vacationId)
-    console.log("🚀 ~ VacationDetailsController ~ vacationDetailsDto:", vacationDetailsDto)
+    console.log('🚀 ~ VacationDetailsController ~ vacationId:', vacationId);
+    console.log(
+      '🚀 ~ VacationDetailsController ~ vacationDetailsDto:',
+      vacationDetailsDto,
+    );
 
     const workerId = await this.vacationDetailsService.updateVacationDetails(
       vacationDetailsDto,
-      vacationId
+      vacationId,
     );
 
-    return await this.vacationService.findAll(workerId)
+    return await this.vacationService.findAll(workerId);
   }
 
   @Delete(':id')

@@ -15,7 +15,7 @@ export class VacationsDetailsRepository {
     @InjectRepository(VacationDetail)
     private readonly db: Repository<VacationDetail>,
     private readonly dataSource: DataSource,
-  ) { }
+  ) {}
 
   async createVacationDetail(
     createVacationDetailDto: CreateVacationDetailDto,

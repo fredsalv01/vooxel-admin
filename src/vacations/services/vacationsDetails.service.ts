@@ -11,7 +11,7 @@ export class VacationsDetailsService {
   constructor(
     private readonly vacationsDetailsRepository: VacationsDetailsRepository,
     private readonly vacationsRepository: VacationsRepository,
-  ) { }
+  ) {}
 
   // create a new vacation detail
   async createVacationDetail(
@@ -37,39 +37,54 @@ export class VacationsDetailsService {
     updateVacationDetailsDto: UpdateVacationDetailsDto,
     vacationId: number,
   ) {
-    const { newVacDetails, oldVacDetails } = updateVacationDetailsDto.items.reduce((acc, item) => {
-      if (item.id) {
-        acc.oldVacDetails.push(item);
-      } else {
-        acc.newVacDetails.push(item);
-      }
-      return acc;
-    }, { newVacDetails: [], oldVacDetails: [] });
+    const { newVacDetails, oldVacDetails } =
+      updateVacationDetailsDto.items.reduce(
+        (acc, item) => {
+          if (item.id) {
+            acc.oldVacDetails.push(item);
+          } else {
+            acc.newVacDetails.push(item);
+          }
+          return acc;
+        },
+        { newVacDetails: [], oldVacDetails: [] },
+      );
 
-
-    let vacationHeader = await this.vacationsRepository.getVacationById(vacationId);
+    let vacationHeader =
+      await this.vacationsRepository.getVacationById(vacationId);
     let total = 0;
 
     if (newVacDetails.length) {
       for (const newVacDet of newVacDetails) {
-        const newVaction = await this.vacationsDetailsRepository.createVacationDetail({
-          vacationId,
-          vacationType: newVacDet.vacationType,
-          quantity: newVacDet.quantity,
-          reason: newVacDet.reason,
-          startDate: newVacDet.startDate,
-          endDate: newVacDet.endDate,
-        });
-        console.log("🚀 ~ VacationsDetailsService ~ forawait ~ newVaction:", newVaction)
+        const newVaction =
+          await this.vacationsDetailsRepository.createVacationDetail({
+            vacationId,
+            vacationType: newVacDet.vacationType,
+            quantity: newVacDet.quantity,
+            reason: newVacDet.reason,
+            startDate: newVacDet.startDate,
+            endDate: newVacDet.endDate,
+          });
+        console.log(
+          '🚀 ~ VacationsDetailsService ~ forawait ~ newVaction:',
+          newVaction,
+        );
 
-        if ([VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(newVacDet.vacationType)) {
+        if (
+          [VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(
+            newVacDet.vacationType,
+          )
+        ) {
           total += newVacDet.quantity;
         }
       }
     }
 
     if (oldVacDetails.length) {
-      console.log("🚀 ~ VacationsDetailsService ~ oldVacDetails:", oldVacDetails)
+      console.log(
+        '🚀 ~ VacationsDetailsService ~ oldVacDetails:',
+        oldVacDetails,
+      );
       const vacationDetailsBD = await Promise.all(
         oldVacDetails.map(
           async (item) =>
@@ -77,9 +92,16 @@ export class VacationsDetailsService {
         ),
       );
       for (const oldVacDet of oldVacDetails) {
-        await this.vacationsDetailsRepository.updateVacationDetail(oldVacDet.id, oldVacDet);
+        await this.vacationsDetailsRepository.updateVacationDetail(
+          oldVacDet.id,
+          oldVacDet,
+        );
 
-        if ([VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(oldVacDet.vacationType)) {
+        if (
+          [VacationDetailType.TOMADAS, VacationDetailType.COMPRADAS].includes(
+            oldVacDet.vacationType,
+          )
+        ) {
           for (const vacDetailBD of vacationDetailsBD) {
             if (vacDetailBD.id === oldVacDet.id) {
               total += oldVacDet.quantity;
@@ -91,14 +113,18 @@ export class VacationsDetailsService {
 
     if (total) {
       vacationHeader.takenVacations = total;
-      vacationHeader.remainingVacations = vacationHeader.accumulatedVacations - total;
-      console.log("🚀 ~ VacationsDetailsService ~ vacationHeader:", vacationHeader)
+      vacationHeader.remainingVacations =
+        vacationHeader.accumulatedVacations - total;
+      console.log(
+        '🚀 ~ VacationsDetailsService ~ vacationHeader:',
+        vacationHeader,
+      );
 
       await this.vacationsRepository.updateVacation(vacationId, {
         accumulatedVacations: vacationHeader.accumulatedVacations,
         takenVacations: vacationHeader.takenVacations,
         remainingVacations: vacationHeader.remainingVacations,
-      })
+      });
     }
 
     return vacationHeader.workerId;
