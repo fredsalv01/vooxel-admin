@@ -11,11 +11,10 @@ import {
 import { VacationDetail } from './vacationDetail.entity';
 import { ContractWorker } from '../../contract_workers/entities/contract_worker.entity';
 import { Expose } from 'class-transformer';
-import { Worker } from "../../workers/entities/worker.entity";
+import { Worker } from '../../workers/entities/worker.entity';
 
 @Entity('vacations')
 export class Vacation {
-
   constructor(partial?: Partial<Vacation>) {
     Object.assign(this, partial);
   }

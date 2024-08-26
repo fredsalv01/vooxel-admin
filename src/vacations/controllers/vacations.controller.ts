@@ -38,9 +38,7 @@ export class VacationsController {
 
   @Get('/workerId/:workerId')
   findAll(@Param('workerId', ParseIntPipe) workerId: number) {
-    this.logger.log(
-      `${this.findAll.name} - contractWorkerId: ${workerId}`,
-    );
+    this.logger.log(`${this.findAll.name} - contractWorkerId: ${workerId}`);
     return this.vacationsService.findAll(workerId);
   }
 

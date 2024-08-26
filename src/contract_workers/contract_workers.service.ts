@@ -14,13 +14,14 @@ export class ContractWorkersService {
     this.logger.debug(this.create.name);
     try {
       //validar si tiene contrato anterior
-      const previousContract = await this.findOne(createContractWorkerDto.workerId);
-      
-      if(previousContract){
-        // si tiene desactivarlo para crear uno nuevo
-        await this.update(previousContract.id, {isActive: false});
-      }
+      const previousContract = await this.findOne(
+        createContractWorkerDto.workerId,
+      );
 
+      if (previousContract) {
+        // si tiene desactivarlo para crear uno nuevo
+        await this.update(previousContract.id, { isActive: false });
+      }
     } catch (error) {
       this.logger.error('ERROR BUSCANDO CONTRATO:', error);
     } finally {

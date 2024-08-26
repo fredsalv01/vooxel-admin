@@ -6,12 +6,7 @@ import {
   Seniority,
   WorkerStatus,
 } from '../utils/enum-types';
-import {
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  Validate,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, Validate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { isUnique, methodEnum } from 'src/validation/isUnique.constraint';
 import { dateFormatValidator } from 'src/common/functions';

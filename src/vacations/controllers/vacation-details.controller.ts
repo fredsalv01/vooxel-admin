@@ -15,6 +15,7 @@ import { VacationDetail } from '../entities/vacationDetail.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuardJwt } from 'src/auth/guards/auth-guard-jwt.guard';
 import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
+import { VacationsService } from '../services/vacations.service';
 
 @ApiTags('vacation-details')
 @ApiBearerAuth()
@@ -22,7 +23,8 @@ import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
 export class VacationDetailsController {
   constructor(
     private readonly vacationDetailsService: VacationsDetailsService,
-  ) { }
+    private readonly vacationService: VacationsService,
+  ) {}
 
   @Get('/vacation/:vacationId')
   @UseGuards(AuthGuardJwt)
@@ -54,13 +56,18 @@ export class VacationDetailsController {
     @Param('vacationId', ParseIntPipe) vacationId: number,
     @Body() vacationDetailsDto: UpdateVacationDetailsDto,
   ) {
-    console.log("🚀 ~ VacationDetailsController ~ vacationId:", vacationId)
-    console.log("🚀 ~ VacationDetailsController ~ vacationDetailsDto:", vacationDetailsDto)
-
-    return this.vacationDetailsService.updateVacationDetails(
+    console.log('🚀 ~ VacationDetailsController ~ vacationId:', vacationId);
+    console.log(
+      '🚀 ~ VacationDetailsController ~ vacationDetailsDto:',
       vacationDetailsDto,
-      vacationId
     );
+
+    const workerId = await this.vacationDetailsService.updateVacationDetails(
+      vacationDetailsDto,
+      vacationId,
+    );
+
+    return await this.vacationService.findAll(workerId);
   }
 
   @Delete(':id')

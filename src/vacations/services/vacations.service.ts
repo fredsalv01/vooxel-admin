@@ -22,7 +22,8 @@ export class VacationsService {
     const result = await this.vacationsRepository.getAllVacations(workerId);
 
     // actualizar la vacacion con los detalles tambien.
-    const vacationDetails = await this.vacationsDetailsRepository.getAllVacationDetails(result.id);
+    const vacationDetails =
+      await this.vacationsDetailsRepository.getAllVacationDetails(result.id);
     const filterActiveVacationDetails = vacationDetails.filter(
       (vacationDetail) =>
         vacationDetail.isActive &&
