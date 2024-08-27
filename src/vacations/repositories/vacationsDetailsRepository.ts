@@ -21,7 +21,6 @@ export class VacationsDetailsRepository {
     createVacationDetailDto: CreateVacationDetailDto,
   ): Promise<VacationDetail> {
     try {
-      
       await this.updateVacation(
         createVacationDetailDto.vacationId,
         createVacationDetailDto.vacationType,

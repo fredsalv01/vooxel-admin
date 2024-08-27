@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 import { isUnique, methodEnum } from 'src/validation/isUnique.constraint';

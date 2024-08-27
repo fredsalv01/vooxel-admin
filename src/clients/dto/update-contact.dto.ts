@@ -1,19 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class CreateContactDto {
+export class UpdateContactDto {
   @ApiProperty({
     description: 'Nombre del Contacto',
     example: 'Jhon Doe',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @ApiProperty({
@@ -31,13 +25,4 @@ export class CreateContactDto {
   @IsString()
   @IsOptional()
   designed_area: string;
-
-  @ApiProperty({
-    description: 'Id de cliente',
-    example: 1,
-  })
-  @IsInt()
-  @IsPositive()
-  @IsNotEmpty()
-  clientId: number;
 }

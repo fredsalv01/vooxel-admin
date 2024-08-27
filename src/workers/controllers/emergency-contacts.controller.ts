@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import { EmergencyContactService } from '../services/emergency-contact.service';

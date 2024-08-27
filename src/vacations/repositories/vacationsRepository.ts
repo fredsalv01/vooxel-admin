@@ -201,7 +201,6 @@ export class VacationsRepository {
   }
 
   private calcVacations(startDate: Date) {
-
     const currentDate = new Date();
     const parseStartDate = new Date(startDate);
 
@@ -228,7 +227,7 @@ export class VacationsRepository {
       : totalMonths;
     if (!isCurrentMonthComplete) {
       return Math.floor((monthsToCalculate - 1) * 2.5);
-    }else{
+    } else {
       // Multiplicar por 2.5 para obtener los días de vacaciones
       return Math.floor(monthsToCalculate * 2.5);
     }

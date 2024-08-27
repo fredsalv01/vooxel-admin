@@ -16,7 +16,7 @@ export class Client {
   constructor(partial?: Partial<Client>) {
     Object.assign(this, partial);
   }
-  
+
   @PrimaryGeneratedColumn('increment')
   @Expose()
   id: number;
@@ -68,14 +68,10 @@ export class Client {
   @Expose()
   isActive: boolean;
 
-  @OneToMany(
-    () => Contact,
-    (contact) => contact.client,
-    {
-      cascade: true,
-      eager: true,
-    },
-  )
+  @OneToMany(() => Contact, (contact) => contact.client, {
+    cascade: true,
+    eager: true,
+  })
   @Expose()
   contacts: Contact[];
 }
