@@ -1,0 +1,6 @@
+export enum BillingServiceType {
+  CONSULTORIA = 'OTROS',
+  LICENCIA = 'LICENCIA',
+  CAPACITACION = 'CAPACITACION',
+  OTROS = 'OTROS'
+}
