@@ -12,6 +12,7 @@ import { FilesModule } from './files/files.module';
 import { ContractWorkersModule } from './contract_workers/contract_workers.module';
 import { ContractClientsModule } from './contract_clients/contract_clients.module';
 import { VacationsModule } from './vacations/vacations.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { VacationsModule } from './vacations/vacations.module';
     ContractWorkersModule,
     ContractClientsModule,
     VacationsModule,
+    BillingModule,
   ],
   controllers: [],
   providers: [],
