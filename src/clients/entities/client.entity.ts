@@ -74,4 +74,5 @@ export class Client {
   })
   @Expose()
   contacts: Contact[];
+  
 }

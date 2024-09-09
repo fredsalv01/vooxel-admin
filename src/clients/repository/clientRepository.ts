@@ -24,7 +24,6 @@ export class ClientRepository {
       )
       .select([
         'client.id',
-        'client.fullName', // Assuming 'fullName' is the combined name fields
         'client.businessName',
         'client.ruc',
         'client.isActive',
@@ -64,7 +63,6 @@ export class ClientRepository {
       const fieldsToSearch = [
         'CAST(client.ruc AS TEXT)',
         'CAST(client.businessName AS TEXT)',
-        'CAST(client.fullName AS TEXT)', // Assuming 'fullName' is the combined name fields
         'CAST(client.email AS TEXT)',
         'CAST(client.ruc AS TEXT)',
         'CAST(client.phone AS TEXT)',
