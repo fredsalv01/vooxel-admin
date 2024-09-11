@@ -85,7 +85,7 @@ export class Billing {
 
   @Column({
     type: 'decimal',
-    precision: 5,
+    precision: 10,
     scale: 2,
     default: 0.0,
   })
@@ -93,7 +93,7 @@ export class Billing {
 
   @Column({
     type: 'decimal',
-    precision: 5,
+    precision: 10,
     scale: 2,
     default: 0.0,
   })
@@ -107,7 +107,7 @@ export class Billing {
 
   @Column({
     type: 'decimal',
-    precision: 5,
+    precision: 4,
     scale: 2,
     default: IGV,
   })
@@ -115,7 +115,7 @@ export class Billing {
 
   @Column({
     type: 'decimal',
-    precision: 5,
+    precision: 10,
     scale: 2,
     default: 0.0,
   })

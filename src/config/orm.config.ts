@@ -13,6 +13,7 @@ import { ContractClient } from '../contract_clients/entities/contract_client.ent
 import { Vacation } from '../vacations/entities/vacation.entity';
 import { VacationDetail } from '../vacations/entities/vacationDetail.entity';
 import { Contact } from '../clients/entities/contact.entity';
+import { Billing } from './../billing/entities/billing.entity';
 
 export default registerAs(
   'orm.config',
@@ -37,6 +38,7 @@ export default registerAs(
       File,
       Vacation,
       VacationDetail,
+      Billing,
     ],
     synchronize: true,
     dropSchema: Boolean(parseInt(process.env.DB_DROP_SCHEMA)),

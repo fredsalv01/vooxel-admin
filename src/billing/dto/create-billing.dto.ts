@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDecimal,
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -97,10 +97,7 @@ export class CreateBillingDto {
     description: 'valor del tipo de cambio',
     example: 3.82,
   })
-  @IsDecimal({
-    decimal_digits: '2',
-    locale: 'es-ES',
-  })
+  @IsNumber({}, { each: true })
   @IsNotEmpty()
   currencyValue: number;
 
@@ -108,10 +105,7 @@ export class CreateBillingDto {
     description: 'monto',
     example: 20000.22,
   })
-  @IsDecimal({
-    decimal_digits: '2',
-    locale: 'es-ES',
-  })
+  @IsNumber({}, { each: true })
   @IsNotEmpty()
   amount: number;
 
@@ -132,22 +126,16 @@ export class CreateBillingDto {
     example: IGV,
     default: IGV,
   })
-  @IsDecimal({
-    decimal_digits: '2',
-    locale: 'es-ES',
-  })
+  @IsNumber({}, { each: true })
   @IsOptional()
   igv: number;
 
   @ApiProperty({
     description: 'total de la facturacion',
-    example: 30000,
+    example: 3000.0,
     default: 0.0,
   })
-  @IsDecimal({
-    decimal_digits: '2',
-    locale: 'es-ES',
-  })
+  @IsNumber({}, { each: true })
   @IsOptional()
   total: number;
 
@@ -156,9 +144,9 @@ export class CreateBillingDto {
     example: BillingState.CANCELADO,
     default: BillingState.PENDIENTE,
   })
-  @IsEnum(BillingCurrencyType)
+  @IsEnum(BillingState)
   @IsNotEmpty()
-  billingState: BillingCurrencyType;
+  billingState: BillingState;
 
   @ApiProperty({
     description: 'fecha de expiracion de la facturacion',
