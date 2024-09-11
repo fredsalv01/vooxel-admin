@@ -7,6 +7,8 @@ export class filterBillingPaginatedDto extends PaginationDto {
   @IsOptional()
   input?: string;
 
+  // TODO: VALIDATE hasHES AND hasIGV
+
   // @IsBoolean()
   // @Transform(({ obj, key }) => {
   //   return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
