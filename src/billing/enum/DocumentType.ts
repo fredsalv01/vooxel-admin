@@ -3,5 +3,5 @@ export enum BillingDocumentType {
   BOLETA = 'BOLETA',
   LT = 'LT',
   ND = 'ND',
-  NC = 'NC'
+  NC = 'NC',
 }

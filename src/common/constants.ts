@@ -3,4 +3,4 @@ export const SECOND = 1 * MILISECONDS;
 export const MINUTE = 60 * SECOND;
 export const HOUR = 60 * MINUTE;
 export const DAY = 24 * HOUR;
-export const IGV = 0.18
+export const IGV = 0.18;

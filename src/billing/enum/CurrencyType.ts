@@ -1,4 +1,4 @@
 export enum BillingCurrencyType {
   SOLES = 'SOLES',
-  DOLARES = 'DOLARES'
+  DOLARES = 'DOLARES',
 }

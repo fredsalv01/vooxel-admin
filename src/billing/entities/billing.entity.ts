@@ -1,14 +1,21 @@
-import { Expose } from "class-transformer";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { BillingDocumentType } from "../enum/DocumentType";
-import { BillingCurrencyType } from "../enum/CurrencyType";
-import { BillingState } from "../enum/BillingState";
-import { BillingServiceType } from "../enum/ServiceType";
+import { Expose } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { BillingDocumentType } from '../enum/DocumentType';
+import { BillingCurrencyType } from '../enum/CurrencyType';
+import { BillingState } from '../enum/BillingState';
+import { BillingServiceType } from '../enum/ServiceType';
+import { IGV } from '../../common/constants';
 
 @Entity()
 export class Billing {
-  constructor(partial?: Partial<Billing>){
-    Object.assign(this, partial)
+  constructor(partial?: Partial<Billing>) {
+    Object.assign(this, partial);
   }
 
   @PrimaryGeneratedColumn('identity')
@@ -17,20 +24,20 @@ export class Billing {
 
   @Column({
     type: 'text',
-    default: null
+    default: null,
   })
   clientName: string;
 
   @Column({
-    type:"enum",
+    type: 'enum',
     enum: BillingDocumentType,
-    default: BillingDocumentType.BOLETA
+    default: BillingDocumentType.BOLETA,
   })
-  documentType: BillingDocumentType
+  documentType: BillingDocumentType;
 
   @Column({
     type: 'text',
-    default: null
+    default: null,
   })
   documentNumber: string;
 
@@ -49,44 +56,60 @@ export class Billing {
   paymentDeadline: Date;
 
   @Column({
-    type:"enum",
+    type: 'enum',
     enum: BillingServiceType,
-    default: BillingServiceType.OTROS
+    default: BillingServiceType.CONSULTORIA,
   })
-  serviceType: BillingServiceType
+  serviceType: BillingServiceType;
 
   @Column({
     type: 'text',
-    default: null
+    nullable: true,
+    default: null,
   })
   description: string;
 
   @Column({
     type: 'text',
-    default: null
+    nullable: true,
+    default: null,
   })
   purchaseOrderNumber: string;
 
   @Column({
-    type:"enum",
+    type: 'enum',
     enum: BillingCurrencyType,
-    default: BillingCurrencyType.SOLES
+    default: BillingCurrencyType.SOLES,
   })
-  currency: BillingCurrencyType
+  currency: BillingCurrencyType;
 
   @Column({
     type: 'decimal',
     precision: 5,
     scale: 2,
-    default: 0.00
+    default: 0.0,
+  })
+  currencyValue: number;
+
+  @Column({
+    type: 'decimal',
+    precision: 5,
+    scale: 2,
+    default: 0.0,
   })
   amount: number;
 
   @Column({
+    type: 'bool',
+    default: false,
+  })
+  hasIGV: boolean;
+
+  @Column({
     type: 'decimal',
     precision: 5,
     scale: 2,
-    default: 0.00
+    default: IGV,
   })
   igv: number;
 
@@ -94,16 +117,16 @@ export class Billing {
     type: 'decimal',
     precision: 5,
     scale: 2,
-    default: 0.00
+    default: 0.0,
   })
   total: number;
 
   @Column({
-    type:"enum",
+    type: 'enum',
     enum: BillingState,
-    default: BillingState.PENDIENTE
+    default: BillingState.PENDIENTE,
   })
-  billingState: BillingState
+  billingState: BillingState;
 
   @Column({
     type: 'date',
@@ -115,10 +138,15 @@ export class Billing {
   @Column('int', { nullable: false, default: 0 })
   accumulatedDays: number;
 
+  @Column('bool', { default: false })
+  hasHes: boolean;
+
+  @Column('text', { nullable: true })
+  Hes: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
 }

@@ -5,9 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Billing } from './entities/billing.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Billing
-  ])],
+  imports: [TypeOrmModule.forFeature([Billing])],
   controllers: [BillingController],
   providers: [BillingService],
 })
