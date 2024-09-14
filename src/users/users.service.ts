@@ -37,7 +37,7 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({
       id,
     });
-
+    
     const { password } = resetPasswordDto;
 
     if (!user) {
@@ -52,7 +52,12 @@ export class UsersService {
     return { message: 'Contraseña actualizada correctamente' };
   }
 
-  async getUsers(isActive: boolean, data: { page: number; limit: number }) {
+  async getUsers(filters: {
+    page: number;
+    limit: number;
+    isActive: boolean;
+    input: string;
+  }) {
     const users = this.userRepository
       .createQueryBuilder('e')
       .orderBy('e.id', 'DESC')
@@ -64,11 +69,27 @@ export class UsersService {
         'e.lastName',
         'e.isActive',
       ])
-      .where('e.isActive = :isActive', { isActive });
+      .where('e.isActive = :isActive', { isActive: filters.isActive });
+
+    if (filters.input) {
+      const fieldsToSearch = [
+        'CAST(e.username AS TEXT)',
+        'CAST(e.email AS TEXT)',
+        'CAST(e.firstName AS TEXT)',
+        'CAST(e.lastName AS TEXT)',
+      ];
+
+      users.andWhere(
+        `CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`,
+        {
+          input: `%${filters.input}%`,
+        },
+      );
+    }
 
     return await paginate(users, {
-      limit: data?.limit ?? 0,
-      page: data?.page ?? 1,
+      limit: filters?.limit ?? 0,
+      page: filters?.page ?? 1,
     });
   }
 
@@ -98,6 +119,11 @@ export class UsersService {
         error: 'Usuario no encontrado',
       });
     }
+    
+    if(!user.password){
+      delete user.password;
+    }
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

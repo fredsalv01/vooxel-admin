@@ -15,15 +15,19 @@ export class UpdateUserDto {
     column: 'username',
     method: methodEnum.update,
   })
+  @IsOptional()
   username?: string;
 
   @IsString()
+  @IsOptional()
   firstName?: string;
 
   @IsString()
+  @IsOptional()
   lastName?: string;
 
   @IsEmail()
+  @IsOptional()
   @isUnique({ tableName: 'user', column: 'email', method: methodEnum.update })
   email?: string;
 
@@ -39,5 +43,6 @@ export class UpdateUserDto {
   @Transform(({ obj, key }) => {
     return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
   })
+  @IsOptional()
   isActive?: boolean;
 }

@@ -11,6 +11,7 @@ import { BillingCurrencyType } from '../enum/CurrencyType';
 import { BillingState } from '../enum/BillingState';
 import { BillingServiceType } from '../enum/ServiceType';
 import { IGV } from '../../common/constants';
+import { Months } from '../../common/enums';
 
 @Entity()
 export class Billing {
@@ -139,10 +140,28 @@ export class Billing {
   accumulatedDays: number;
 
   @Column('bool', { default: false })
-  hasHes: boolean;
+  hashes: boolean;
 
   @Column('text', { nullable: true })
-  Hes: string;
+  hes: string;
+
+  // estas son propiedades calculadas que bien pueden ser 0 o nulas porque son calculadas por dentro
+
+  @Column('int', { nullable: true, default: 0 })
+  currencyConversionAmount: number; // este seria el monto neto USD2 segun el excel
+
+  @Column('int', { nullable: true, default: 0 })
+  igvConversionDollars: number; // esta es la taza de igv cuando es dolares (seria currency_conversion_amount * 0.18)
+
+  @Column('int', { nullable: true, default: 0 })
+  totalAmountDollars: number; //esto seria el igvConversionDollars + currency_conversion_amount
+
+  @Column({
+    type: 'enum',
+    enum: Months,
+    nullable: true,
+  })
+  paymentMonth: Months;
 
   @CreateDateColumn()
   createdAt: Date;

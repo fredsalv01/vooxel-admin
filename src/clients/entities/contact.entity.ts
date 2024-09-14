@@ -27,6 +27,10 @@ export class Contact {
   phone: string;
 
   @Expose()
+  @Column({ nullable: true })
+  email: string;
+
+  @Expose()
   @Column()
   designed_area: string;
 

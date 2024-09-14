@@ -167,7 +167,7 @@ export class CreateBillingDto {
   accumulatedDays?: number = 0;
 
   @ApiProperty({
-    description: 'validar si tiene HES o no',
+    description: 'validar si tiene hes o no',
     example: true,
     default: false,
   })
@@ -176,13 +176,13 @@ export class CreateBillingDto {
     return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
   })
   @IsOptional()
-  hasHes: boolean;
+  hashes: boolean;
 
   @ApiProperty({
-    description: 'numero de HES es un numero unico',
+    description: 'numero de hes es un numero unico',
     example: 'c598c49f-c2c7-4ad2-8e29-4a5e4218008a',
   })
   @IsString()
   @IsOptional()
-  Hes: string;
+  hes: string;
 }

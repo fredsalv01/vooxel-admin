@@ -9,6 +9,7 @@ import {
   Param,
   Put,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UsersService } from './users.service';
@@ -38,11 +39,11 @@ export class UsersController {
     return user;
   }
 
-  @Post('reset-password')
+  @Post('reset-password/:id')
   @UseGuards(AuthGuardJwt)
   resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     return this.usersService.resetPassword(resetPasswordDto, +id);
   }
@@ -50,10 +51,12 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuardJwt)
   @HttpCode(200)
-  async getUsers(@Query() data: getUserDto) {
-    const users = await this.usersService.getUsers(data.isActive, {
-      page: +data.page,
-      limit: +data.limit,
+  async getUsers(@Query() filters: getUserDto) {
+    const users = await this.usersService.getUsers({
+      page: +filters.page,
+      input: filters.input,
+      isActive: filters.isActive,
+      limit: +filters.limit,
     });
     return users;
   }

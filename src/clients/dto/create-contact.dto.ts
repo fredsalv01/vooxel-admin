@@ -25,6 +25,14 @@ export class CreateContactDto {
   phone: string;
 
   @ApiProperty({
+    description: 'Email del contacto',
+    example: 'jhon.doe@email.com',
+  })
+  @IsString()
+  @IsOptional()
+  email: string;
+
+  @ApiProperty({
     description: 'Area designada',
     example: 'Contabilidad',
   })

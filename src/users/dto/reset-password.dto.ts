@@ -1,11 +1,11 @@
 import { IsRepeated } from '../../validation/is-repeated.constraint';
-import { Length } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 export class ResetPasswordDto {
-  @Length(8)
+  @IsString()
   password: string;
 
-  @Length(8)
+  @IsString()
   @IsRepeated('password')
   retypedPassword: string;
 }

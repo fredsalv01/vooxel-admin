@@ -45,7 +45,7 @@ export class BillingRepository {
         'CAST(billing.purchaseOrderNumber AS TEXT)',
         'CAST(billing.currency AS TEXT)',
         'CAST(billing.billingState AS TEXT)',
-        'CAST(billing.Hes AS TEXT)',
+        'CAST(billing.hes AS TEXT)',
       ];
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
         input: `%${input}%`,
