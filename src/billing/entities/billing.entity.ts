@@ -3,15 +3,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
+  // OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { BillingDocumentType } from '../enum/DocumentType';
 import { BillingCurrencyType } from '../enum/CurrencyType';
 import { BillingState } from '../enum/BillingState';
-import { BillingServiceType } from '../enum/ServiceType';
+// import { BillingServiceType } from '../enum/ServiceType';
 import { IGV } from '../../common/constants';
 import { Months } from '../../common/enums';
+import { Service } from './service.entity';
 
 @Entity()
 export class Billing {
@@ -56,12 +59,11 @@ export class Billing {
   @Expose()
   paymentDeadline: Date;
 
-  @Column({
-    type: 'enum',
-    enum: BillingServiceType,
-    default: BillingServiceType.CONSULTORIA,
+  // Relación con Service (Muchas facturaciones están relacionadas con un solo servicio)
+  @ManyToOne(() => Service, (service) => service.billings, {
+    onDelete: 'CASCADE',
   })
-  serviceType: BillingServiceType;
+  service: Service;
 
   @Column({
     type: 'text',
@@ -128,6 +130,12 @@ export class Billing {
     default: BillingState.PENDIENTE,
   })
   billingState: BillingState;
+
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  billingStateDate: Date;
 
   @Column({
     type: 'date',

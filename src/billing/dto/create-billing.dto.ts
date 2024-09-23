@@ -61,12 +61,11 @@ export class CreateBillingDto {
 
   @ApiProperty({
     description: 'tipo de servicio',
-    example: BillingServiceType.CONSULTORIA,
-    default: BillingServiceType.CONSULTORIA,
+    example: 1,
   })
-  @IsEnum(BillingServiceType)
+  @IsNumber()
   @IsNotEmpty()
-  serviceType: BillingServiceType;
+  serviceType: number;
 
   @ApiProperty({
     description: 'descripcion del servicio',
