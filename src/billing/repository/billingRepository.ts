@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Billing } from '../entities/billing.entity';
 import { DataSource, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { CreateBillingDto } from '../dto/create-billing.dto';
+import { Service } from '../entities/service.entity';
 
 export class BillingRepository {
   private readonly logger = new Logger(BillingRepository.name);
@@ -16,9 +18,13 @@ export class BillingRepository {
     return this.db.createQueryBuilder('billing').orderBy('billing.id', 'DESC');
   }
 
-  async createBilling(data: any) {
+  async createBilling(data: any, service: Service) {
     try {
-      const result = await this.db.save(new Billing(data));
+      const billing = this.db.create({
+        ...data,
+        service,
+      });
+      const result = await this.db.save(billing);
       this.logger.debug(
         `${this.createBilling.name} - result`,
         JSON.stringify(result, null, 2),
@@ -35,22 +41,23 @@ export class BillingRepository {
 
     const qb = this.getBillingBaseQuery();
     const { input } = filters;
-
+    qb.leftJoinAndSelect('billing.service', 'service');
     if (input) {
       const fieldsToSearch = [
         'CAST(billing.clientName AS TEXT)',
         'CAST(billing.documentType AS TEXT)',
         'CAST(billing.documentNumber AS TEXT)',
-        'CAST(billing.serviceType AS TEXT)',
         'CAST(billing.purchaseOrderNumber AS TEXT)',
         'CAST(billing.currency AS TEXT)',
         'CAST(billing.billingState AS TEXT)',
         'CAST(billing.hes AS TEXT)',
+        'CAST(service.name AS TEXT)'
       ];
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
         input: `%${input}%`,
       });
     }
+
     const result = await paginate(qb, {
       limit: limit ?? 10,
       page: currentPage ?? 1,

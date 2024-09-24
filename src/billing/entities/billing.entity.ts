@@ -59,9 +59,9 @@ export class Billing {
   @Expose()
   paymentDeadline: Date;
 
-  // Relación con Service (Muchas facturaciones están relacionadas con un solo servicio)
   @ManyToOne(() => Service, (service) => service.billings, {
     onDelete: 'CASCADE',
+    eager: true
   })
   service: Service;
 

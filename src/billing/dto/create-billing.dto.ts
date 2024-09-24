@@ -65,7 +65,7 @@ export class CreateBillingDto {
   })
   @IsNumber()
   @IsNotEmpty()
-  serviceType: number;
+  serviceId: number;
 
   @ApiProperty({
     description: 'descripcion del servicio',
