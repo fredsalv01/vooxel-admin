@@ -51,7 +51,7 @@ export class BillingRepository {
         'CAST(billing.currency AS TEXT)',
         'CAST(billing.billingState AS TEXT)',
         'CAST(billing.hes AS TEXT)',
-        'CAST(service.name AS TEXT)'
+        'CAST(service.name AS TEXT)',
       ];
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
         input: `%${input}%`,
@@ -74,6 +74,9 @@ export class BillingRepository {
       const result = await this.db.findOne({
         where: {
           id,
+        },
+        relations: {
+          service: true,
         },
       });
       if (!result) {
