@@ -21,7 +21,7 @@ export class BillingRepository {
 
   async createBilling(data: any, service: Service, client: Client) {
     try {
-      
+      console.log('data', data);
       const billing = this.db.create({
         ...data,
         service,

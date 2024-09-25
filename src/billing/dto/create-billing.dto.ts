@@ -73,7 +73,7 @@ export class CreateBillingDto {
   })
   @IsOptional()
   @IsString()
-  descripcion: string;
+  description: string;
 
   @ApiProperty({
     description: 'numero de orden de compra',
