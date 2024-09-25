@@ -27,7 +27,12 @@ export class BillingServiceRepository {
 
   async list() {
     try {
-      const result = await this.db.find();
+      const result = await this.db.find({
+        select: {
+          name: true,
+          id: true,
+        },
+      });
       this.logger.debug(
         `${this.list.name} - result`,
         JSON.stringify(result, null, 2),
