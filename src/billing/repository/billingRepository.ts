@@ -21,11 +21,13 @@ export class BillingRepository {
 
   async createBilling(data: any, service: Service, client: Client) {
     try {
+      
       const billing = this.db.create({
         ...data,
         service,
         client,
       });
+      console.log('billing', billing);
       const result = await this.db.save(billing);
       this.logger.debug(
         `${this.createBilling.name} - result`,

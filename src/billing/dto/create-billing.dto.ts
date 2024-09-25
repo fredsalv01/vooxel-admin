@@ -45,11 +45,11 @@ export class CreateBillingDto {
 
   @ApiProperty({
     description: 'fecha limite de pago',
-    example: '2021-01-01',
+    example: 20,
   })
-  @Validate(dateFormatValidator)
+  @IsNumber()
   @IsNotEmpty()
-  paymentDeadline: string;
+  paymentDeadline: number;
 
   @ApiProperty({
     description: 'tipo de servicio',
@@ -146,6 +146,14 @@ export class CreateBillingDto {
   @IsEnum(BillingState)
   @IsNotEmpty()
   billingState: BillingState;
+
+  @ApiProperty({
+    description: 'fecha de cambio de estado',
+    example: '2021-01-01',
+  })
+  @Validate(dateFormatValidator)
+  @IsOptional()
+  billingStateDate: string;
 
   @ApiProperty({
     description: 'fecha de expiracion de la facturacion',

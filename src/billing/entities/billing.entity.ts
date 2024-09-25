@@ -29,12 +29,6 @@ export class Billing {
   id: number;
 
   @Column({
-    type: 'text',
-    default: null,
-  })
-  clientName: string;
-
-  @Column({
     type: 'enum',
     enum: BillingDocumentType,
     default: BillingDocumentType.BOLETA,
@@ -118,7 +112,7 @@ export class Billing {
 
   @Column({
     type: 'decimal',
-    precision: 4,
+    precision: 10,
     scale: 2,
     default: IGV,
   })
