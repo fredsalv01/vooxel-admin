@@ -49,7 +49,6 @@ export class BillingRepository {
     qb.leftJoinAndSelect('billing.client', 'client');
     if (input) {
       const fieldsToSearch = [
-        'CAST(billing.clientName AS TEXT)',
         'CAST(billing.documentType AS TEXT)',
         'CAST(billing.documentNumber AS TEXT)',
         'CAST(billing.purchaseOrderNumber AS TEXT)',
