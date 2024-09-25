@@ -12,20 +12,12 @@ import {
 } from 'class-validator';
 import { BillingDocumentType } from '../enum/DocumentType';
 import { dateFormatValidator } from 'src/common/functions';
-import { BillingServiceType } from '../enum/ServiceType';
 import { BillingCurrencyType } from '../enum/CurrencyType';
 import { Transform } from 'class-transformer';
 import { BillingState } from '../enum/BillingState';
 import { IGV } from '../../common/constants';
 
 export class CreateBillingDto {
-  @ApiProperty({
-    description: 'Nombre del cliente',
-    example: 'Rimac Seguros',
-  })
-  @IsNotEmpty()
-  @IsString()
-  clientName: string;
 
   @ApiProperty({
     description: 'tipo de documento',
