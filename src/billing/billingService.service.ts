@@ -21,8 +21,8 @@ export class BillingServiceService {
     return service;
   }
 
-  async findAll() {
-    const result = await this.billingServiceRepository.list();
+  async findAll(input: string) {
+    const result = await this.billingServiceRepository.list(input);
     return result;
   }
 }

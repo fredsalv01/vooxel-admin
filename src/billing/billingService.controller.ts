@@ -36,8 +36,8 @@ export class BillingServiceController {
   @UseGuards(AuthGuardJwt)
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(ClassSerializerInterceptor)
-  findAll() {
+  findAll(@Query() queryParams: filterBillingServiceDto) {
     this.logger.log(this.findAll.name);
-    return this.billingServiceService.findAll();
+    return this.billingServiceService.findAll(queryParams.input);
   }
 }

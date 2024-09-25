@@ -25,14 +25,19 @@ export class BillingServiceRepository {
     }
   }
 
-  async list() {
+  async list(input: string) {
     try {
-      const result = await this.db.find({
-        select: {
-          name: true,
-          id: true,
-        },
-      });
+      const fieldsToSearch = ['CAST(e.name AS TEXT)'];
+      const qb = this.db
+        .createQueryBuilder('e')
+        .orderBy('id', 'DESC')
+        .select(['e.id', 'e.name']);
+      if (input) {
+        qb.where(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
+          input: `%${input}%`,
+        });
+      }
+      const result = qb.getMany();
       this.logger.debug(
         `${this.list.name} - result`,
         JSON.stringify(result, null, 2),
