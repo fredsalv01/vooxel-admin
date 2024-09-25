@@ -16,7 +16,7 @@ import { BillingState } from '../enum/BillingState';
 import { IGV } from '../../common/constants';
 import { Months } from '../../common/enums';
 import { Service } from './service.entity';
-import { Client } from "../../clients/entities/client.entity";
+import { Client } from '../../clients/entities/client.entity';
 
 @Entity()
 export class Billing {
@@ -55,21 +55,21 @@ export class Billing {
   startDate: Date;
 
   @Column({
-    type: 'date',
+    type: 'int',
     nullable: true,
   })
   @Expose()
-  paymentDeadline: Date;
+  paymentDeadline: number;
 
   @ManyToOne(() => Service, (service) => service.billings, {
     onDelete: 'CASCADE',
-    eager: true
+    eager: true,
   })
   service: Service;
 
   @ManyToOne(() => Client, (client) => client.billings, {
     onDelete: 'CASCADE',
-    eager: true
+    eager: true,
   })
   client: Client;
 
