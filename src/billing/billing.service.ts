@@ -40,10 +40,11 @@ export class BillingService {
     const { items, ...restPaginationData } = data;
 
     const mapResponseItems = data.items.map((item) => {
-      const { service, ...restData } = item;
+      const { service, client, ...restData } = item;
       return {
         ...restData,
         serviceName: service.name,
+        client: client.businessName
       };
     });
 
