@@ -132,6 +132,28 @@ export class VacationsDetailsService {
 
   // delete vacation detail
   async deleteVacationDetails(id: number) {
-    return this.vacationsDetailsRepository.deleteVacationDetail(id);
+    const vacationDetail =
+      this.vacationsDetailsRepository.getVacationDetail(id);
+    const vacation = await this.vacationsRepository.getVacationById(
+      (await vacationDetail).vacationId,
+    );
+    await this.vacationsDetailsRepository.deleteVacationDetail(id);
+
+    const updatedVacations = await this.vacationsRepository.updateVacation(
+      vacation.id,
+      {
+        accumulatedVacations: 0,
+        takenVacations: 0,
+        remainingVacations: 0,
+        expiredDays: 0,
+        plannedVacations: 0,
+      },
+    );
+
+    if (updatedVacations) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
