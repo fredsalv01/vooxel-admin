@@ -4,6 +4,7 @@ import { UpdateBillingDto } from './dto/update-billing.dto';
 import { BillingRepository } from './repository/billingRepository';
 import { filterBillingPaginatedDto } from './dto/filter-get-billing.dto';
 import { BillingServiceRepository } from './repository/billingServiceRepository';
+import { ClientRepository } from "../clients/repository/clientRepository";
 
 @Injectable()
 export class BillingService {
@@ -11,16 +12,21 @@ export class BillingService {
   constructor(
     private readonly billingRepository: BillingRepository,
     private readonly billingServiceRepository: BillingServiceRepository,
+    private readonly clientRepository: ClientRepository
   ) {}
 
   async create(createBillingDto: CreateBillingDto) {
-    const { serviceId, ...restData } = createBillingDto;
+    const { serviceId, clientId,  ...restData } = createBillingDto;
     const service = await this.billingServiceRepository.findOneById(serviceId);
+    const client = await this.clientRepository.findOne(clientId);
     if (!service) {
       throw new NotFoundException(`Service with ID ${serviceId} not found`);
     }
-
-    return this.billingRepository.createBilling(restData, service);
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${clientId} not found`);
+    }
+    
+    return this.billingRepository.createBilling(restData, service, client);
   }
 
   async findAll({ limit, page, ...filters }: filterBillingPaginatedDto) {

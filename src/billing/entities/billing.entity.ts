@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   // OneToMany,
   PrimaryGeneratedColumn,
@@ -15,6 +16,7 @@ import { BillingState } from '../enum/BillingState';
 import { IGV } from '../../common/constants';
 import { Months } from '../../common/enums';
 import { Service } from './service.entity';
+import { Client } from "../../clients/entities/client.entity";
 
 @Entity()
 export class Billing {
@@ -64,6 +66,12 @@ export class Billing {
     eager: true
   })
   service: Service;
+
+  @ManyToOne(() => Client, (client) => client.billings, {
+    onDelete: 'CASCADE',
+    eager: true
+  })
+  client: Client;
 
   @Column({
     type: 'text',

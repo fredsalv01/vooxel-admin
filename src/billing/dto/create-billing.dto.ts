@@ -66,6 +66,14 @@ export class CreateBillingDto {
   @IsNumber()
   @IsNotEmpty()
   serviceId: number;
+  
+  @ApiProperty({
+    description: 'id del cliente',
+    example: 1,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  clientId: number;
 
   @ApiProperty({
     description: 'descripcion del servicio',

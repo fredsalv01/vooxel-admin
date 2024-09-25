@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { CreateBillingDto } from '../dto/create-billing.dto';
 import { Service } from '../entities/service.entity';
+import { Client } from '../../clients/entities/client.entity';
 
 export class BillingRepository {
   private readonly logger = new Logger(BillingRepository.name);
@@ -18,11 +19,12 @@ export class BillingRepository {
     return this.db.createQueryBuilder('billing').orderBy('billing.id', 'DESC');
   }
 
-  async createBilling(data: any, service: Service) {
+  async createBilling(data: any, service: Service, client: Client) {
     try {
       const billing = this.db.create({
         ...data,
         service,
+        client,
       });
       const result = await this.db.save(billing);
       this.logger.debug(
@@ -42,6 +44,7 @@ export class BillingRepository {
     const qb = this.getBillingBaseQuery();
     const { input } = filters;
     qb.leftJoinAndSelect('billing.service', 'service');
+    qb.leftJoinAndSelect('billing.client', 'client');
     if (input) {
       const fieldsToSearch = [
         'CAST(billing.clientName AS TEXT)',
@@ -52,6 +55,7 @@ export class BillingRepository {
         'CAST(billing.billingState AS TEXT)',
         'CAST(billing.hes AS TEXT)',
         'CAST(service.name AS TEXT)',
+        'CAST(client.businessName AS TEXT)',
       ];
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
         input: `%${input}%`,
@@ -77,6 +81,7 @@ export class BillingRepository {
         },
         relations: {
           service: true,
+          client: true
         },
       });
       if (!result) {

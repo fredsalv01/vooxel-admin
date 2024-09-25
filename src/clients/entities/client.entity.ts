@@ -10,6 +10,7 @@ import {
 import { WorkerToClient } from 'src/workers/entities/worker-to-client.entity';
 import { ContractClient } from '../../contract_clients/entities/contract_client.entity';
 import { Contact } from './contact.entity';
+import { Billing } from "../../billing/entities/billing.entity";
 
 @Entity()
 export class Client {
@@ -48,6 +49,9 @@ export class Client {
 
   @OneToMany(() => ContractClient, (contractClient) => contractClient.client)
   contractClients: ContractClient[];
+
+  @OneToMany(() => Billing, (billing) => billing.client)
+  billings: Billing[];
 
   @CreateDateColumn({
     type: 'timestamp',
