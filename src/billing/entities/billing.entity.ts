@@ -24,7 +24,7 @@ export class Billing {
     enum: BillingDocumentType,
     default: BillingDocumentType.BOLETA,
   })
-  billingDocumentType: BillingDocumentType;
+  documentType: BillingDocumentType;
 
   @Column({
     type: 'text',

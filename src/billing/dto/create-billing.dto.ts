@@ -148,14 +148,6 @@ export class CreateBillingDto {
   billingState: BillingState;
 
   @ApiProperty({
-    description: 'fecha de cambio de estado',
-    example: '2021-01-01',
-  })
-  @Validate(dateFormatValidator)
-  @IsOptional()
-  billingStateDate: string;
-
-  @ApiProperty({
     description: 'fecha de expiracion de la facturacion',
     example: '2021-01-01',
   })
