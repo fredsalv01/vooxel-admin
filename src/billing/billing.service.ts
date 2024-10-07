@@ -25,7 +25,7 @@ export class BillingService {
     if (!client) {
       throw new NotFoundException(`Client with ID ${clientId} not found`);
     }
-    
+    // operaciones de conversion de datos
     return this.billingRepository.createBilling(restData, service, client);
   }
 

@@ -98,7 +98,7 @@ export class CreateBillingDto {
   })
   @IsNumber({}, { each: true })
   @IsNotEmpty()
-  currencyValue: number;
+  conversionRate: number;
 
   @ApiProperty({
     description: 'monto',
