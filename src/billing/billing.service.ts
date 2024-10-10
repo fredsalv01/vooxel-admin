@@ -59,36 +59,38 @@ export class BillingService {
   }
 
   async update(id: number, updateBillingDto: UpdateBillingDto) {
+    
     const billing = await this.billingRepository.getBillingDetails(id);
+    
 
     if(updateBillingDto.state2) {
       billing.state2 = updateBillingDto.state2;
     }
 
     if (updateBillingDto.depositDate) {
-      billing.depositDate = moment(updateBillingDto.depositDate).format('YYYY-MM-DD');
-      billing.depositMonth = Months[moment(updateBillingDto.depositDate).format('MMMM').toUpperCase()];
+      updateBillingDto.depositDate = moment(updateBillingDto.depositDate).format('YYYY-MM-DD');
+      updateBillingDto.depositMonth = Months[moment(updateBillingDto.depositDate).format('MMMM').toUpperCase()];
     }
     
     if (updateBillingDto.depositDate2) {
-      billing.depositDate2 = moment(updateBillingDto.depositDate2).format('YYYY-MM-DD');
-      billing.depositMonth2 = Months[moment(updateBillingDto.depositDate2).format('MMMM').toUpperCase()];
+      updateBillingDto.depositDate2 = moment(updateBillingDto.depositDate2).format('YYYY-MM-DD');
+      updateBillingDto.depositMonth2 = Months[moment(updateBillingDto.depositDate2).format('MMMM').toUpperCase()];
     }
 
     if (updateBillingDto.depositAmountDollars && billing.currency === BillingCurrencyType.DOLARES) {
-      billing.depositAmountDollars = updateBillingDto.depositAmountDollars;
-      billing.depositAmountSoles = updateBillingDto.depositAmountDollars * billing.conversionRate;
+      updateBillingDto.depositAmountDollars = updateBillingDto.depositAmountDollars;
+      updateBillingDto.depositAmountSoles = updateBillingDto.depositAmountDollars * billing.conversionRate;
     } else if (updateBillingDto.depositAmountSoles && billing.currency === BillingCurrencyType.SOLES) {
-      billing.depositAmountSoles = updateBillingDto.depositAmountSoles;
-      billing.depositAmountDollars = updateBillingDto.depositAmountSoles / billing.conversionRate;
+      updateBillingDto.depositAmountSoles = updateBillingDto.depositAmountSoles;
+      updateBillingDto.depositAmountDollars = updateBillingDto.depositAmountSoles / billing.conversionRate;
     }
     
     if (updateBillingDto.depositAmountDollars2 && billing.currency === BillingCurrencyType.DOLARES) {
-      billing.depositAmountDollars2 = updateBillingDto.depositAmountDollars2;
-      billing.depositAmountSoles2 = updateBillingDto.depositAmountDollars2 * billing.conversionRate;
+      updateBillingDto.depositAmountDollars2 = updateBillingDto.depositAmountDollars2;
+      updateBillingDto.depositAmountSoles2 = updateBillingDto.depositAmountDollars2 * billing.conversionRate;
     } else if (updateBillingDto.depositAmountSoles2 && billing.currency === BillingCurrencyType.SOLES) {
-      billing.depositAmountSoles2 = updateBillingDto.depositAmountSoles2;
-      billing.depositAmountDollars2 = updateBillingDto.depositAmountSoles2 / billing.conversionRate;
+      updateBillingDto.depositAmountSoles2 = updateBillingDto.depositAmountSoles2;
+      updateBillingDto.depositAmountDollars2 = updateBillingDto.depositAmountSoles2 / billing.conversionRate;
     }
 
     return await this.billingRepository.updateBilling(id, billing);

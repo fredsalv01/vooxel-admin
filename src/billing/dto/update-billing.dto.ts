@@ -225,7 +225,7 @@ export class UpdateBillingDto extends PartialType(CreateBillingDto) {
     },
     { toClassOnly: true },
   )
-  depositMonth1?: Months;
+  depositMonth2?: Months;
 
   @IsOptional()
   @IsDateString({}, { message: 'Invalid deposit date 2 format' })
