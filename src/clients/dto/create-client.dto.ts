@@ -39,12 +39,4 @@ export class CreateClientDto {
   @IsString()
   @IsOptional()
   address: string;
-
-  @ApiProperty({
-    description: 'email del cliente',
-    example: 'email@email.com',
-  })
-  @IsEmail()
-  @IsOptional()
-  email: string;
 }
