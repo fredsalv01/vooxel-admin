@@ -93,7 +93,7 @@ export class BillingService {
       updateBillingDto.depositAmountDollars2 = updateBillingDto.depositAmountSoles2 / billing.conversionRate;
     }
 
-    return await this.billingRepository.updateBilling(id, billing);
+    return await this.billingRepository.updateBilling(id, updateBillingDto);
   }
 
   remove(id: number) {
