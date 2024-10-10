@@ -8,16 +8,32 @@ import {
   ManyToOne,
   UpdateDateColumn,
 } from 'typeorm';
-import moment from 'moment-timezone';
 import { Service } from './service.entity';
 import { Client } from '../../clients/entities/client.entity'; // Relación con Cliente
 import { BillingCurrencyType, BillingState, BillingDocumentType } from '../enum';
 import { IGV } from '../../common/constants'; // Usando IGV como constante
+import { Months } from '../../common/enums';
+import 'moment/locale/es';
+const moment = require('moment-timezone');
 
 @Entity()
 export class Billing {
   @PrimaryGeneratedColumn('identity')
   id: number;
+
+  @Column({
+    type: 'int',
+    nullable: true,
+    default: null,
+  })
+  year: number;  // Nueva columna para el año
+
+  @Column({
+    type: 'text',
+    nullable: true,
+    default: null,
+  })
+  month: string;  // Nueva columna para el mes
 
   @Column({
     type: 'enum',
@@ -163,9 +179,80 @@ export class Billing {
   })
   conversionRate: number; // Tipo de cambio actual
 
+  // Nuevos campos según la imagen
+  @Column({
+    type: 'enum',
+    enum: Months,
+    nullable: true,
+  })
+  depositMonth: Months;
+
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  depositDate: Date;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  depositAmountDollars: number;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  depositAmountSoles: number;
+
+  @Column({
+    type: 'enum',
+    enum: BillingState,
+    nullable: true,
+  })
+  state2: BillingState;
+
+  @Column({
+    type: 'enum',
+    enum: Months,
+    nullable: true,
+  })
+  depositMonth2: Months;
+
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  depositDate2: Date;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  depositAmountDollars2: number;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  depositAmountSoles2: number;
+
   @BeforeInsert()
-  @BeforeUpdate()
   calculateBillingDetails() {
+    if (this.startDate) {
+      const date = moment(this.startDate);
+      this.year = date.year();
+      this.month = date.format('MMMM'); // Obtiene el mes en formato largo
+    }
+
     if (this.startDate && this.paymentDeadline) {
       this.expirationDate = moment(this.startDate)
         .add(this.paymentDeadline, 'days')
@@ -205,4 +292,5 @@ export class Billing {
       this.totalConversionAmount = this.total * this.conversionRate;
     }
   }
+
 }
