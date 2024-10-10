@@ -28,7 +28,6 @@ export class ClientRepository {
         'client.ruc',
         'client.isActive',
         'client.phone',
-        'client.email',
         'COUNT(workerToClient.workerToClientId) AS workerToClientCount',
         // Add more fields as needed
       ])
@@ -63,7 +62,6 @@ export class ClientRepository {
       const fieldsToSearch = [
         'CAST(client.ruc AS TEXT)',
         'CAST(client.businessName AS TEXT)',
-        'CAST(client.email AS TEXT)',
         'CAST(client.ruc AS TEXT)',
         'CAST(client.phone AS TEXT)',
         // Add more fields as needed
