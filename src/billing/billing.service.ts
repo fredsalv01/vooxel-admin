@@ -59,6 +59,11 @@ export class BillingService {
 
   async update(id: number, updateBillingDto: UpdateBillingDto) {
     const billing = await this.billingRepository.getBillingDetails(id);
+
+    if(updateBillingDto.state2) {
+      billing.state2 = updateBillingDto.state2;
+    }
+
     if (updateBillingDto.depositDate) {
       billing.depositDate = moment(updateBillingDto.depositDate).format('YYYY-MM-DD');
       billing.depositMonth = Months[moment(updateBillingDto.depositDate).format('MMMM').toUpperCase()];
