@@ -28,6 +28,7 @@ export class ClientRepository {
         'client.ruc',
         'client.isActive',
         'client.phone',
+        'client.address',
         'COUNT(workerToClient.workerToClientId) AS workerToClientCount',
         // Add more fields as needed
       ])
@@ -64,7 +65,7 @@ export class ClientRepository {
         'CAST(client.businessName AS TEXT)',
         'CAST(client.ruc AS TEXT)',
         'CAST(client.phone AS TEXT)',
-        // Add more fields as needed
+        'CAST(client.address AS TEXT)'
       ];
 
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
