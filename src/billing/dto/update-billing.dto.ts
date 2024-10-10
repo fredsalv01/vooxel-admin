@@ -13,6 +13,10 @@ import { BillingState } from '../enum';
 const moment = require('moment-timezone');
 
 export class UpdateBillingDto extends PartialType(CreateBillingDto) {
+  constructor(){
+    super();
+  }  
+
   @IsOptional()
   @IsDateString({}, { message: 'Invalid deposit date format' })
   @Transform(
