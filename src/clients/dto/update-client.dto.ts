@@ -34,14 +34,6 @@ export class UpdateClientDto {
   phone: string;
 
   @ApiProperty({
-    description: 'email del cliente',
-    example: 'email@email.com',
-  })
-  @IsEmail()
-  @IsOptional()
-  email: string;
-
-  @ApiProperty({
     description: 'direccion del cliente',
     example: 'Calle Avenida La Paz 125, Lima',
   })

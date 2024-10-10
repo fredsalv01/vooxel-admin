@@ -36,12 +36,6 @@ export class Client {
   @Expose()
   phone: string;
 
-  @Column('text', {
-    nullable: true
-  })
-  @Expose()
-  email: string;
-
   @Column('text')
   @Expose()
   address: string;
