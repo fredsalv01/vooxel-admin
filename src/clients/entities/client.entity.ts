@@ -38,10 +38,6 @@ export class Client {
 
   @Column('text')
   @Expose()
-  email: string;
-
-  @Column('text')
-  @Expose()
   address: string;
 
   @OneToMany(() => WorkerToClient, (workerToClient) => workerToClient.client)
