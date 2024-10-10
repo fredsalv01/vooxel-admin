@@ -46,7 +46,8 @@ export class BillingService {
       return {
         ...restData,
         serviceName: service.name,
-        client: client.businessName
+        client: client.businessName,
+        clientRuc: client.ruc
       };
     });
 
