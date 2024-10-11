@@ -29,6 +29,7 @@ export class VacationsRepository {
         ...vacation,
         remainingVacations:
           vacation.accumulatedVacations - vacation.takenVacations,
+        isActive: true
       });
 
       const result = await this.db.save(newVacation);
@@ -46,16 +47,29 @@ export class VacationsRepository {
   // get all vacation
   async getAllVacations(workerId: number): Promise<Vacation> {
     try {
-      const worker = (await this.dataSource.getRepository('worker').findOne({
+      console.log('🚀workerId vacaciones', workerId);
+      const worker = await this.dataSource.getRepository('worker').findOne({
         where: {
           id: workerId,
-          vacation: { vacationDetails: { isActive: true } },
         },
         relations: ['vacation', 'vacation.vacationDetails'],
-      })) as Worker;
+      }) as Worker;
 
+      if (!worker) {
+        throw new NotFoundException('Worker not found');
+      }
+
+      const activeVacations = worker.vacation?.vacationDetails?.filter(detail => detail.isActive);
+
+      if (!activeVacations || activeVacations.length === 0) {
+        console.info('No active vacations found');
+      }
+
+      console.log('🚀startDate vacaciones', worker.startDate);
       const accumulatedVacations = this.calcVacations(worker.startDate);
+      console.log('accumulatedVacations vacaciones', accumulatedVacations);
       const expiredDays = Math.floor(accumulatedVacations / 30) * 30;
+      console.log('expiredDays vacaciones', expiredDays);
 
       if (!worker?.vacation) {
         worker.vacation = await this.createVacation({

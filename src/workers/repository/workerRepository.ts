@@ -255,4 +255,20 @@ export class WorkerRepository {
       await queryRunner.release();
     }
   }
+
+  async getVacationWithWorkerId(workerId: number): Promise<Worker> {
+    const worker = await this.db.findOne({
+      where: {
+        id: workerId,
+        isActive: true
+      },
+      relations: ['vacation', 'vacation.vacationDetails']
+    })
+
+    if(!worker){
+      throw new NotFoundException(`No se encontro el trabajador con el id ${workerId}`);
+    }
+
+    return worker;
+  }
 }

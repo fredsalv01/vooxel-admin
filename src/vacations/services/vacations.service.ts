@@ -4,6 +4,7 @@ import { UpdateVacationDto } from '../dto/update-vacation.dto';
 import { VacationsRepository } from '../repositories/vacationsRepository';
 import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
 import { VacationDetailType } from '../enum/vacationDetailType';
+import { WorkerRepository } from "../../workers/repository/workerRepository";
 
 @Injectable()
 export class VacationsService {
@@ -11,6 +12,7 @@ export class VacationsService {
   constructor(
     private readonly vacationsRepository: VacationsRepository,
     private readonly vacationsDetailsRepository: VacationsDetailsRepository,
+    private readonly workerRepository: WorkerRepository
   ) {}
 
   create(createVacationDto: CreateVacationDto) {
@@ -20,7 +22,6 @@ export class VacationsService {
 
   async findAll(workerId: number) {
     const result = await this.vacationsRepository.getAllVacations(workerId);
-
     // actualizar la vacacion con los detalles tambien.
     const vacationDetails =
       await this.vacationsDetailsRepository.getAllVacationDetails(result.id);
