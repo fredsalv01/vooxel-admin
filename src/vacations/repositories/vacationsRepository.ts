@@ -60,6 +60,7 @@ export class VacationsRepository {
       }
 
       const activeVacations = worker.vacation?.vacationDetails?.filter(detail => detail.isActive);
+      worker.vacation.vacationDetails = activeVacations;
 
       if (!activeVacations || activeVacations.length === 0) {
         console.info('No active vacations found');
