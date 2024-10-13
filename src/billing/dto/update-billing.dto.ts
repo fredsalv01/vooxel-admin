@@ -177,7 +177,7 @@ export class UpdateBillingDto extends PartialType(CreateBillingDto) {
     return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
   })
   @IsOptional()
-  hashes: boolean;
+  hasHes: boolean;
 
   @ApiProperty({
     description: 'numero de hes es un numero unico',
