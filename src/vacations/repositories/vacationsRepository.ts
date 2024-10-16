@@ -29,7 +29,7 @@ export class VacationsRepository {
         ...vacation,
         remainingVacations:
           vacation.accumulatedVacations - vacation.takenVacations,
-        isActive: true
+        isActive: true,
       });
 
       const result = await this.db.save(newVacation);
@@ -48,22 +48,15 @@ export class VacationsRepository {
   async getAllVacations(workerId: number): Promise<Vacation> {
     try {
       console.log('🚀workerId vacaciones', workerId);
-      const worker = await this.dataSource.getRepository('worker').findOne({
+      const worker = (await this.dataSource.getRepository('worker').findOne({
         where: {
           id: workerId,
         },
         relations: ['vacation', 'vacation.vacationDetails'],
-      }) as Worker;
+      })) as Worker;
 
       if (!worker) {
         throw new NotFoundException('Worker not found');
-      }
-
-      const activeVacations = worker.vacation?.vacationDetails?.filter(detail => detail.isActive);
-      worker.vacation.vacationDetails = activeVacations;
-
-      if (!activeVacations || activeVacations.length === 0) {
-        console.info('No active vacations found');
       }
 
       console.log('🚀startDate vacaciones', worker.startDate);
@@ -93,6 +86,19 @@ export class VacationsRepository {
         worker.vacation.accumulatedVacations = accumulatedVacations;
         worker.vacation.remainingVacations = remainingVacations;
         worker.vacation.expiredDays = expiredDays;
+      }
+
+      if (!worker.vacation?.vacationDetails) {
+        worker.vacation.vacationDetails = [];
+      } else {
+        const activeVacations = worker.vacation?.vacationDetails?.filter(
+          (detail) => detail.isActive,
+        );
+        worker.vacation.vacationDetails = activeVacations;
+        console.log(worker.vacation.vacationDetails);
+        if (!activeVacations || activeVacations.length === 0) {
+          console.info('No active vacations found');
+        }
       }
 
       const result = worker.vacation;
