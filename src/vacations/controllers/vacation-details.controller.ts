@@ -74,7 +74,7 @@ export class VacationDetailsController {
   @UseGuards(AuthGuardJwt)
   async deleteVacationDetails(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<boolean> {
+  ): Promise<any> {
     return this.vacationDetailsService.deleteVacationDetails(id);
   }
 }

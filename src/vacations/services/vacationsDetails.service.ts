@@ -5,12 +5,14 @@ import { UpdateVacationDetailsDto } from '../dto/update-vacation-details.dto';
 import { VacationDetailItem } from '../classes/VacationDetailItem';
 import { VacationsRepository } from '../repositories/vacationsRepository';
 import { VacationDetailType } from '../enum/vacationDetailType';
+import { VacationsService } from './vacations.service';
 
 @Injectable()
 export class VacationsDetailsService {
   constructor(
     private readonly vacationsDetailsRepository: VacationsDetailsRepository,
     private readonly vacationsRepository: VacationsRepository,
+    private readonly vacationService: VacationsService
   ) {}
 
   // create a new vacation detail
@@ -133,9 +135,9 @@ export class VacationsDetailsService {
   // delete vacation detail
   async deleteVacationDetails(id: number) {
     const vacationDetail =
-      this.vacationsDetailsRepository.getVacationDetail(id);
+      await this.vacationsDetailsRepository.getVacationDetail(id);
     const vacation = await this.vacationsRepository.getVacationById(
-      (await vacationDetail).vacationId,
+      vacationDetail.vacationId,
     );
     await this.vacationsDetailsRepository.deleteVacationDetail(id);
 
@@ -151,7 +153,7 @@ export class VacationsDetailsService {
     );
 
     if (updatedVacations) {
-      return true;
+      return await this.vacationService.findAll(vacation.workerId);
     } else {
       return false;
     }
