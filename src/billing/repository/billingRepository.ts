@@ -6,6 +6,7 @@ import { paginate } from 'nestjs-typeorm-paginate';
 import { CreateBillingDto } from '../dto/create-billing.dto';
 import { Service } from '../entities/service.entity';
 import { Client } from '../../clients/entities/client.entity';
+import * as moment from 'moment-timezone';
 
 export class BillingRepository {
   private readonly logger = new Logger(BillingRepository.name);
@@ -40,11 +41,11 @@ export class BillingRepository {
     }
   }
 
-  async getBillingList({ limit, currentPage, filters }) {
-    this.logger.log('VALIDATE FILTERS', filters);
+  async getBillingList({ limit, currentPage, Dtofilters }) {
+    this.logger.log('VALIDATE FILTERS', Dtofilters);
 
     const qb = this.getBillingBaseQuery();
-    const { input } = filters;
+    const { input, filters } = Dtofilters;
     qb.leftJoinAndSelect('billing.service', 'service');
     qb.leftJoinAndSelect('billing.client', 'client');
     if (input) {
@@ -60,6 +61,77 @@ export class BillingRepository {
       ];
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {
         input: `%${input}%`,
+      });
+    }
+
+    if (filters) {
+      filters.forEach((filter: any) => {
+        if (filter?.year) {
+          qb.andWhere(`EXTRACT(YEAR FROM billing.createdAt) IN (:...year)`, {
+            year: filter.year,
+          });
+        }
+        if (filter?.month) {
+          qb.andWhere(`EXTRACT(MONTH FROM billing.createdAt) IN (:...month)`, {
+            month: filter.month,
+          });
+        }
+        if (filter?.currency) {
+          qb.andWhere(`billing.currency IN (:...currency)`, {
+            currency: filter.currency,
+          });
+        }
+        if (filter?.state) {
+          qb.andWhere(`billing.billingState = :state`, {
+            state: filter.state,
+          });
+        }
+        if (filter?.dates) {
+          filter.dates.forEach((date: any) => {
+            // si no hay data ingresada en el campo de fechas
+            // se toma el mes actual
+            if (!date.start_date && !date.end_date) {
+              const start_date = moment().startOf('month').format('YYYY-MM-DD');
+              const end_date = moment().endOf('month').format('YYYY-MM-DD');
+              qb.andWhere(
+                `billing
+                .${date.column} BETWEEN :start_date AND :end_date`,
+                {
+                  start_date,
+                  end_date,
+                },
+              );
+            } else if (date.start_date && date.end_date) {
+              qb.andWhere(
+                `billing
+                .${date.column} BETWEEN :start_date AND :end_date`,
+                {
+                  start_date: date.start_date,
+                  end_date: date.end_date,
+                },
+              );
+            } else if (date.start_date && !date.end_date) {
+              qb.andWhere(
+                `billing
+                .${date.column} >= :start_date`,
+                {
+                  start_date: date.start_date,
+                },
+              );
+            } else if (!date.start_date && date.end_date) {
+              qb.andWhere(
+                `billing
+                .${date.column} <= :end_date`,
+                {
+                  end_date: date.end_date,
+                },
+              );
+            }
+          });
+        }
+        if (filter.order) {
+          qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
+        }
       });
     }
 
@@ -82,7 +154,7 @@ export class BillingRepository {
         },
         relations: {
           service: true,
-          client: true
+          client: true,
         },
       });
       if (!result) {
