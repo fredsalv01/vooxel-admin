@@ -74,4 +74,5 @@ export class BillingController {
   remove(@Param('id') id: string) {
     return this.billingService.remove(+id);
   }
+
 }

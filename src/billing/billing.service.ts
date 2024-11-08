@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateBillingDto } from './dto/create-billing.dto';
 import { UpdateBillingDto } from './dto/update-billing.dto';
 import { BillingRepository } from './repository/billingRepository';
-import { filterBillingPaginatedDto } from './dto/filter-get-billing.dto';
+import { Filter, filterBillingPaginatedDto } from './dto/filter-get-billing.dto';
 import { BillingServiceRepository } from './repository/billingServiceRepository';
 import { ClientRepository } from "../clients/repository/clientRepository";
 import { Months } from "../common/enums";
@@ -32,11 +32,11 @@ export class BillingService {
   }
 
   async findAll({ limit, page, ...filters }: filterBillingPaginatedDto) {
-    const filterProperties = { ...filters } as unknown as any;
+    const filterProperties = { ...filters } as unknown as { input: string, filters: Filter[] };
     const data = await this.billingRepository.getBillingList({
       limit,
       currentPage: page,
-      filters: filterProperties,
+      Dtofilters: filterProperties,
     });
 
     const { items, ...restPaginationData } = data;
