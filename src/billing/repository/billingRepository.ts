@@ -81,6 +81,16 @@ export class BillingRepository {
             currency: filter.currency,
           });
         }
+        if (filter?.service) {
+          qb.andWhere(`service.name IN (:...service)`, {
+            service: filter.service,
+          });
+        }
+        if (filter?.client) {
+          qb.andWhere(`client.businessName IN (:...client)`, {
+            client: filter.client,
+          });
+        }
         if (filter?.state) {
           qb.andWhere(`billing.billingState = :state`, {
             state: filter.state,
