@@ -230,14 +230,16 @@ export class BillingRepository {
       const qbYear = this.db
         .createQueryBuilder('billing')
         .select('billing.year')
+        .where('billing.year IS NOT NULL')
         .distinct(true);
 
       const qbMonths = this.db
-      .createQueryBuilder('billing')
-      .select('billing.month')
-      .distinct(true);
+        .createQueryBuilder('billing')
+        .select('billing.month')
+        .where('billing.month IS NOT NULL')
+        .distinct(true);
 
-      const [currencies, billingStates, serviceNames, clientBusinessNames] =
+      const [years, months, currencies, billingStates, serviceNames, clientBusinessNames] =
         await Promise.all([
           qbMonths.getRawMany(),
           qbYear.getRawMany(),
@@ -248,8 +250,8 @@ export class BillingRepository {
         ]);
 
       return {
-        years: currencies.map((item) => item.billing_year),
-        months: billingStates.map((item) => item.billing_month),
+        years: years.map((item) => item.billing_year),
+        months: months.map((item) => item.billing_month),
         currencies: currencies.map((item) => item.billing_currency),
         billingStates: billingStates.map((item) => item.billing_billingState),
         serviceNames: serviceNames.map((item) => item.service_name),
