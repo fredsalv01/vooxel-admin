@@ -86,7 +86,6 @@ export class BillingRepository {
               property = `billing.${key}`;
               break;
           }
-
           qb.andWhere(`${property} IN (:...${key})`, {
             [key]: typeof value === 'string' ? [value] : value,
           });
@@ -141,18 +140,18 @@ export class BillingRepository {
       // }
       // });
     }
-    const response = await qb.getMany();
-    console.log('response 🚀', response);
-    // const result = await paginate(qb, {
-    //   limit: limit ?? 10,
-    //   page: currentPage ?? 1,
-    // });
-    // this.logger.debug(
-    //   `${this.getBillingList.name} - result`,
-    //   JSON.stringify(result, null, 2),
-    // );
-    // return result;
-    return response;
+    // const response = await qb.getMany();
+    // console.log('response 🚀', response);
+    const result = await paginate(qb, {
+      limit: limit ?? 10,
+      page: currentPage ?? 1,
+    });
+    this.logger.debug(
+      `${this.getBillingList.name} - result`,
+      JSON.stringify(result, null, 2),
+    );
+    return result;
+    // return response;
   }
 
   async getBillingDetails(id: number) {

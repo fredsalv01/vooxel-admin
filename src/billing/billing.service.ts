@@ -44,20 +44,19 @@ export class BillingService {
       Dtofilters: filterProperties,
     });
 
-    // const { items, ...restPaginationData } = data;
+    const { items, ...restPaginationData } = data;
 
-    // const mapResponseItems = data.items.map((item) => {
-    //   const { service, client, ...restData } = item;
-    //   return {
-    //     ...restData,
-    //     serviceName: service.name,
-    //     client: client.businessName,
-    //     clientRuc: client.ruc,
-    //   };
-    // });
+    const mapResponseItems = data.items.map((item) => {
+      const { service, client, ...restData } = item;
+      return {
+        ...restData,
+        serviceName: service.name,
+        client: client.businessName,
+        clientRuc: client.ruc,
+      };
+    });
 
-    // return { items: mapResponseItems, ...restPaginationData };
-    return data;
+    return { items: mapResponseItems, ...restPaginationData };
   }
 
   async findOne(id: number) {
