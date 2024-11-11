@@ -121,6 +121,6 @@ export class CreateWorkerDto {
   familiarAssignment: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @IsOptional()
   techSkills: string[]; // string[]
 }
