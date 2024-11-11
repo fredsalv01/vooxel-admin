@@ -241,8 +241,8 @@ export class BillingRepository {
 
       const [years, months, currencies, billingStates, serviceNames, clientBusinessNames] =
         await Promise.all([
-          qbMonths.getRawMany(),
           qbYear.getRawMany(),
+          qbMonths.getRawMany(),
           qbCurrency.getRawMany(),
           qbBillingState.getRawMany(),
           qbServiceName.getRawMany(),
