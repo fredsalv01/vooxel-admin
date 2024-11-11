@@ -47,6 +47,12 @@ export class BillingController {
     return this.billingService.findAll(request);
   }
 
+  @Get('unique_values')
+  @UseGuards(AuthGuardJwt)
+  getUniqueValues() {
+    return this.billingService.getUniqueValues();
+  }
+
   @Get(':id')
   @UseGuards(AuthGuardJwt)
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -72,4 +78,6 @@ export class BillingController {
   remove(@Param('id') id: string) {
     return this.billingService.remove(+id);
   }
+
+  
 }

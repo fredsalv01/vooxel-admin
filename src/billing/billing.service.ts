@@ -131,4 +131,8 @@ export class BillingService {
   remove(id: number) {
     return `This action removes a #${id} billing`;
   }
+
+  async getUniqueValues() {
+    return await this.billingRepository.getUniqueValues();
+  }
 }

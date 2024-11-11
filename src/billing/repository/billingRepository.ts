@@ -140,8 +140,6 @@ export class BillingRepository {
       //   qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
       // }
     }
-    // const response = await qb.getMany();
-    // console.log('response 🚀', response);
     const result = await paginate(qb, {
       limit: limit ?? 10,
       page: currentPage ?? 1,
@@ -202,6 +200,48 @@ export class BillingRepository {
       throw new BadRequestException(error?.detail);
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  async getUniqueValues() {
+    try {
+      const qbCurrency = this.db.createQueryBuilder('billing')
+            .select('billing.currency')
+            .distinct(true);
+
+        const qbBillingState = this.db.createQueryBuilder('billing')
+            .select('billing.billingState')
+            .distinct(true);
+
+        const qbServiceName = this.db.createQueryBuilder('billing')
+            .leftJoin('billing.service', 'service')
+            .select('service.name')
+            .distinct(true);
+
+        const qbClientBusinessName = this.db.createQueryBuilder('billing')
+            .leftJoin('billing.client', 'client')
+            .select('client.businessName')
+            .distinct(true);
+
+        const [currencies, billingStates, serviceNames, clientBusinessNames] = await Promise.all([
+            qbCurrency.getRawMany(),
+            qbBillingState.getRawMany(),
+            qbServiceName.getRawMany(),
+            qbClientBusinessName.getRawMany(),
+        ]);
+
+        return {
+            currencies: currencies.map(item => item.billing_currency),
+            billingStates: billingStates.map(item => item.billing_billingState),
+            serviceNames: serviceNames.map(item => item.service_name),
+            clientBusinessNames: clientBusinessNames.map(item => item.client_businessName),
+        };
+    } catch (error) {
+      this.logger.error(
+        'ERROR AL OBTENER VALORES UNICOS DE FACTURACION: ',
+        error,
+      );
+      throw new Error(error.detail);
     }
   }
 }
