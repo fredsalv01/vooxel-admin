@@ -205,37 +205,58 @@ export class BillingRepository {
 
   async getUniqueValues() {
     try {
-      const qbCurrency = this.db.createQueryBuilder('billing')
-            .select('billing.currency')
-            .distinct(true);
+      const qbCurrency = this.db
+        .createQueryBuilder('billing')
+        .select('billing.currency')
+        .distinct(true);
 
-        const qbBillingState = this.db.createQueryBuilder('billing')
-            .select('billing.billingState')
-            .distinct(true);
+      const qbBillingState = this.db
+        .createQueryBuilder('billing')
+        .select('billing.billingState')
+        .distinct(true);
 
-        const qbServiceName = this.db.createQueryBuilder('billing')
-            .leftJoin('billing.service', 'service')
-            .select('service.name')
-            .distinct(true);
+      const qbServiceName = this.db
+        .createQueryBuilder('billing')
+        .leftJoin('billing.service', 'service')
+        .select('service.name')
+        .distinct(true);
 
-        const qbClientBusinessName = this.db.createQueryBuilder('billing')
-            .leftJoin('billing.client', 'client')
-            .select('client.businessName')
-            .distinct(true);
+      const qbClientBusinessName = this.db
+        .createQueryBuilder('billing')
+        .leftJoin('billing.client', 'client')
+        .select('client.businessName')
+        .distinct(true);
 
-        const [currencies, billingStates, serviceNames, clientBusinessNames] = await Promise.all([
-            qbCurrency.getRawMany(),
-            qbBillingState.getRawMany(),
-            qbServiceName.getRawMany(),
-            qbClientBusinessName.getRawMany(),
+      const qbYear = this.db
+        .createQueryBuilder('billing')
+        .select('billing.year')
+        .distinct(true);
+
+      const qbMonths = this.db
+      .createQueryBuilder('billing')
+      .select('billing.month')
+      .distinct(true);
+
+      const [currencies, billingStates, serviceNames, clientBusinessNames] =
+        await Promise.all([
+          qbMonths.getRawMany(),
+          qbYear.getRawMany(),
+          qbCurrency.getRawMany(),
+          qbBillingState.getRawMany(),
+          qbServiceName.getRawMany(),
+          qbClientBusinessName.getRawMany(),
         ]);
 
-        return {
-            currencies: currencies.map(item => item.billing_currency),
-            billingStates: billingStates.map(item => item.billing_billingState),
-            serviceNames: serviceNames.map(item => item.service_name),
-            clientBusinessNames: clientBusinessNames.map(item => item.client_businessName),
-        };
+      return {
+        years: currencies.map((item) => item.billing_year),
+        months: billingStates.map((item) => item.billing_month),
+        currencies: currencies.map((item) => item.billing_currency),
+        billingStates: billingStates.map((item) => item.billing_billingState),
+        serviceNames: serviceNames.map((item) => item.service_name),
+        clientBusinessNames: clientBusinessNames.map(
+          (item) => item.client_businessName,
+        ),
+      };
     } catch (error) {
       this.logger.error(
         'ERROR AL OBTENER VALORES UNICOS DE FACTURACION: ',
