@@ -12,7 +12,6 @@ export class FiltersBillingDto extends PaginationDto {
     description: 'año de la factura',
     example: [2021],
   })
-  // @IsArray({ each: true, message: 'year debe ser un array de numeros' })
   @IsOptional()
   year?: number[];
 
@@ -20,7 +19,6 @@ export class FiltersBillingDto extends PaginationDto {
     description: 'mes de la factura',
     example: [1],
   })
-  // @IsArray({ each: true, message: 'months debe ser un array de numeros' })
   @IsOptional()
   month?: string[];
 
@@ -28,7 +26,6 @@ export class FiltersBillingDto extends PaginationDto {
     description: 'tipo de cambio de la factura',
     example: ['SOLES', 'DOLARES'],
   })
-  // @IsArray({ each: true, message: 'currency debe ser un array de strings' })
   @IsOptional()
   currency?: string[];
 
@@ -44,20 +41,12 @@ export class FiltersBillingDto extends PaginationDto {
     description: 'tipo de servicio',
     example: ['CONSULTORIA', 'CAPACITACION'],
   })
-  @IsArray({
-    each: true,
-    message: 'Los tipos de servicio son un array de strings',
-  })
   @IsOptional()
   service?: string[];
 
   @ApiProperty({
     description: 'cliente de la factura',
     example: ['Empresa 1', 'Empresa 2'],
-  })
-  @IsArray({
-    each: true,
-    message: 'Los clientes deben ser un array de strings',
   })
   @IsOptional()
   client?: string[];
@@ -72,9 +61,8 @@ export class FiltersBillingDto extends PaginationDto {
       },
     ],
   })
-  @IsObject({ each: true, message: 'Las fechas deben ser un array de objetos' })
   @IsOptional()
-  dates?: DateRange[];
+  dates?: DateRanges[];
 
   // @ApiProperty({
   //   description: 'orden de la factura',
@@ -83,4 +71,18 @@ export class FiltersBillingDto extends PaginationDto {
   // @IsObject({ each: true, message: 'El orden debe ser un objeto' })
   // @IsOptional()
   // order?: OrderData = { column: 'id', direction: 'ASC' };
+}
+
+class DateRanges {
+  @IsOptional()
+  @IsString()
+  column?: string;
+
+  @IsOptional()
+  @IsString()
+  start_date?: string;
+
+  @IsOptional()
+  @IsString()
+  end_date?: string;
 }

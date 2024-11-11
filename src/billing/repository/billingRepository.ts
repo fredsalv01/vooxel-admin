@@ -108,6 +108,7 @@ export class BillingRepository {
       //         },
       //       );
       //     } else if (date.start_date && date.end_date) {
+      //       console.log('date.column', date.column);
       //       qb.andWhere(
       //         `billing
       //           .${date.column} BETWEEN :start_date AND :end_date`,
@@ -138,7 +139,6 @@ export class BillingRepository {
       // if (filter.order) {
       //   qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
       // }
-      // });
     }
     // const response = await qb.getMany();
     // console.log('response 🚀', response);

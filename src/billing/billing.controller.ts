@@ -39,14 +39,12 @@ export class BillingController {
     return this.billingService.create(createBillingDto);
   }
 
-  @Get()
+  @Post('/find')
   @UseGuards(AuthGuardJwt)
-  @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(ClassSerializerInterceptor)
-  findAll(@Query() queryParams: filterBillingPaginatedDto) {
+  findAll(@Body() request: filterBillingPaginatedDto) {
     this.logger.log(this.findAll.name);
-    this.logger.debug('query', JSON.stringify(queryParams, null, 2));
-    return this.billingService.findAll(queryParams);
+    this.logger.debug('query', JSON.stringify(request, null, 2));
+    return this.billingService.findAll(request);
   }
 
   @Get(':id')
