@@ -69,6 +69,7 @@ export class BillingRepository {
 
     if (filters) {
       const { dates, ...restFilters } = filters;
+      console.log('restFilters', restFilters);
       for (const [key, value] of Object.entries(restFilters)) {
         if (value) {
           let property = key;
@@ -92,50 +93,49 @@ export class BillingRepository {
         }
       }
 
-      // if (dates) {
-      //   dates.forEach((date: any) => {
-      //     // si no hay data ingresada en el campo de fechas
-      //     // se toma el mes actual
-      //     if (!date.start_date && !date.end_date) {
-      //       const start_date = moment().startOf('month').format('YYYY-MM-DD');
-      //       const end_date = moment().endOf('month').format('YYYY-MM-DD');
-      //       qb.andWhere(
-      //         `billing
-      //           .${date.column} BETWEEN :start_date AND :end_date`,
-      //         {
-      //           start_date,
-      //           end_date,
-      //         },
-      //       );
-      //     } else if (date.start_date && date.end_date) {
-      //       console.log('date.column', date.column);
-      //       qb.andWhere(
-      //         `billing
-      //           .${date.column} BETWEEN :start_date AND :end_date`,
-      //         {
-      //           start_date: date.start_date,
-      //           end_date: date.end_date,
-      //         },
-      //       );
-      //     } else if (date.start_date && !date.end_date) {
-      //       qb.andWhere(
-      //         `billing
-      //           .${date.column} >= :start_date`,
-      //         {
-      //           start_date: date.start_date,
-      //         },
-      //       );
-      //     } else if (!date.start_date && date.end_date) {
-      //       qb.andWhere(
-      //         `billing
-      //           .${date.column} <= :end_date`,
-      //         {
-      //           end_date: date.end_date,
-      //         },
-      //       );
-      //     }
-      //   });
-      // }
+      if (dates) {
+        dates.forEach((date: any) => {
+          // si no hay data ingresada en el campo de fechas
+          // se toma el mes actual
+          if (!date.start_date && !date.end_date) {
+            const start_date = moment().startOf('month').format('YYYY-MM-DD');
+            const end_date = moment().endOf('month').format('YYYY-MM-DD');
+            qb.andWhere(
+              `billing
+                ."${date.column}" BETWEEN :start_date AND :end_date`,
+              {
+                start_date,
+                end_date,
+              },
+            );
+          } else if (date.start_date && date.end_date) {
+            qb.andWhere(
+              `billing
+                ."${date.column}" BETWEEN :start_date AND :end_date`,
+              {
+                start_date: date.start_date,
+                end_date: date.end_date,
+              },
+            );
+          } else if (date.start_date && !date.end_date) {
+            qb.andWhere(
+              `billing
+                ."${date.column}" >= :start_date`,
+              {
+                start_date: date.start_date,
+              },
+            );
+          } else if (!date.start_date && date.end_date) {
+            qb.andWhere(
+              `billing
+                ."${date.column}" <= :end_date`,
+              {
+                end_date: date.end_date,
+              },
+            );
+          }
+        });
+      }
       // if (filter.order) {
       //   qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
       // }
