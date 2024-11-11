@@ -7,6 +7,7 @@ import { CreateBillingDto } from '../dto/create-billing.dto';
 import { Service } from '../entities/service.entity';
 import { Client } from '../../clients/entities/client.entity';
 import * as moment from 'moment-timezone';
+import { Console } from 'console';
 
 export class BillingRepository {
   private readonly logger = new Logger(BillingRepository.name);
@@ -45,7 +46,9 @@ export class BillingRepository {
     this.logger.log('VALIDATE FILTERS', Dtofilters);
 
     const qb = this.getBillingBaseQuery();
-    const { input, filters } = Dtofilters;
+    const { input, ...filters } = Dtofilters;
+    console.log('input🚀', input);
+    console.log('filters', filters);
     qb.leftJoinAndSelect('billing.service', 'service');
     qb.leftJoinAndSelect('billing.client', 'client');
     if (input) {
@@ -65,95 +68,91 @@ export class BillingRepository {
     }
 
     if (filters) {
-      filters.forEach((filter: any) => {
-        if (filter?.year) {
-          qb.andWhere(`EXTRACT(YEAR FROM billing.createdAt) IN (:...year)`, {
-            year: filter.year,
-          });
-        }
-        if (filter?.month) {
-          qb.andWhere(`EXTRACT(MONTH FROM billing.createdAt) IN (:...month)`, {
-            month: filter.month,
-          });
-        }
-        if (filter?.currency) {
-          qb.andWhere(`billing.currency IN (:...currency)`, {
-            currency: filter.currency,
-          });
-        }
-        if (filter?.service) {
-          qb.andWhere(`service.name IN (:...service)`, {
-            service: filter.service,
-          });
-        }
-        if (filter?.client) {
-          qb.andWhere(`client.businessName IN (:...client)`, {
-            client: filter.client,
-          });
-        }
-        if (filter?.state) {
-          qb.andWhere(`billing.billingState = :state`, {
-            state: filter.state,
-          });
-        }
-        if (filter?.dates) {
-          filter.dates.forEach((date: any) => {
-            // si no hay data ingresada en el campo de fechas
-            // se toma el mes actual
-            if (!date.start_date && !date.end_date) {
-              const start_date = moment().startOf('month').format('YYYY-MM-DD');
-              const end_date = moment().endOf('month').format('YYYY-MM-DD');
-              qb.andWhere(
-                `billing
-                .${date.column} BETWEEN :start_date AND :end_date`,
-                {
-                  start_date,
-                  end_date,
-                },
-              );
-            } else if (date.start_date && date.end_date) {
-              qb.andWhere(
-                `billing
-                .${date.column} BETWEEN :start_date AND :end_date`,
-                {
-                  start_date: date.start_date,
-                  end_date: date.end_date,
-                },
-              );
-            } else if (date.start_date && !date.end_date) {
-              qb.andWhere(
-                `billing
-                .${date.column} >= :start_date`,
-                {
-                  start_date: date.start_date,
-                },
-              );
-            } else if (!date.start_date && date.end_date) {
-              qb.andWhere(
-                `billing
-                .${date.column} <= :end_date`,
-                {
-                  end_date: date.end_date,
-                },
-              );
-            }
-          });
-        }
-        if (filter.order) {
-          qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
-        }
-      });
-    }
+      const { dates, ...restFilters } = filters;
+      for (const [key, value] of Object.entries(restFilters)) {
+        if (value) {
+          let property = key;
+          switch (property) {
+            case 'state':
+              property = 'billing.billingState';
+              break;
+            case 'service':
+              property = 'service.name';
+              break;
+            case 'client':
+              property = 'client.businessName';
+              break;
+            default:
+              property = `billing.${key}`;
+              break;
+          }
 
-    const result = await paginate(qb, {
-      limit: limit ?? 10,
-      page: currentPage ?? 1,
-    });
-    this.logger.debug(
-      `${this.getBillingList.name} - result`,
-      JSON.stringify(result, null, 2),
-    );
-    return result;
+          qb.andWhere(`${property} IN (:...${key})`, {
+            [key]: typeof value === 'string' ? [value] : value,
+          });
+        }
+      }
+
+      // if (dates) {
+      //   dates.forEach((date: any) => {
+      //     // si no hay data ingresada en el campo de fechas
+      //     // se toma el mes actual
+      //     if (!date.start_date && !date.end_date) {
+      //       const start_date = moment().startOf('month').format('YYYY-MM-DD');
+      //       const end_date = moment().endOf('month').format('YYYY-MM-DD');
+      //       qb.andWhere(
+      //         `billing
+      //           .${date.column} BETWEEN :start_date AND :end_date`,
+      //         {
+      //           start_date,
+      //           end_date,
+      //         },
+      //       );
+      //     } else if (date.start_date && date.end_date) {
+      //       qb.andWhere(
+      //         `billing
+      //           .${date.column} BETWEEN :start_date AND :end_date`,
+      //         {
+      //           start_date: date.start_date,
+      //           end_date: date.end_date,
+      //         },
+      //       );
+      //     } else if (date.start_date && !date.end_date) {
+      //       qb.andWhere(
+      //         `billing
+      //           .${date.column} >= :start_date`,
+      //         {
+      //           start_date: date.start_date,
+      //         },
+      //       );
+      //     } else if (!date.start_date && date.end_date) {
+      //       qb.andWhere(
+      //         `billing
+      //           .${date.column} <= :end_date`,
+      //         {
+      //           end_date: date.end_date,
+      //         },
+      //       );
+      //     }
+      //   });
+      // }
+      // if (filter.order) {
+      //   qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
+      // }
+      // });
+    }
+    const response = await qb.getMany();
+    console.log('response 🚀', response);
+    // const result = await paginate(qb, {
+    //   limit: limit ?? 10,
+    //   page: currentPage ?? 1,
+    // });
+    // this.logger.debug(
+    //   `${this.getBillingList.name} - result`,
+    //   JSON.stringify(result, null, 2),
+    // );
+    // return result;
+    return response;
   }
 
   async getBillingDetails(id: number) {

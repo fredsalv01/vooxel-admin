@@ -33,6 +33,7 @@ export class BillingService {
   }
 
   async findAll({ limit, page, ...filters }: filterBillingPaginatedDto) {
+    console.log('filters SERVICE BILLLING', filters);
     const filterProperties = { ...filters } as unknown as {
       input?: string;
       filters?: Filters[];
@@ -43,19 +44,20 @@ export class BillingService {
       Dtofilters: filterProperties,
     });
 
-    const { items, ...restPaginationData } = data;
+    // const { items, ...restPaginationData } = data;
 
-    const mapResponseItems = data.items.map((item) => {
-      const { service, client, ...restData } = item;
-      return {
-        ...restData,
-        serviceName: service.name,
-        client: client.businessName,
-        clientRuc: client.ruc,
-      };
-    });
+    // const mapResponseItems = data.items.map((item) => {
+    //   const { service, client, ...restData } = item;
+    //   return {
+    //     ...restData,
+    //     serviceName: service.name,
+    //     client: client.businessName,
+    //     clientRuc: client.ruc,
+    //   };
+    // });
 
-    return { items: mapResponseItems, ...restPaginationData };
+    // return { items: mapResponseItems, ...restPaginationData };
+    return data;
   }
 
   async findOne(id: number) {

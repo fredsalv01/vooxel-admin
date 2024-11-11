@@ -1,6 +1,6 @@
 export interface Filters {
   year: number[];
-  month: number[];
+  month: string[];
   currency: string[];
   state: string;
   service: string[];
@@ -26,4 +26,3 @@ export interface OrderData {
   column: string;
   direction: string;
 }
-

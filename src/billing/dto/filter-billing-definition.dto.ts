@@ -10,25 +10,25 @@ export class FiltersBillingDto extends PaginationDto {
 
   @ApiProperty({
     description: 'año de la factura',
-    example: [2021, 2022],
+    example: [2021],
   })
-  @IsArray({ each: true, message: 'year debe ser un array de numeros' })
+  // @IsArray({ each: true, message: 'year debe ser un array de numeros' })
   @IsOptional()
   year?: number[];
 
   @ApiProperty({
     description: 'mes de la factura',
-    example: [1, 2, 3],
+    example: [1],
   })
-  @IsArray({ each: true, message: 'months debe ser un array de numeros' })
+  // @IsArray({ each: true, message: 'months debe ser un array de numeros' })
   @IsOptional()
-  month?: number[];
+  month?: string[];
 
   @ApiProperty({
     description: 'tipo de cambio de la factura',
     example: ['SOLES', 'DOLARES'],
   })
-  @IsArray({ each: true, message: 'currency debe ser un array de strings' })
+  // @IsArray({ each: true, message: 'currency debe ser un array de strings' })
   @IsOptional()
   currency?: string[];
 
@@ -49,7 +49,7 @@ export class FiltersBillingDto extends PaginationDto {
     message: 'Los tipos de servicio son un array de strings',
   })
   @IsOptional()
-  service: string[];
+  service?: string[];
 
   @ApiProperty({
     description: 'cliente de la factura',
@@ -60,7 +60,7 @@ export class FiltersBillingDto extends PaginationDto {
     message: 'Los clientes deben ser un array de strings',
   })
   @IsOptional()
-  client: string[];
+  client?: string[];
 
   @ApiProperty({
     description: 'rango de fechas',
@@ -76,11 +76,11 @@ export class FiltersBillingDto extends PaginationDto {
   @IsOptional()
   dates?: DateRange[];
 
-  @ApiProperty({
-    description: 'orden de la factura',
-    example: { column: 'id', direction: 'ASC' },
-  })
-  @IsObject({ each: true, message: 'El orden debe ser un objeto' })
-  @IsOptional()
-  order?: OrderData = { column: 'id', direction: 'ASC' };
+  // @ApiProperty({
+  //   description: 'orden de la factura',
+  //   example: { column: 'id', direction: 'ASC' },
+  // })
+  // @IsObject({ each: true, message: 'El orden debe ser un objeto' })
+  // @IsOptional()
+  // order?: OrderData = { column: 'id', direction: 'ASC' };
 }
