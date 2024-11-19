@@ -190,7 +190,7 @@ export class WorkerRepository {
         'client.businessName',
         'client.ruc',
       ]);
-    const { input, isActive, ...restFilters } = filters;
+    const { input, isActive, paginate, ...restFilters } = filters;
 
     if (Object.keys(restFilters).length > 0) {
       for (const key in restFilters) {
@@ -228,16 +228,26 @@ export class WorkerRepository {
       isActive,
     });
 
-    const result = await paginate(qb, {
-      limit: limit ?? 10,
-      page: currentPage ?? 1,
-    });
-    this.logger.debug(
-      `${this.findWorkers.name} - result`,
-      JSON.stringify(result, null, 2),
-    );
-
-    return result;
+    if(paginate) {
+      const result = await paginate(qb, {
+        limit: limit ?? 10,
+        page: currentPage ?? 1,
+      });
+  
+      this.logger.debug(
+        `${this.findWorkers.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+  
+      return result;
+    }else{
+      const result = await qb.getMany();
+      this.logger.debug(
+        `${this.findWorkers.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    }
   }
 
   async updateWorker(id: number, updateWorkerData: any) {

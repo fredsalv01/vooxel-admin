@@ -13,75 +13,48 @@ export class FiltersWorkerDto extends PaginationDto {
     example: [DocumentType.DNI],
   })
   @IsOptional()
-  documentType: DocumentType[];
-
-  @ApiProperty({
-    description: 'numero de documento del trabajador',
-    example: '12345678',
-  })
-  @IsOptional()
-  documentNumber: string;
-
-  @ApiProperty({
-    description: 'apellido paterno del trabajador',
-    example: 'Perez',
-  })
-  @IsOptional()
-  apPat: string;
-
-  @ApiProperty({
-    description: 'apellido materno del trabajador',
-    example: 'Gomez',
-  })
-  @IsOptional()
-  apMat: string;
-
-  @ApiProperty({
-    description: 'nombre del trabajador',
-    example: 'Juan',
-  })
-  name: string;
+  documentType?: DocumentType[];
 
   @ApiProperty({
     description: 'nivel de ingles del trabajador',
     example: [EnglishLevel.INTERM],
   })
-  englishLevel: EnglishLevel[];
+  englishLevel?: EnglishLevel[];
 
   @ApiProperty({
     description: 'cargo del trabajador',
     example: 'Desarrollador',
   })
-  charge: string;
+  charge?: string;
 
   @ApiProperty({
     description: 'seniority del trabajador',
     example: [Seniority.JUNIOR],
   })
-  seniority: Seniority[];
+  seniority?: Seniority[];
 
   @ApiProperty({
     description: 'distrito del trabajador',
     example: 'San Miguel',
   })
-  district: string;
+  district?: string;
 
   @ApiProperty({
     description: 'provincia del trabajador',
     example: 'Lima',
   })
-  province: string;
+  province?: string;
 
   @ApiProperty({
     description: 'departamento del trabajador',
     example: 'Lima',
   })
-  department: string;
+  department?: string;
 
   @ApiProperty({
     description: 'asignacion familiar del trabajador',
     example: 'SI',
   })
-  familiarAssignment: string;
+  familiarAssignment?: string;
 
 }

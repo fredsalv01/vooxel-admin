@@ -41,39 +41,70 @@ export class WorkersService {
       currentPage: page,
       filters: filterProperties,
     });
-
-    const items = result.items as unknown as FindWorkersResponse[];
-    const formatItems = items.map((item) => {
-      if (item.emergencyContacts.length > 0) {
-        item.emergencyContacts = item.emergencyContacts.map(
-          (contact: EmergencyContact) => {
-            return {
-              id: contact.id,
-              name: contact.name,
-              phone: contact.phone,
-              relation: contact.relation,
-            };
-          },
-        );
-      }
-      if (item.clientInfo) {
-        item.clientInfo = {
-          id: item.clientInfo.id,
-          businessName: item.clientInfo.businessName,
-          ruc: item.clientInfo.ruc,
+    
+    if(filterProperties.paginate) {
+      const items = result.items as unknown as FindWorkersResponse[];
+      const formatItems = items.map((item) => {
+        if (item.emergencyContacts.length > 0) {
+          item.emergencyContacts = item.emergencyContacts.map(
+            (contact: EmergencyContact) => {
+              return {
+                id: contact.id,
+                name: contact.name,
+                phone: contact.phone,
+                relation: contact.relation,
+              };
+            },
+          );
+        }
+        if (item.clientInfo) {
+          item.clientInfo = {
+            id: item.clientInfo.id,
+            businessName: item.clientInfo.businessName,
+            ruc: item.clientInfo.ruc,
+          };
+        }
+  
+        return {
+          ...item,
+          contractType: item.contractWorkers?.contractType || 'No tiene contrato',
         };
-      }
-
+      });
+  
       return {
-        ...item,
-        contractType: item.contractWorkers?.contractType || 'No tiene contrato',
+        ...result,
+        items: formatItems,
       };
-    });
-
-    return {
-      ...result,
-      items: formatItems,
-    };
+    }else {
+      const formatItems = result.map((item: any) => {
+        if (item.emergencyContacts.length > 0) {
+          item.emergencyContacts = item.emergencyContacts.map(
+            (contact: EmergencyContact) => {
+              return {
+                id: contact.id,
+                name: contact.name,
+                phone: contact.phone,
+                relation: contact.relation,
+              };
+            },
+          );
+        }
+        if (item.clientInfo) {
+          item.clientInfo = {
+            id: item.clientInfo.id,
+            businessName: item.clientInfo.businessName,
+            ruc: item.clientInfo.ruc,
+          };
+        }
+  
+        return {
+          ...item,
+          contractType: item.contractWorkers?.contractType || 'No tiene contrato',
+        };
+      });
+  
+      return formatItems;
+    }
   }
 
   findOne(id: number) {
