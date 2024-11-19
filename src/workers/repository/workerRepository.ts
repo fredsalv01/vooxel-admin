@@ -190,7 +190,20 @@ export class WorkerRepository {
         'client.businessName',
         'client.ruc',
       ]);
-    const { input, isActive } = filters;
+    const { input, isActive, ...restFilters } = filters;
+
+    if(Object.keys(restFilters).length > 0){
+      for (const key in restFilters) {
+        if (Object.prototype.hasOwnProperty.call(restFilters, key)) {
+          const value = restFilters[key];
+          if (value) {
+            qb.andWhere(`e.${key} = :${key}`, {
+              [key]: value,
+            });
+          }
+        }
+      }
+    }
 
     if (input) {
       const fieldsToSearch = [

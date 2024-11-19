@@ -38,14 +38,12 @@ export class WorkersController {
     return this.workersService.create(createWorkerDto);
   }
 
-  @Get()
+  @Post('/find')
   @UseGuards(AuthGuardJwt)
-  @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(ClassSerializerInterceptor)
-  findAll(@Query() queryParams: filterWorkersPaginatedDto) {
+  findAll(@Body() request: filterWorkersPaginatedDto) {
     this.logger.log(this.findAll.name);
-    this.logger.debug('query', JSON.stringify(queryParams, null, 2));
-    return this.workersService.findAll(queryParams);
+    this.logger.debug('query', JSON.stringify(request, null, 2));
+    return this.workersService.findAll(request);
   }
 
   @Get(':id')

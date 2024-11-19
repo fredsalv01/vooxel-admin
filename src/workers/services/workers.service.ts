@@ -30,7 +30,11 @@ export class WorkersService {
   }
 
   async findAll({ limit, page, ...filters }: filterWorkersPaginatedDto) {
-    const filterProperties = { ...filters } as unknown as any;
+    const filterProperties = { ...filters } as unknown as {
+      input?: string;
+      isActive?: boolean;
+      filters?: WorkerFilters[];
+    };
     const result = await this.workerRepository.findWorkers({
       limit,
       currentPage: page,

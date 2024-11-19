@@ -1,8 +1,13 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../../pagination/dto/pagination.dto';
 import { Transform } from 'class-transformer';
+import { FiltersWorkerDto } from './filters-worker.dto';
 
-export class filterWorkersPaginatedDto extends PaginationDto {
+export class filterWorkersPaginatedDto extends FiltersWorkerDto {
+  constructor() {
+    super();
+  }
+  
   @IsString()
   @IsOptional()
   input?: string;
