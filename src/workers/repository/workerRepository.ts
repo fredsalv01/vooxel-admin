@@ -312,11 +312,40 @@ export class WorkerRepository {
       .where('worker.seniority IS NOT NULL')
       .distinct(true);
 
-    const [documentType, charge, englishLevel, seniority] = await Promise.all([
+    const qbDistrict = this.db
+      .createQueryBuilder('worker')
+      .select('worker.district')
+      .where('worker.district IS NOT NULL')
+      .distinct(true);
+
+    const qbProvince = this.db
+      .createQueryBuilder('worker')
+      .select('worker.province')
+      .where('worker.province IS NOT NULL')
+      .distinct(true);
+
+    const qbDepartment = this.db
+      .createQueryBuilder('worker')
+      .select('worker.department')
+      .where('worker.department IS NOT NULL')
+      .distinct(true);
+
+    const [
+      documentType,
+      charge,
+      englishLevel,
+      seniority,
+      district,
+      province,
+      department,
+    ] = await Promise.all([
       qbdocumentType.getRawMany(),
       qbcharge.getRawMany(),
       qbenglishLevel.getRawMany(),
       qbSeniority.getRawMany(),
+      qbDistrict.getRawMany(),
+      qbProvince.getRawMany(),
+      qbDepartment.getRawMany(),
     ]);
     console.log('documentType', documentType);
     console.log('charge', charge);
@@ -327,6 +356,9 @@ export class WorkerRepository {
       charge: charge.map((item) => item.worker_charge),
       englishLevel: englishLevel.map((item) => item.worker_englishLevel),
       seniority: seniority.map((item) => item.worker_seniority),
+      district: district.map((item) => item.worker_district),
+      province: province.map((item) => item.worker_province),
+      department: department.map((item) => item.worker_department),
     };
   }
 }
