@@ -104,4 +104,8 @@ export class WorkersService {
   remove(id: number) {
     return this.workerRepository.updateWorker(id, { isActive: false });
   }
+
+  getUniqueValues() {
+    return this.workerRepository.getUniqueValues();
+  }
 }

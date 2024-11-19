@@ -46,6 +46,13 @@ export class WorkersController {
     return this.workersService.findAll(request);
   }
 
+  @Get('/unique-values')
+  @UseGuards(AuthGuardJwt)
+  getUniqueValues() {
+    this.logger.log(this.getUniqueValues.name);
+    return this.workersService.getUniqueValues();
+  }
+
   @Get(':id')
   @UseGuards(AuthGuardJwt)
   findOne(@Param('id') id: string) {

@@ -192,7 +192,7 @@ export class WorkerRepository {
       ]);
     const { input, isActive, ...restFilters } = filters;
 
-    if(Object.keys(restFilters).length > 0){
+    if (Object.keys(restFilters).length > 0) {
       for (const key in restFilters) {
         if (Object.prototype.hasOwnProperty.call(restFilters, key)) {
           const value = restFilters[key];
@@ -273,15 +273,60 @@ export class WorkerRepository {
     const worker = await this.db.findOne({
       where: {
         id: workerId,
-        isActive: true
+        isActive: true,
       },
-      relations: ['vacation', 'vacation.vacationDetails']
-    })
+      relations: ['vacation', 'vacation.vacationDetails'],
+    });
 
-    if(!worker){
-      throw new NotFoundException(`No se encontro el trabajador con el id ${workerId}`);
+    if (!worker) {
+      throw new NotFoundException(
+        `No se encontro el trabajador con el id ${workerId}`,
+      );
     }
 
     return worker;
+  }
+
+  async getUniqueValues() {
+    const qbdocumentType = this.db
+      .createQueryBuilder('worker')
+      .select('worker.documentType')
+      .where('worker.documentType IS NOT NULL')
+      .distinct(true);
+
+    const qbcharge = this.db
+      .createQueryBuilder('worker')
+      .select('worker.charge')
+      .where('worker.charge IS NOT NULL')
+      .distinct(true);
+
+    const qbenglishLevel = this.db
+      .createQueryBuilder('worker')
+      .select('worker.englishLevel')
+      .where('worker.englishLevel IS NOT NULL')
+      .distinct(true);
+
+    const qbSeniority = this.db
+      .createQueryBuilder('worker')
+      .select('worker.seniority')
+      .where('worker.seniority IS NOT NULL')
+      .distinct(true);
+
+    const [documentType, charge, englishLevel, seniority] = await Promise.all([
+      qbdocumentType.getRawMany(),
+      qbcharge.getRawMany(),
+      qbenglishLevel.getRawMany(),
+      qbSeniority.getRawMany(),
+    ]);
+    console.log('documentType', documentType);
+    console.log('charge', charge);
+    console.log('englishLevel', englishLevel);
+    console.log('seniority', seniority);
+    return {
+      documentType: documentType.map((item) => item.worker_documentType),
+      charge: charge.map((item) => item.worker_charge),
+      englishLevel: englishLevel.map((item) => item.worker_englishLevel),
+      seniority: seniority.map((item) => item.worker_seniority),
+    };
   }
 }
