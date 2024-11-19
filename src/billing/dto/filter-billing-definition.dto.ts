@@ -13,7 +13,7 @@ export class FiltersBillingDto extends PaginationDto {
     example: false,
   })
   @IsOptional()
-  paginate?: boolean;
+  paginate?: boolean = true;
 
   @ApiProperty({
     description: 'año de la factura',
