@@ -37,14 +37,14 @@ export class BillingService {
     const filterProperties = { ...filters } as unknown as {
       input?: string;
       filters?: Filters[];
+      paginate?:boolean;
     };
     const data = await this.billingRepository.getBillingList({
       limit,
       currentPage: page,
       Dtofilters: filterProperties,
-      paginated: filters.paginate,
     });
-
+    console.log('data', data);
     if (filters.paginate) {
       const { items, ...restPaginationData } = data;
 

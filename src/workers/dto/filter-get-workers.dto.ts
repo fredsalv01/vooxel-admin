@@ -8,6 +8,9 @@ export class filterWorkersPaginatedDto extends FiltersWorkerDto {
     super();
   }
   
+  @IsOptional()
+  paginate?: boolean = true;
+
   @IsString()
   @IsOptional()
   input?: string;

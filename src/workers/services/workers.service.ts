@@ -34,6 +34,7 @@ export class WorkersService {
       input?: string;
       isActive?: boolean;
       filters?: WorkerFilters[];
+      paginate?: boolean;
     };
     const result = await this.workerRepository.findWorkers({
       limit,

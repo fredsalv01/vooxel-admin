@@ -46,12 +46,11 @@ export class BillingRepository {
     limit,
     currentPage,
     Dtofilters,
-    paginated,
   }): Promise<any> {
     this.logger.log('VALIDATE FILTERS', Dtofilters);
 
     const qb = this.getBillingBaseQuery();
-    const { input, ...filters } = Dtofilters;
+    const { input, paginate: paginated, ...filters } = Dtofilters;
     console.log('input🚀', input);
     console.log('filters', filters);
     qb.leftJoinAndSelect('billing.service', 'service');
