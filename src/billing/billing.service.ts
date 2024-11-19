@@ -42,21 +42,36 @@ export class BillingService {
       limit,
       currentPage: page,
       Dtofilters: filterProperties,
+      paginated: filters.paginate,
     });
 
-    const { items, ...restPaginationData } = data;
+    if (filters.paginate) {
+      const { items, ...restPaginationData } = data;
 
-    const mapResponseItems = data.items.map((item) => {
-      const { service, client, ...restData } = item;
-      return {
-        ...restData,
-        serviceName: service.name,
-        client: client.businessName,
-        clientRuc: client.ruc,
-      };
-    });
+      const mapResponseItems = data.items.map((item) => {
+        const { service, client, ...restData } = item;
+        return {
+          ...restData,
+          serviceName: service.name,
+          client: client.businessName,
+          clientRuc: client.ruc,
+        };
+      });
 
-    return { items: mapResponseItems, ...restPaginationData };
+      return { items: mapResponseItems, ...restPaginationData };
+    } else {
+      const mapResponseItems = data.map((item: any) => {
+        const { service, client, ...restData } = item;
+        return {
+          ...restData,
+          serviceName: service.name,
+          client: client.businessName,
+          clientRuc: client.ruc,
+        };
+      });
+
+      return mapResponseItems;
+    }
   }
 
   async findOne(id: number) {

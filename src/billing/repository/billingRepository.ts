@@ -42,7 +42,12 @@ export class BillingRepository {
     }
   }
 
-  async getBillingList({ limit, currentPage, Dtofilters }) {
+  async getBillingList({
+    limit,
+    currentPage,
+    Dtofilters,
+    paginated,
+  }): Promise<any> {
     this.logger.log('VALIDATE FILTERS', Dtofilters);
 
     const qb = this.getBillingBaseQuery();
@@ -140,15 +145,26 @@ export class BillingRepository {
       //   qb.orderBy(`billing.${filter.order.column}`, filter.order.direction);
       // }
     }
-    const result = await paginate(qb, {
-      limit: limit ?? 10,
-      page: currentPage ?? 1,
-    });
-    this.logger.debug(
-      `${this.getBillingList.name} - result`,
-      JSON.stringify(result, null, 2),
-    );
-    return result;
+
+    if (paginated) {
+      const result = await paginate(qb, {
+        limit: limit ?? 10,
+        page: currentPage ?? 1,
+      });
+      this.logger.debug(
+        `${this.getBillingList.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    } else {
+      const result = await qb.getMany();
+      this.logger.debug(
+        `${this.getBillingList.name} - result`,
+        JSON.stringify(result, null, 2),
+      );
+      return result;
+    }
+
     // return response;
   }
 
@@ -239,15 +255,21 @@ export class BillingRepository {
         .where('billing.month IS NOT NULL')
         .distinct(true);
 
-      const [years, months, currencies, billingStates, serviceNames, clientBusinessNames] =
-        await Promise.all([
-          qbYear.getRawMany(),
-          qbMonths.getRawMany(),
-          qbCurrency.getRawMany(),
-          qbBillingState.getRawMany(),
-          qbServiceName.getRawMany(),
-          qbClientBusinessName.getRawMany(),
-        ]);
+      const [
+        years,
+        months,
+        currencies,
+        billingStates,
+        serviceNames,
+        clientBusinessNames,
+      ] = await Promise.all([
+        qbYear.getRawMany(),
+        qbMonths.getRawMany(),
+        qbCurrency.getRawMany(),
+        qbBillingState.getRawMany(),
+        qbServiceName.getRawMany(),
+        qbClientBusinessName.getRawMany(),
+      ]);
 
       return {
         years: years.map((item) => item.billing_year),
