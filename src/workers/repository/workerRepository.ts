@@ -349,6 +349,25 @@ export class WorkerRepository {
       .where('worker.department IS NOT NULL')
       .distinct(true);
 
+    const qbclient = this.db
+      .createQueryBuilder('worker')
+      .leftJoinAndMapOne(
+        'worker.clientInfo',
+        WorkerToClient,
+        'workerToClient',
+        'worker.id = workerToClient.workerId AND workerToClient.isActive = :isActive',
+        { isActive: true },
+      )
+      .leftJoinAndMapOne(
+        'worker.clientInfo.client',
+        Client,
+        'client',
+        'workerToClient.clientId = client.id',
+      )
+      .select('client.businessName')
+      .where('client.businessName IS NOT NULL')
+      .distinct(true);
+
     const [
       documentType,
       charge,
@@ -357,6 +376,7 @@ export class WorkerRepository {
       district,
       province,
       department,
+      client,
     ] = await Promise.all([
       qbdocumentType.getRawMany(),
       qbcharge.getRawMany(),
@@ -365,11 +385,9 @@ export class WorkerRepository {
       qbDistrict.getRawMany(),
       qbProvince.getRawMany(),
       qbDepartment.getRawMany(),
+      qbclient.getRawMany(),
     ]);
-    console.log('documentType', documentType);
-    console.log('charge', charge);
-    console.log('englishLevel', englishLevel);
-    console.log('seniority', seniority);
+    console.log('client', client);
     return {
       documentType: documentType.map((item) => item.worker_documentType),
       charge: charge.map((item) => item.worker_charge),
@@ -378,6 +396,7 @@ export class WorkerRepository {
       district: district.map((item) => item.worker_district),
       province: province.map((item) => item.worker_province),
       department: department.map((item) => item.worker_department),
+      client: client.map((item) => item.client_businessName),
     };
   }
 }
