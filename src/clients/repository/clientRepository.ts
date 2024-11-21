@@ -65,7 +65,7 @@ export class ClientRepository {
         'CAST(client.businessName AS TEXT)',
         'CAST(client.ruc AS TEXT)',
         'CAST(client.phone AS TEXT)',
-        'CAST(client.address AS TEXT)'
+        'CAST(client.address AS TEXT)',
       ];
 
       qb.andWhere(`CONCAT_WS('', ${fieldsToSearch.join(',')}) ILIKE :input`, {

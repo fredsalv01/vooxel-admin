@@ -42,11 +42,7 @@ export class BillingRepository {
     }
   }
 
-  async getBillingList({
-    limit,
-    currentPage,
-    Dtofilters,
-  }): Promise<any> {
+  async getBillingList({ limit, currentPage, Dtofilters }): Promise<any> {
     this.logger.log('VALIDATE FILTERS', Dtofilters);
 
     const qb = this.getBillingBaseQuery();

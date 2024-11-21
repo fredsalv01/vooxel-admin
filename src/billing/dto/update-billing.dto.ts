@@ -14,13 +14,16 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { Months } from '../../common/enums';
-import { BillingCurrencyType, BillingDocumentType, BillingState } from '../enum';
+import {
+  BillingCurrencyType,
+  BillingDocumentType,
+  BillingState,
+} from '../enum';
 import { dateFormatValidator } from 'src/common/functions';
 import { IGV } from 'src/common/constants';
 const moment = require('moment-timezone');
 
 export class UpdateBillingDto extends PartialType(CreateBillingDto) {
-  
   @ApiProperty({
     description: 'tipo de documento',
     example: BillingDocumentType.BOLETA,
@@ -60,7 +63,7 @@ export class UpdateBillingDto extends PartialType(CreateBillingDto) {
   @IsNumber()
   @IsOptional()
   serviceId: number;
-  
+
   @ApiProperty({
     description: 'id del cliente',
     example: 1,

@@ -3,7 +3,6 @@ import { PaginationDto } from '../../pagination/dto/pagination.dto';
 import { Transform } from 'class-transformer';
 
 export class getUserDto extends PaginationDto {
-
   @IsString()
   @IsOptional()
   input?: string;

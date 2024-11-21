@@ -10,7 +10,11 @@ import {
 } from 'typeorm';
 import { Service } from './service.entity';
 import { Client } from '../../clients/entities/client.entity'; // Relación con Cliente
-import { BillingCurrencyType, BillingState, BillingDocumentType } from '../enum';
+import {
+  BillingCurrencyType,
+  BillingState,
+  BillingDocumentType,
+} from '../enum';
 import { IGV } from '../../common/constants'; // Usando IGV como constante
 import { Months } from '../../common/enums';
 import 'moment/locale/es';
@@ -26,14 +30,14 @@ export class Billing {
     nullable: true,
     default: null,
   })
-  year: number;  // Nueva columna para el año
+  year: number; // Nueva columna para el año
 
   @Column({
     type: 'text',
     nullable: true,
     default: null,
   })
-  month: string;  // Nueva columna para el mes
+  month: string; // Nueva columna para el mes
 
   @Column({
     type: 'enum',
@@ -292,5 +296,4 @@ export class Billing {
       this.totalConversionAmount = this.total * this.conversionRate;
     }
   }
-
 }

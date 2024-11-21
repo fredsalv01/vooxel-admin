@@ -228,19 +228,19 @@ export class WorkerRepository {
       isActive,
     });
 
-    if(paginate) {
+    if (paginate) {
       const result = await paginate(qb, {
         limit: limit ?? 10,
         page: currentPage ?? 1,
       });
-  
+
       this.logger.debug(
         `${this.findWorkers.name} - result`,
         JSON.stringify(result, null, 2),
       );
-  
+
       return result;
-    }else{
+    } else {
       const result = await qb.getMany();
       this.logger.debug(
         `${this.findWorkers.name} - result`,

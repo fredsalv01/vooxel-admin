@@ -37,7 +37,7 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({
       id,
     });
-    
+
     const { password } = resetPasswordDto;
 
     if (!user) {
@@ -119,8 +119,8 @@ export class UsersService {
         error: 'Usuario no encontrado',
       });
     }
-    
-    if(!user.password){
+
+    if (!user.password) {
       delete user.password;
     }
 

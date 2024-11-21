@@ -14,7 +14,7 @@ import { Vacation } from '../vacations/entities/vacation.entity';
 import { VacationDetail } from '../vacations/entities/vacationDetail.entity';
 import { Contact } from '../clients/entities/contact.entity';
 import { Billing } from './../billing/entities/billing.entity';
-import { Service } from "../billing/entities/service.entity";
+import { Service } from '../billing/entities/service.entity';
 
 export default registerAs(
   'orm.config',

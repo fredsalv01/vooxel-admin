@@ -12,7 +12,7 @@ export class VacationsDetailsService {
   constructor(
     private readonly vacationsDetailsRepository: VacationsDetailsRepository,
     private readonly vacationsRepository: VacationsRepository,
-    private readonly vacationService: VacationsService
+    private readonly vacationService: VacationsService,
   ) {}
 
   // create a new vacation detail

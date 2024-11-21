@@ -7,7 +7,7 @@ export class filterWorkersPaginatedDto extends FiltersWorkerDto {
   constructor() {
     super();
   }
-  
+
   @IsOptional()
   paginate?: boolean = true;
 

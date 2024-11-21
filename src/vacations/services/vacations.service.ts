@@ -4,7 +4,7 @@ import { UpdateVacationDto } from '../dto/update-vacation.dto';
 import { VacationsRepository } from '../repositories/vacationsRepository';
 import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
 import { VacationDetailType } from '../enum/vacationDetailType';
-import { WorkerRepository } from "../../workers/repository/workerRepository";
+import { WorkerRepository } from '../../workers/repository/workerRepository';
 
 @Injectable()
 export class VacationsService {
@@ -12,7 +12,7 @@ export class VacationsService {
   constructor(
     private readonly vacationsRepository: VacationsRepository,
     private readonly vacationsDetailsRepository: VacationsDetailsRepository,
-    private readonly workerRepository: WorkerRepository
+    private readonly workerRepository: WorkerRepository,
   ) {}
 
   create(createVacationDto: CreateVacationDto) {

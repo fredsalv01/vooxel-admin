@@ -18,7 +18,6 @@ import { BillingState } from '../enum/BillingState';
 import { IGV } from '../../common/constants';
 
 export class CreateBillingDto {
-
   @ApiProperty({
     description: 'tipo de documento',
     example: BillingDocumentType.BOLETA,
@@ -58,7 +57,7 @@ export class CreateBillingDto {
   @IsNumber()
   @IsNotEmpty()
   serviceId: number;
-  
+
   @ApiProperty({
     description: 'id del cliente',
     example: 1,

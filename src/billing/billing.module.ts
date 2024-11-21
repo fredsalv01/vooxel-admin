@@ -10,11 +10,14 @@ import { BillingServiceService } from './billingService.service';
 import { BillingServiceController } from './billingService.controller';
 import { ClientsModule } from '../clients/clients.module';
 import { ClientRepository } from '../clients/repository/clientRepository';
-import { Client } from "../clients/entities/client.entity";
+import { Client } from '../clients/entities/client.entity';
 
 @Module({
-  imports: [ClientsModule, TypeOrmModule.forFeature([Service, Billing, Client])],
-controllers: [BillingController, BillingServiceController],
+  imports: [
+    ClientsModule,
+    TypeOrmModule.forFeature([Service, Billing, Client]),
+  ],
+  controllers: [BillingController, BillingServiceController],
   providers: [
     ClientRepository,
     BillingService,

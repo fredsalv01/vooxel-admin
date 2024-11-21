@@ -7,7 +7,7 @@ export class FiltersWorkerDto extends PaginationDto {
   constructor() {
     super();
   }
-  
+
   @ApiProperty({
     description: 'tipo de documento del trabajador',
     example: [DocumentType.DNI],
@@ -56,5 +56,4 @@ export class FiltersWorkerDto extends PaginationDto {
     example: 'SI',
   })
   familiarAssignment?: string;
-
 }

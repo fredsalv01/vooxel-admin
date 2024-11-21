@@ -41,8 +41,8 @@ export class WorkersService {
       currentPage: page,
       filters: filterProperties,
     });
-    
-    if(filterProperties.paginate) {
+
+    if (filterProperties.paginate) {
       const items = result.items as unknown as FindWorkersResponse[];
       const formatItems = items.map((item) => {
         if (item.emergencyContacts.length > 0) {
@@ -64,18 +64,19 @@ export class WorkersService {
             ruc: item.clientInfo.ruc,
           };
         }
-  
+
         return {
           ...item,
-          contractType: item.contractWorkers?.contractType || 'No tiene contrato',
+          contractType:
+            item.contractWorkers?.contractType || 'No tiene contrato',
         };
       });
-  
+
       return {
         ...result,
         items: formatItems,
       };
-    }else {
+    } else {
       const formatItems = result.map((item: any) => {
         if (item.emergencyContacts.length > 0) {
           item.emergencyContacts = item.emergencyContacts.map(
@@ -96,13 +97,14 @@ export class WorkersService {
             ruc: item.clientInfo.ruc,
           };
         }
-  
+
         return {
           ...item,
-          contractType: item.contractWorkers?.contractType || 'No tiene contrato',
+          contractType:
+            item.contractWorkers?.contractType || 'No tiene contrato',
         };
       });
-  
+
       return formatItems;
     }
   }

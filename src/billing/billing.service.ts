@@ -37,7 +37,7 @@ export class BillingService {
     const filterProperties = { ...filters } as unknown as {
       input?: string;
       filters?: Filters[];
-      paginate?:boolean;
+      paginate?: boolean;
     };
     const data = await this.billingRepository.getBillingList({
       limit,
