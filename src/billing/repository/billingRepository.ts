@@ -3,11 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Billing } from '../entities/billing.entity';
 import { DataSource, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-import { CreateBillingDto } from '../dto/create-billing.dto';
 import { Service } from '../entities/service.entity';
 import { Client } from '../../clients/entities/client.entity';
 import * as moment from 'moment-timezone';
-import { Console } from 'console';
 
 export class BillingRepository {
   private readonly logger = new Logger(BillingRepository.name);

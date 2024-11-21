@@ -8,6 +8,7 @@ import { ClientRepository } from '../clients/repository/clientRepository';
 import { Months } from '../common/enums';
 import { BillingCurrencyType } from './enum';
 import { Filters } from './interface';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const moment = require('moment-timezone');
 @Injectable()
 export class BillingService {

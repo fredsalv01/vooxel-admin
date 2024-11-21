@@ -145,7 +145,7 @@ export class WorkerRepository {
     }
   }
 
-  async findWorkers({ limit, currentPage, filters }) {
+  async findWorkers({ limit, currentPage, filters }): Promise<any> {
     console.log('VALIDATE Filters', filters);
     const qb = this.getWorkersBaseQuery()
       .leftJoin('e.emergencyContacts', 'emergencyContacts')
@@ -190,17 +190,26 @@ export class WorkerRepository {
         'client.businessName',
         'client.ruc',
       ]);
-    const { input, isActive, paginate, ...restFilters } = filters;
+    const { input, isActive, paginate: paginated, ...restFilters } = filters;
 
     if (Object.keys(restFilters).length > 0) {
-      for (const key in restFilters) {
-        if (Object.prototype.hasOwnProperty.call(restFilters, key)) {
-          const value = restFilters[key];
-          if (value) {
-            qb.andWhere(`e.${key} = :${key}`, {
-              [key]: value,
-            });
+      for (const [key, value] of Object.entries(restFilters)) {
+        if (value) {
+          let property = key;
+          switch (property) {
+            case 'chiefOfficer':
+              property = 'chiefOfficer.id';
+              break;
+            case 'client':
+              property = 'client.businessName';
+              break;
+            default:
+              property = `e.${key}`;
+              break;
           }
+          qb.andWhere(`${property} IN (:...${key})`, {
+            [key]: typeof value === 'string' ? [value] : value,
+          });
         }
       }
     }
@@ -228,7 +237,7 @@ export class WorkerRepository {
       isActive,
     });
 
-    if (paginate) {
+    if (paginated) {
       const result = await paginate(qb, {
         limit: limit ?? 10,
         page: currentPage ?? 1,
