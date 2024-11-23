@@ -5,6 +5,7 @@ import { VacationsRepository } from '../repositories/vacationsRepository';
 import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
 import { VacationDetailType } from '../enum/vacationDetailType';
 import { WorkerRepository } from '../../workers/repository/workerRepository';
+import { response } from 'express';
 
 @Injectable()
 export class VacationsService {
@@ -44,6 +45,27 @@ export class VacationsService {
     });
 
     return result;
+  }
+
+  async exportVacations(request: number[]): Promise<any[]> {
+    const responseArray: any[] = [];
+    for (const id of request) {
+      this.logger.log(`Exporting vacation with id: ${id}`);
+      const result: any = await this.findAll(id);
+      const worker: any = await this.workerRepository.getOneWorker(id);
+      const workerData = {
+        id: worker.id,
+        name: worker.name,
+        apPat: worker.apPat,
+        apMat: worker.apMat,
+        email: worker.email,
+        clientInfo: worker.clientInfo,
+        contractInfo: worker.contractWorkers[0],
+      };
+      result.workerData = workerData;
+      responseArray.push(result);
+    }
+    return responseArray;
   }
 
   findOne(id: number) {

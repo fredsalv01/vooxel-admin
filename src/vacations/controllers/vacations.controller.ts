@@ -42,6 +42,14 @@ export class VacationsController {
     return this.vacationsService.findAll(workerId);
   }
 
+  @Post('/export-vacations')
+  @UseGuards(AuthGuardJwt)
+  exportVacations(@Body() request: number[]) {
+    this.logger.log(this.exportVacations.name);
+    this.logger.debug('RequestBody', JSON.stringify(request, null, 2));
+    return this.vacationsService.exportVacations(request);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     this.logger.log(`${this.findOne.name} - id: ${id}`);
