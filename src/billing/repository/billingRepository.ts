@@ -75,7 +75,7 @@ export class BillingRepository {
             case 'state':
               property = 'billing.billingState';
               break;
-            case 'serviceNames':
+            case 'serviceName':
               property = 'service.name';
               break;
             case 'client':

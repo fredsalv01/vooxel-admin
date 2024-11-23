@@ -49,7 +49,7 @@ export class FiltersBillingDto extends PaginationDto {
     example: ['CONSULTORIA', 'CAPACITACION'],
   })
   @IsOptional()
-  serviceNames: string[];
+  serviceName: string[];
 
   @ApiProperty({
     description: 'cliente de la factura',
