@@ -265,14 +265,12 @@ export class BillingRepository {
       ]);
 
       return {
-        years: years.map((item) => item.billing_year),
-        months: months.map((item) => item.billing_month),
-        currencies: currencies.map((item) => item.billing_currency),
-        billingStates: billingStates.map((item) => item.billing_billingState),
-        serviceNames: serviceNames.map((item) => item.service_name),
-        clientBusinessNames: clientBusinessNames.map(
-          (item) => item.client_businessName,
-        ),
+        year: years.map((item) => item.billing_year),
+        month: months.map((item) => item.billing_month),
+        currency: currencies.map((item) => item.billing_currency),
+        state: billingStates.map((item) => item.billing_billingState),
+        serviceName: serviceNames.map((item) => item.service_name),
+        client: clientBusinessNames.map((item) => item.client_businessName),
       };
     } catch (error) {
       this.logger.error(
