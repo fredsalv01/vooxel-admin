@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Validate,
@@ -99,6 +100,10 @@ export class CreateWorkerDto {
   @IsNotEmpty()
   @IsEmail()
   email: string; // email personal del trabajador
+
+  @IsNotEmpty()
+  @IsNumber()
+  salary: number; // salario del trabajador
 
   @IsString()
   @IsNotEmpty()

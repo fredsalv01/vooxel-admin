@@ -130,6 +130,12 @@ export class Worker {
   @Column({
     default: null,
   })
+  salary: number;
+
+  @Expose()
+  @Column({
+    default: null,
+  })
   address: string;
 
   @Expose()

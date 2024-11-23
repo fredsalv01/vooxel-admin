@@ -29,6 +29,7 @@ export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {
   birthdate?: string;
   phoneNumber?: string;
   email?: string;
+  salary?: number;
   province?: string;
   department?: string;
   district?: string;

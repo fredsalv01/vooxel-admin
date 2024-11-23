@@ -61,8 +61,9 @@ export class VacationsService {
         email: worker.email,
         clientInfo: worker.clientInfo,
         contractInfo: worker.contractWorkers[0],
+        salary: worker.salary,
       };
-      result.workerData = workerData;
+      result.worker = workerData;
       responseArray.push(result);
     }
     return responseArray;
