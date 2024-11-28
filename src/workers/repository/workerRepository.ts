@@ -203,7 +203,7 @@ export class WorkerRepository {
         'client.businessName',
         'client.ruc',
       ]);
-    const { input, isActive, paginate: paginated, ...restFilters } = filters;
+    const { input, isActive, salary: salaries, paginate: paginated, ...restFilters } = filters;
 
     if (Object.keys(restFilters).length > 0) {
       for (const [key, value] of Object.entries(restFilters)) {
@@ -225,6 +225,25 @@ export class WorkerRepository {
           });
         }
       }
+    }
+
+    if(salaries) {
+      salaries.forEach((salary: {min?: number, max?:number}) => {
+        if(salary.min && salary.max) {
+          qb.andWhere(`e.salary >= :min AND e.salary <= :max`, {
+            min: salary.min,
+            max: salary.max
+          });
+        } else if(salary.min) {
+          qb.andWhere(`e.salary >= :min`, {
+            min: salary.min
+          });
+        } else if(salary.max) {
+          qb.andWhere(`e.salary <= :max`, {
+            max: salary.max
+          });
+        }
+      });
     }
 
     if (input) {

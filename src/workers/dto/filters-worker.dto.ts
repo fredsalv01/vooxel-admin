@@ -1,7 +1,7 @@
 import { DocumentType, EnglishLevel, Seniority } from '../utils/enum-types';
 import { PaginationDto } from '../../pagination/dto/pagination.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class FiltersWorkerDto extends PaginationDto {
   constructor() {
@@ -70,4 +70,30 @@ export class FiltersWorkerDto extends PaginationDto {
   })
   @IsOptional()
   client?: string[];
+
+  @ApiProperty({
+    description: 'salario del trabajador',
+    example: 'RIPLEY',
+  })
+  @IsOptional()
+  salary?: SalaryRange[];
+}
+
+class SalaryRange {
+  @ApiProperty({
+    description: 'min del salario del trabajador',
+    example: 1,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  min?: number;
+
+  @ApiProperty({
+    description: 'max del salario del trabajador',
+    example: 1000,
+  })
+  @IsOptional()
+  @IsInt()
+  max?: number;
 }
