@@ -21,7 +21,7 @@ export class VacationsService {
     return this.vacationsRepository.createVacation(createVacationDto);
   }
 
-  async findAll(workerId: number) {
+  async findAll(workerId: number, update: boolean = true) {
     const result = await this.vacationsRepository.getAllVacations(workerId);
     // actualizar la vacacion con los detalles tambien.
     const vacationDetails =
@@ -39,19 +39,23 @@ export class VacationsService {
       0,
     );
 
-    await this.update(result.id, {
-      takenVacations: takenVacationsUpdate,
-      remainingVacations: result.accumulatedVacations - takenVacationsUpdate,
-    });
+    if (!update) {
+      return result;
+    } else {
+      await this.update(result.id, {
+        takenVacations: takenVacationsUpdate,
+        remainingVacations: result.accumulatedVacations - takenVacationsUpdate,
+      });
 
-    return result;
+      return result;
+    }
   }
 
   async exportVacations(request: number[]): Promise<any[]> {
     const responseArray: any[] = [];
     for (const id of request) {
       this.logger.log(`Exporting vacation with id: ${id}`);
-      const result: any = await this.findAll(id);
+      const result: any = await this.findAll(id, false);
       const worker: any = await this.workerRepository.getOneWorker(id);
       const workerData = {
         id: worker.id,
