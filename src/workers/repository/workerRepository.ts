@@ -184,6 +184,7 @@ export class WorkerRepository {
         'e.district',
         'e.province',
         'e.department',
+        'e.address',
         'e.seniority',
         'e.familiarAssignment',
         'e.salary',
