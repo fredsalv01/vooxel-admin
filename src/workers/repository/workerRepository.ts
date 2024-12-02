@@ -86,6 +86,7 @@ export class WorkerRepository {
         .createQueryBuilder('worker')
         .leftJoinAndSelect('worker.emergencyContacts', 'emergencyContacts')
         .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
+        .leftJoinAndSelect('worker.subordinates', 'subordinates')
         .leftJoinAndSelect('worker.certifications', 'certifications')
         .leftJoinAndMapOne(
           'worker.clientInfo',
@@ -149,7 +150,8 @@ export class WorkerRepository {
     console.log('VALIDATE Filters', filters);
     const qb = this.getWorkersBaseQuery()
       .leftJoin('e.emergencyContacts', 'emergencyContacts')
-      .leftJoin('e.chiefOfficer', 'chiefOfficer')
+      .leftJoinAndSelect('e.chiefOfficer', 'chiefOfficer')
+      .leftJoinAndSelect('e.subordinates', 'subordinates')
       .leftJoinAndMapOne(
         'e.clientInfo',
         WorkerToClient,
@@ -184,6 +186,7 @@ export class WorkerRepository {
         'e.district',
         'e.province',
         'e.department',
+        // 'e.subordinates',
         'e.address',
         'e.seniority',
         'e.familiarAssignment',
@@ -199,7 +202,6 @@ export class WorkerRepository {
         'emergencyContacts.name',
         'emergencyContacts.relation',
         'chiefOfficer.id',
-        'chiefOfficer.name',
         'client.id', // Include client id
         'client.businessName',
         'client.ruc',
@@ -261,7 +263,7 @@ export class WorkerRepository {
         'CAST(contract.contractType AS TEXT)',
         'CAST(e.charge AS TEXT)',
         'CAST(e.techSkills AS TEXT)',
-        'CAST(chiefOfficer.name AS TEXT)',
+        // 'CAST(chiefOfficer.name AS TEXT)',
         'CAST(client.businessName AS TEXT)',
       ];
 
@@ -296,24 +298,61 @@ export class WorkerRepository {
     }
   }
 
-  async updateWorker(id: number, updateWorkerData: any) {
+  async updateWorker(
+    id: number,
+    updateWorkerData: any,
+  ) {
+    const { chiefOfficerId, subordinates, ...restData } = updateWorkerData;
+  
+    // Find the chief officer if provided
+    let chiefOfficer: Worker = null;
+    if (chiefOfficerId) {
+      chiefOfficer = await this.getOneWorker(chiefOfficerId);
+      if (!chiefOfficer) {
+        throw new NotFoundException(`Chief Officer with ID ${chiefOfficerId} not found`);
+      }
+    }
+  
+    // Preload the worker with the new data
     const worker: Worker = await this.db.preload({
       id: id,
-      chiefOfficer: updateWorkerData.chiefOfficerId,
-      ...updateWorkerData,
+      chiefOfficer,
+      ...restData,
     });
-
+  
     if (!worker) {
       throw new NotFoundException({
         error: 'Colaborador no encontrado',
       });
     }
+  
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      // Save the updated worker
       await queryRunner.manager.save(worker);
-
+  
+      // Update subordinates if provided
+      if (subordinates && subordinates.length > 0) {
+        // Remove existing subordinates
+        await queryRunner.manager
+          .createQueryBuilder()
+          .delete()
+          .from(Worker)
+          .where("chiefOfficerId = :id", { id: worker.id })
+          .execute();
+  
+        // Add new subordinates
+        const subordinateEntities = subordinates.map(subordinateData => {
+          return this.db.create({
+            ...subordinateData,
+            chiefOfficer: worker,
+          });
+        });
+        await queryRunner.manager.save(subordinateEntities);
+      }
+  
       await queryRunner.commitTransaction();
       return worker;
     } catch (error) {

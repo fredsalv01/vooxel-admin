@@ -114,9 +114,14 @@ export class WorkersService {
   }
 
   async update(id: number, updateWorkerDto: UpdateWorkerDto) {
-    const formatData = {
-      ...updateWorkerDto,
-    };
+    const { chiefOfficerId, ...restData } = updateWorkerDto;
+
+    const chiefOfficer =
+      await this.workerRepository.getOneWorker(chiefOfficerId);
+
+    if (!chiefOfficer) {
+      throw new Error('El jefe de oficina no existe');
+    }
 
     //validar si el row existe para ver si hay actualizacion de cliente o no
     const existsWorkerToClient =

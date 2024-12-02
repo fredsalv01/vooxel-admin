@@ -5,6 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -180,18 +181,13 @@ export class Worker {
   @Expose()
   techSkills: string[]; // string[]
 
-  @OneToOne(() => Worker, (worker) => worker.chiefOfficer)
-  @JoinColumn({
-    name: 'chiefOfficerId',
-  })
-  @Expose()
+  @ManyToOne(() => Worker, (worker) => worker.chiefOfficer)
+  @JoinColumn({ name: 'chiefOfficerId' })
   chiefOfficer: Worker;
 
-  @Column({
-    nullable: true,
-    default: null,
-  })
-  chiefOfficerId: number; // aca vamos a hacer una asignacion circular en bd
+  @OneToMany(() => Worker, (worker) => worker.chiefOfficer)
+  @Expose()
+  subordinates: Worker[];
 
   @ManyToMany(() => BankAccount, (bankAccount) => bankAccount.workers)
   @JoinTable()
