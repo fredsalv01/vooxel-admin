@@ -203,6 +203,9 @@ export class WorkerRepository {
         'emergencyContacts.relation',
         'chiefOfficer.id',
         'chiefOfficer.name',
+        'chiefOfficer.apPat',
+        'chiefOfficer.apMat',
+        'chiefOfficer.email',
         'client.id', // Include client id
         'client.businessName',
         'client.ruc',
