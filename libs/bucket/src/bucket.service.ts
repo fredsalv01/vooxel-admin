@@ -8,9 +8,9 @@ export class BucketService {
   private readonly bucketName: string;
 
   constructor() {
-    const GCP_PROJECT_ID = 'vooxellapps'; // reemplaza
-    const GCP_KEY_FILE_PATH = 'vooxellapps-gcp.json'; // REEMPLAZAR
-    this.bucketName = 'vooxell-webapp'; // REEMPLAZAR
+    const GCP_PROJECT_ID = 'file-upload-app-b9ae4'; // reemplaza
+    const GCP_KEY_FILE_PATH = 'gcp-app.json'; // REEMPLAZAR
+    this.bucketName = 'staging.file-upload-app-b9ae4.appspot.com'; // REEMPLAZAR
     this.storage = new Storage({
       projectId: GCP_PROJECT_ID,
       keyFilename: GCP_KEY_FILE_PATH,
