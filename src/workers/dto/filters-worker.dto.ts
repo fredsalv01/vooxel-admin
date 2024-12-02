@@ -73,10 +73,10 @@ export class FiltersWorkerDto extends PaginationDto {
 
   @ApiProperty({
     description: 'salario del trabajador',
-    example: [{ min: 1, max: 1000 }],
+    example: { min: 1, max: 1000 },
   })
   @IsOptional()
-  salary?: SalaryRange[];
+  salary?: SalaryRange;
 }
 
 class SalaryRange {
