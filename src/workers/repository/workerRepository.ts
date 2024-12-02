@@ -447,6 +447,13 @@ export class WorkerRepository {
       .where('client.businessName IS NOT NULL')
       .distinct(true);
 
+    const qbChiefOfficer = this.db
+      .createQueryBuilder('worker')
+      .leftJoinAndSelect('worker.chiefOfficer', 'chiefOfficer')
+      .select('chiefOfficer.name')
+      .where('chiefOfficer.name IS NOT NULL')
+      .distinct(true);
+
     const [
       documentType,
       charge,
@@ -455,6 +462,7 @@ export class WorkerRepository {
       district,
       province,
       department,
+      chiefOfficer,
       client,
     ] = await Promise.all([
       qbdocumentType.getRawMany(),
@@ -464,9 +472,9 @@ export class WorkerRepository {
       qbDistrict.getRawMany(),
       qbProvince.getRawMany(),
       qbDepartment.getRawMany(),
+      qbChiefOfficer.getRawMany(),
       qbclient.getRawMany(),
     ]);
-    console.log('client', client);
     return {
       documentType: documentType.map((item) => item.worker_documentType),
       charge: charge.map((item) => item.worker_charge),
@@ -476,6 +484,7 @@ export class WorkerRepository {
       province: province.map((item) => item.worker_province),
       department: department.map((item) => item.worker_department),
       client: client.map((item) => item.client_businessName),
+      chiefOfficer: chiefOfficer.map((item) => item.chiefOfficer_name),
     };
   }
 }
