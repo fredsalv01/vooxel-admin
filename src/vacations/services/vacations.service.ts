@@ -64,6 +64,7 @@ export class VacationsService {
         email: worker.email,
         documentType: worker.documentType,
         documentNumber: worker.documentNumber,
+        chiefOfficer: worker.chiefOfficer,
         clientInfo: worker.clientInfo,
         contractInfo: worker.contractWorkers[0],
         salary: worker.salary,
