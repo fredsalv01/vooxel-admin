@@ -4,9 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { CreateVacationDto } from '../dto/create-vacation.dto';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { UpdateVacationDto } from '../dto/update-vacation.dto';
-import { DAY } from '../../common/constants';
 import { Worker } from '../../workers/entities/worker.entity';
-import { VacationDetailType } from '../enum/vacationDetailType';
 
 export class VacationsRepository {
   private readonly logger = new Logger(VacationsRepository.name);

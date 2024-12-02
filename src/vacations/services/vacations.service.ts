@@ -5,7 +5,6 @@ import { VacationsRepository } from '../repositories/vacationsRepository';
 import { VacationsDetailsRepository } from '../repositories/vacationsDetailsRepository';
 import { VacationDetailType } from '../enum/vacationDetailType';
 import { WorkerRepository } from '../../workers/repository/workerRepository';
-import { response } from 'express';
 
 @Injectable()
 export class VacationsService {
@@ -63,6 +62,8 @@ export class VacationsService {
         apPat: worker.apPat,
         apMat: worker.apMat,
         email: worker.email,
+        documentType: worker.documentType,
+        documentNumber: worker.documentNumber,
         clientInfo: worker.clientInfo,
         contractInfo: worker.contractWorkers[0],
         salary: worker.salary,
