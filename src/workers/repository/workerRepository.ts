@@ -202,6 +202,7 @@ export class WorkerRepository {
         'emergencyContacts.name',
         'emergencyContacts.relation',
         'chiefOfficer.id',
+        'chiefOfficer.name',
         'client.id', // Include client id
         'client.businessName',
         'client.ruc',
@@ -298,41 +299,40 @@ export class WorkerRepository {
     }
   }
 
-  async updateWorker(
-    id: number,
-    updateWorkerData: any,
-  ) {
+  async updateWorker(id: number, updateWorkerData: any) {
     const { chiefOfficerId, subordinates, ...restData } = updateWorkerData;
-  
+
     // Find the chief officer if provided
     let chiefOfficer: Worker = null;
     if (chiefOfficerId) {
       chiefOfficer = await this.getOneWorker(chiefOfficerId);
       if (!chiefOfficer) {
-        throw new NotFoundException(`Chief Officer with ID ${chiefOfficerId} not found`);
+        throw new NotFoundException(
+          `Chief Officer with ID ${chiefOfficerId} not found`,
+        );
       }
     }
-  
+
     // Preload the worker with the new data
     const worker: Worker = await this.db.preload({
       id: id,
       chiefOfficer,
       ...restData,
     });
-  
+
     if (!worker) {
       throw new NotFoundException({
         error: 'Colaborador no encontrado',
       });
     }
-  
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       // Save the updated worker
       await queryRunner.manager.save(worker);
-  
+
       // Update subordinates if provided
       if (subordinates && subordinates.length > 0) {
         // Remove existing subordinates
@@ -340,11 +340,11 @@ export class WorkerRepository {
           .createQueryBuilder()
           .delete()
           .from(Worker)
-          .where("chiefOfficerId = :id", { id: worker.id })
+          .where('chiefOfficerId = :id', { id: worker.id })
           .execute();
-  
+
         // Add new subordinates
-        const subordinateEntities = subordinates.map(subordinateData => {
+        const subordinateEntities = subordinates.map((subordinateData) => {
           return this.db.create({
             ...subordinateData,
             chiefOfficer: worker,
@@ -352,7 +352,7 @@ export class WorkerRepository {
         });
         await queryRunner.manager.save(subordinateEntities);
       }
-  
+
       await queryRunner.commitTransaction();
       return worker;
     } catch (error) {
